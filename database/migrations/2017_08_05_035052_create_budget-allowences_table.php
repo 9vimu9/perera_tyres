@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSalaryFeaturesTable extends Migration
+class CreateBudgetallowencesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class CreateSalaryFeaturesTable extends Migration
      */
     public function up()
     {
-        Schema::create('salary_features', function (Blueprint $table) {
+        Schema::create('budget-allowances', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->integer('is_precentage');
-            $table->decimal('value',7,2);
-            $table->integer('is_deduction');
-
+            $table->float('amount', 6, 2);
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ class CreateSalaryFeaturesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('salary_features');
+        Schema::dropIfExists('budget-allowances');
     }
 }

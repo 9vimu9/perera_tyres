@@ -16,10 +16,10 @@ class CreateHolidayssTable extends Migration
         Schema::create('holidays', function (Blueprint $table) {
             $table->increments('id');
             $table->date('date');
-            $table->integer('holiday_type_id');
+            $table->integer('holiday-types_id')->length(10)->unsigned();
+            $table->foreign('holiday-types_id')->references('id')->on('holiday-types')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
-            $table->foreign('holiday_type_id')->references('id')->on('holiday_types')->onDelete('cascade')->onUpdate('cascade');
-          $table->unique(['date', 'holiday_type_id'],"composite 2");
+            $table->unique(['date', 'holiday-types_id'],"composite holidays");
         });
     }
 

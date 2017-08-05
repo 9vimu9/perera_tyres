@@ -15,28 +15,18 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('branchs_id')->length(10)->unsigned();
+            $table->integer('cats_id')->length(10)->unsigned();
+            $table->integer('fingerprint_no');
             $table->string('name');
             $table->string('address');
             $table->string('nic');
             $table->string('tel');
-            $table->integer('etf_no')->unique();
+            $table->integer('etf_no');
             $table->time('start_time');
             $table->date('join_date');
-
-
-
-            $table->integer('branch_id');
-            $table->integer('cat_id');
-            $table->integer('designation_id');
-            $table->decimal('basic',7,2);
-            $table->decimal('budget_allowance',7,2);
-            //$table->decimal('unit_price',7,2);
-
-            $table->foreign('branch_id')->references('id')->on('branchs')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('designation_id')->references('id')->on('designations')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('cat_id')->references('id')->on('cats')->onDelete('cascade')->onUpdate('cascade');
-
-
+            $table->foreign('branchs_id')->references('id')->on('branchs')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('cats_id')->references('id')->on('cats')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

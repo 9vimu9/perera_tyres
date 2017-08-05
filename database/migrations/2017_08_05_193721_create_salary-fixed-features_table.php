@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAttendencesTable extends Migration
+class CreateSalaryFixedFeaturesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateAttendencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('attendences', function (Blueprint $table) {
+        Schema::create('fixed-features', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('employee_id');
-            $table->date('date');
-            $table->time('in');
-            $table->time('out');
+            $table->string('name');
+            $table->enum('fixed_method', ['amount', 'precentage']);
+            $table->integer('is_compulsory');//1=yes 0 no
+            $table->enum('feature_type', ['deduction', 'allowance','demo']);
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateAttendencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendences');
+        Schema::dropIfExists('fixed-features');
     }
 }

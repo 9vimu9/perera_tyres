@@ -17,4 +17,16 @@ Route::get('/', function () {
 
 Auth::routes();
 
+
+Route::get('/get_suggestions_for_select2','Select2Controller@GetSuggestionsForSelect2');
+
+
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/test', function () {
+    return view('employees.create');
+});
+
+
+
+Route::resource('employees','EmployeesController');

@@ -22,7 +22,7 @@ class CreateEmployeesTable extends Migration
             $table->string('address');
             $table->string('nic');
             $table->string('tel');
-            $table->integer('etf_no');
+            $table->integer('epf_no');
             $table->time('start_time');
             $table->date('join_date');
             $table->foreign('branchs_id')->references('id')->on('branchs')->onDelete('cascade')->onUpdate('cascade');

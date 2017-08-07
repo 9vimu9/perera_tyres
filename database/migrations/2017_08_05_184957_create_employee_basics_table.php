@@ -13,12 +13,12 @@ class CreateEmployeeBasicsTable extends Migration
      */
     public function up()
     {
-        Schema::create('employee-basics', function (Blueprint $table) {
+        Schema::create('basic_salarys', function (Blueprint $table) {
           $table->increments('id');
-          $table->integer('employees_id')->length(10)->unsigned();
-          $table->float('amount', 6, 2);
+          $table->integer('employee_id')->length(10)->unsigned();
+          $table->float('amount', 10, 2);
           $table->timestamps();
-          $table->foreign('employees_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');
+          $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');
 
 
         });
@@ -31,6 +31,6 @@ class CreateEmployeeBasicsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employee-basics');
+        Schema::dropIfExists('basic_salarys');
     }
 }

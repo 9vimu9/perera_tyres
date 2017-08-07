@@ -5,6 +5,7 @@
  */
 namespace App\Helpers;
 
+
 class QuickVali
 {
 

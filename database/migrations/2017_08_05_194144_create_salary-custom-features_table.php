@@ -13,7 +13,7 @@ class CreateSalaryCustomFeaturesTable extends Migration
      */
     public function up()
     {
-        Schema::create('custom-features', function (Blueprint $table) {
+        Schema::create('custom_features', function (Blueprint $table) {
           $table->increments('id');
           $table->string('name');
           $table->enum('fixed_method', ['amount', 'precentage']);
@@ -32,6 +32,6 @@ class CreateSalaryCustomFeaturesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('custom-features');
+        Schema::dropIfExists('custom_features');
     }
 }

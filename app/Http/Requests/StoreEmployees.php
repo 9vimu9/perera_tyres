@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Helpers\QuickVali;
+
 use Illuminate\Support\Facades\Config;
 
 class StoreEmployees extends FormRequest
@@ -34,10 +34,10 @@ class StoreEmployees extends FormRequest
           'join_date'=>'required|date',
           'address'=>'required',
           'basic_salary' => Config::get('enums.QuickVali.money'),
-          'branchs_id'=>Config::get('enums.QuickVali.fk'),
+          'branch_id'=>Config::get('enums.QuickVali.fk'),
           'fingerprint_no'=>'required|numeric',
-          'cats_id'=>Config::get('enums.QuickVali.fk'),
-          'designations_id'=>Config::get('enums.QuickVali.fk'),
+          'cat_id'=>Config::get('enums.QuickVali.fk'),
+          'designation_id'=>Config::get('enums.QuickVali.fk'),
           'start_time'=>'required'//|'.Config::get('enums.QuickVali.time')
             //
         ];

@@ -13,11 +13,11 @@ class CreateSalaryFixedFeatureValuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('fixed-feature-values', function (Blueprint $table) {
+        Schema::create('fixed_feature_values', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('fixed-features_id')->length(10)->unsigned();
+            $table->integer('fixed_feature_id')->length(10)->unsigned();
             $table->float('amount', 6, 2);
-            $table->foreign('fixed-features_id')->references('id')->on('fixed-features')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('fixed_feature_id')->references('id')->on('fixed_features')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateSalaryFixedFeatureValuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fixed-feature-values');
+        Schema::dropIfExists('fixed_feature_values');
     }
 }

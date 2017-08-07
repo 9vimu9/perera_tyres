@@ -15,16 +15,16 @@ class CreateSlipsTable extends Migration
     {
         Schema::create('slips', function (Blueprint $table) {
               $table->increments('id');
-              $table->integer('salarys_id')->length(10)->unsigned();
-              $table->integer('employee-basics_id')->length(10)->unsigned();
-              $table->integer('employee_designations_id')->length(10)->unsigned();
+              $table->integer('salary_id')->length(10)->unsigned();
+              $table->integer('basic_salary_id')->length(10)->unsigned();
+              $table->integer('employee__designation_id')->length(10)->unsigned();
               $table->timestamps();
 
-              $table->foreign('salarys_id')->references('id')->on('salarys')->onDelete('cascade')->onUpdate('cascade');
-              $table->foreign('employee-basics_id')->references('id')->on('employee-basics')->onDelete('cascade')->onUpdate('cascade');
-              $table->foreign('employee_designations_id')->references('id')->on('employee_designations')->onDelete('cascade')->onUpdate('cascade');
+              $table->foreign('salary_id')->references('id')->on('salarys')->onDelete('cascade')->onUpdate('cascade');
+              $table->foreign('basic_salary_id')->references('id')->on('basic_salarys')->onDelete('cascade')->onUpdate('cascade');
+              $table->foreign('employee__designation_id')->references('id')->on('employee__designations')->onDelete('cascade')->onUpdate('cascade');
 
-              $table->unique(['employee-basics_id', 'salarys_id'],"composite slips");
+              $table->unique(['basic_salary_id', 'salary_id'],"composite slips");
 
 
 

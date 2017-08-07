@@ -13,7 +13,7 @@ class CreateSalaryFixedFeaturesTable extends Migration
      */
     public function up()
     {
-        Schema::create('fixed-features', function (Blueprint $table) {
+        Schema::create('fixed_features', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->enum('fixed_method', ['amount', 'precentage']);
@@ -30,6 +30,6 @@ class CreateSalaryFixedFeaturesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fixed-features');
+        Schema::dropIfExists('fixed_features');
     }
 }

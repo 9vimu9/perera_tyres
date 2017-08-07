@@ -6,5 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employees extends Model
 {
-     protected $guarded = [];
+  public function cat()
+  {
+      return $this->belongsTo('App\cats');
+  }
+
+  public function branch()
+  {
+      return $this->belongsTo('App\branchs');
+  }
 }

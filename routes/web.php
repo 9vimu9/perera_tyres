@@ -24,9 +24,19 @@ Route::get('/get_suggestions_for_select2','Select2Controller@GetSuggestionsForSe
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/test', function () {
-    return view('employees.create');
+    return view('attendence.input_fingerprint_data');
 });
 
 
 
 Route::resource('employees','EmployeesController');
+
+
+////////////salarys routes///////////
+Route::resource('salaries','SalarysController');
+
+
+
+/////////////////ajax
+//Route::get('/ajax_call','AjaxController@AjaxCall');
+Route::post('/ajax_call','AjaxController@AjaxCall');

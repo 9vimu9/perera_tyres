@@ -15,8 +15,8 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('branchs_id')->length(10)->unsigned();
-            $table->integer('cats_id')->length(10)->unsigned();
+            $table->integer('branch_id')->length(10)->unsigned();
+            $table->integer('cat_id')->length(10)->unsigned();
             $table->integer('fingerprint_no');
             $table->string('name');
             $table->string('address');
@@ -25,8 +25,8 @@ class CreateEmployeesTable extends Migration
             $table->integer('epf_no');
             $table->time('start_time');
             $table->date('join_date');
-            $table->foreign('branchs_id')->references('id')->on('branchs')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('cats_id')->references('id')->on('cats')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('branch_id')->references('id')->on('branchs')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('cat_id')->references('id')->on('cats')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@ class CreateBudgetallowencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('budget-allowances', function (Blueprint $table) {
+        Schema::create('budget_allowances', function (Blueprint $table) {
             $table->increments('id');
             $table->float('amount', 6, 2);
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateBudgetallowencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('budget-allowances');
+        Schema::dropIfExists('budget_allowances');
     }
 }

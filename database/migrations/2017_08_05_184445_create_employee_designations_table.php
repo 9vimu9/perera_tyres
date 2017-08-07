@@ -13,14 +13,14 @@ class CreateEmployeeDesignationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('employee_designations', function (Blueprint $table) {
+        Schema::create('employee__designations', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('employees_id')->length(10)->unsigned();
-            $table->integer('designations_id')->length(10)->unsigned();
+            $table->integer('employee_id')->length(10)->unsigned();
+            $table->integer('designation_id')->length(10)->unsigned();
             $table->timestamps();
-            $table->foreign('employees_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('designations_id')->references('id')->on('designations')->onDelete('cascade')->onUpdate('cascade');
-            $table->unique(['employees_id', 'designations_id'],"composite employee_designations");
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('designation_id')->references('id')->on('designations')->onDelete('cascade')->onUpdate('cascade');
+          
 
         });
     }
@@ -32,6 +32,6 @@ class CreateEmployeeDesignationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employee_designations');
+        Schema::dropIfExists('employee__designations');
     }
 }

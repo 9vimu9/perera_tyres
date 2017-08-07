@@ -13,13 +13,13 @@ class CreateSlipSalaryCustomFeatureValuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('slip_custom-feature-values', function (Blueprint $table) {
+        Schema::create('slip__custom_feature_values', function (Blueprint $table) {
           $table->increments('id');
-          $table->integer('slips_id')->length(10)->unsigned();
-          $table->integer('custom-features_id')->length(10)->unsigned();
+          $table->integer('slip_id')->length(10)->unsigned();
+          $table->integer('custom_feature_id')->length(10)->unsigned();
           $table->float('amount', 6, 2);
-          $table->foreign('custom-features_id')->references('id')->on('custom-features')->onDelete('cascade')->onUpdate('cascade');
-          $table->foreign('slips_id')->references('id')->on('slips')->onDelete('cascade')->onUpdate('cascade');
+          $table->foreign('custom_feature_id')->references('id')->on('custom_features')->onDelete('cascade')->onUpdate('cascade');
+          $table->foreign('slip_id')->references('id')->on('slips')->onDelete('cascade')->onUpdate('cascade');
           $table->timestamps();
 
         });
@@ -32,6 +32,6 @@ class CreateSlipSalaryCustomFeatureValuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('slip_custom-feature-values');
+        Schema::dropIfExists('slip__custom_feature_values');
     }
 }

@@ -13,9 +13,9 @@ class CreateCatWorkingDaysTablee extends Migration
      */
     public function up()
     {
-        Schema::create('cat-working-days', function (Blueprint $table) {
+        Schema::create('cat_working_days', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('cats_id')->length(10)->unsigned();
+            $table->integer('cat_id')->length(10)->unsigned();
             $table->integer('is_sun_work');//1=working 0=holiday
             $table->integer('is_mon_work');//1=working 0=holiday
             $table->integer('is_tue_work');//1=working 0=holiday
@@ -24,7 +24,7 @@ class CreateCatWorkingDaysTablee extends Migration
             $table->integer('is_fri_work');//1=working 0=holiday
             $table->integer('is_sat_work');//1=working 0=holiday
             $table->timestamps();
-            $table->foreign('cats_id')->references('id')->on('cats')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('cat_id')->references('id')->on('cats')->onDelete('cascade')->onUpdate('cascade');
             
         });
     }
@@ -36,6 +36,6 @@ class CreateCatWorkingDaysTablee extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cat-working-days');
+        Schema::dropIfExists('cat_working_days');
     }
 }

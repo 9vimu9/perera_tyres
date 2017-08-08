@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\SalarysRequest;
+use App\budget_allowances;
+use App\salarys;
 
 class SalarysController extends Controller
 {
@@ -14,7 +16,9 @@ class SalarysController extends Controller
      */
     public function index()
     {
-         return view("salarys.index");
+      $salarys=salarys::all();
+      return view("salarys.index")->with('salarys',$salarys);
+
     }
 
     /**
@@ -35,7 +39,11 @@ class SalarysController extends Controller
      */
     public function store(SalarysRequest $request)
     {
-        return $request->all();
+      //  $budget_allowance=
+        $salary=new salarys();
+        $budget_allowance_id=budget_allowances::latest()->first()->id;
+        //return $budget_allowance_id;
+        $this->SaveToDb($request,$salary,$budget_allowance_id);
     }
 
     /**
@@ -69,7 +77,7 @@ class SalarysController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return 'fucking update';
     }
 
     /**
@@ -81,5 +89,21 @@ class SalarysController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function SaveToDb($request,$salary,$latest_budget_allowence_id=0)
+    {
+      $salary->year=$request['year'];
+      $salary->month=$request['month'];
+      $salary->start_date=$request['start_date'];
+      $salary->end_date=$request['end_date'];
+      if ($latest_budget_allowence_id>0) {
+       $salary->budget_allowance_id=$latest_budget_allowence_id;
+      }
+
+      $salary->save();
+
+
+
     }
 }

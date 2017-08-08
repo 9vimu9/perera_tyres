@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -105,7 +105,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
+{{-- //////////////////////////////////////////home made scripts//////////////////////// --}}
 <script src="{{ asset('js/main.js') }}"></script>
+<script src="{{ asset('js/tables.js') }}"></script>
+<script src="{{ asset('js/ajax.js') }}"></script>
+<script src="{{ asset('js/select2.js') }}"></script>
 
 
 @yield('script')

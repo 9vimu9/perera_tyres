@@ -26,7 +26,7 @@ class SalarysRequest extends FormRequest
     {
         return [
           'year'=>Config::get('enums.QuickVali.fk'),
-          'month'=>Config::get('enums.QuickVali.fk'),
+          'month'=>'required',
           'start_date'=>Config::get('enums.QuickVali.important_date'),
           'end_date'=>Config::get('enums.QuickVali.important_date')
             //

@@ -59,6 +59,7 @@
 @endsection
 
 @section('form_script')
+  <script src="{{ asset('js/fullcalendar.js') }}"></script>
   <script>
 
     $('#holiday_type_id').on('select2:select', function (evt) {
@@ -66,7 +67,7 @@
   });
     create_update_toggle('holidays','holiday');
 
-    
+
   </script>
 
 

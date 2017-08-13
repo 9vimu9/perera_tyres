@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Config;
 
-class SalarysRequest extends FormRequest
+class FileUploadRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,10 +25,11 @@ class SalarysRequest extends FormRequest
     public function rules()
     {
         return [
-          'year'=>'required'
-          'month'=>'required',
-          'start_date'=>Config::get('enums.QuickVali.important_date'),
-          'end_date'=>Config::get('enums.QuickVali.important_date')
+          'salary_id'=>Config::get('enums.QuickVali.fk'),
+          'branch_id'=>Config::get('enums.QuickVali.fk'),
+          'fileToUpload'=>'required|max:1999'
+
+
             //
         ];
     }

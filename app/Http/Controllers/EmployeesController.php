@@ -9,6 +9,7 @@ use App\Http\Requests\StoreEmployees;
 use App\Employees;
 
 
+
 class EmployeesController extends Controller
 {
     /**

@@ -17,7 +17,7 @@ $('.time_picker_input').datetimepicker({
 });
 
 SetDateTimePicker('.date_picker_fix','YYYY/MM/DD',true,true);
-SetDateTimePicker('.month_picker_fix','YYYY/MM',true,true);
+SetDateTimePicker('.month_picker_fix','YYYY/MM',true,false);
 
 function SetDateTimePicker(id,format,is_inline,is_sideBySide) {
   $(id).datetimepicker({

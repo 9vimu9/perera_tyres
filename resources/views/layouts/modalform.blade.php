@@ -4,8 +4,7 @@
 
 <div class="container">
 
-  <div class="row">
-    <div class="col-xs-10 col-xs-offset-1">
+
       <h3><p class="text-center">@yield('title')</p></h3>
 
       <div class="panel panel-info">
@@ -18,8 +17,8 @@
         @yield('table')
         </div>
       </div>
-    </div>
-  </div>
+
+
 </div>
 
 <form  id='form' action="" method="post">

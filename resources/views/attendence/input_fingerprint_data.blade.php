@@ -12,10 +12,10 @@
         <div class="panel-body">
           <div class="row">
             <div class="col-sm-1"></div>
-              <div class="col-sm-5">
+              <div class="col-sm-4">
                   <div id="month_picker" class="month_picker_fix"></div>
               </div>
-              <div class="col-sm-5">
+              <div class="col-sm-3">
                 <h3><p class="text-center" id="year">2017</p></h3>
                 <h3><p class="text-center" id="month">oct</p></h3>
                 <hr>
@@ -37,7 +37,7 @@
 
               <form  action="attendence/new_sheet" method="post" enctype="multipart/form-data">
                   {{ csrf_field() }}
-                <input type="hidden" name="salarys_id" id="salarys_id" >
+                <input type="hidden" name="salary_id" id="salary_id" >
 
               <div class="col-xs-12">
                 <select id="branch_id"  name="branch_id" class="form-control" data-width="100%">
@@ -82,7 +82,7 @@
             $('#year').html(data[0].year);
             $('#start_date').html(data[0].start_date);
             $('#end_date').html(data[0].end_date);
-            $('#salarys_id').val(data[0].id);
+            $('#salary_id').val(data[0].id);
           });
       })
 

@@ -3,7 +3,7 @@
 
 
     var salarys_index_table =   $('#salarys_index').DataTable({
-          'paging'      : false,
+          'paging'      : true,
           'lengthChange': true,
           'searching'   : true,
           'ordering'    : true,
@@ -26,38 +26,37 @@
 
 
 
+/////////////////////////////////holidays.index table//////////////////////////////
+
+var holidays_index_table =   $('#holidays_index').DataTable({
+      'paging'      : true,
+      'lengthChange': true,
+      'searching'   : true,
+      'ordering'    : true,
+      'info'        : false,
+      'autoWidth'   : false
+
+    });
+
+    var searchArray = {
+      0:"date",//table column:id date
+      1:"name"
+    };
+
+    AddColumnSearch(holidays_index_table,searchArray,'#holidays_index');
+
+////////////////////////////////////eof holidays.index////////////////////////////////
 
 
+var salarys_index_table =   $('#input_fingerprint_data').DataTable({
+      'paging'      : false,
+      'lengthChange': true,
+      'searching'   : true,
+      'ordering'    : true,
+      'info'        : false,
+      'autoWidth'   : false
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    });
 
 
 ////////////////////////////////////table functions/////////////////////

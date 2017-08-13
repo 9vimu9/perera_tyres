@@ -3,6 +3,7 @@
 GetSuggestionsForSelect2("#cat_id",'name','cats');
 GetSuggestionsForSelect2("#branch_id",'name','branchs');
 GetSuggestionsForSelect2("#designation_id",'name','designations');
+GetSuggestionsForSelect2("#holiday_type_id",'name','holiday_types');
 
 ///////////////////////////eof selct2 suggestion cals//////////////////////
 

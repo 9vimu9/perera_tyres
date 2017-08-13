@@ -10,16 +10,20 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/af-2.2.0/b-1.3.1/b-colvis-1.3.1/b-print-1.3.1/cr-1.3.3/r-2.1.1/rr-1.2.0/sc-1.4.2/datatables.min.css"/>
-
-
 
     <!-- Styles -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    {{-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/af-2.2.0/b-1.3.1/b-colvis-1.3.1/b-print-1.3.1/cr-1.3.3/r-2.1.1/rr-1.2.0/sc-1.4.2/datatables.min.css"/> --}}
+    <link href="{{ asset('css/libries/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/libries/select2.min.css') }}" rel="stylesheet">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('css/libries/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+
+    <link href='https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.min.css' rel='stylesheet' />
+    <link href='https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+
+
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-      <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
 
 </head>
 <body>
@@ -96,21 +100,26 @@
     </div>
       {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 
+      {{-- <script src="{{ asset('js/libries/jquery.min.js') }}"></script> --}}
+      <script src="{{ asset('js/libries/jquery-2.2.4.min.js') }}"></script>
+
+<script src="{{ asset('js/libries/moment.min.js') }}"></script>
+<script src="{{ asset('js/libries/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/libries/datatables.min.js') }}"></script>
+<script src="{{ asset('js/libries/bootstrap-datetimepicker.min.js') }}"></script>
+<script src="{{ asset('js/libries/select2.min.js') }}"></script>
+<script src="{{ asset('js/libries/fullcalendar.min.js') }}"></script>
 
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/af-2.2.0/b-1.3.1/b-colvis-1.3.1/b-print-1.3.1/cr-1.3.3/r-2.1.1/rr-1.2.0/sc-1.4.2/datatables.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
 {{-- //////////////////////////////////////////home made scripts//////////////////////// --}}
-<script src="{{ asset('js/main.js') }}"></script>
-<script src="{{ asset('js/tables.js') }}"></script>
+
+<script src="{{ asset('js/dates.js') }}"></script>
 <script src="{{ asset('js/ajax.js') }}"></script>
 <script src="{{ asset('js/select2.js') }}"></script>
-
+<script src="{{ asset('js/tables.js') }}"></script>
+<script src="{{ asset('js/fullcalendar.js') }}"></script>
 
 @yield('script')
 

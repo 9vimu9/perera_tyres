@@ -66,7 +66,7 @@
     <div class="form-group{{ $errors->has('join_date') ? ' has-error' : '' }}">
       <label class="col-sm-4 control-label">date joined</label>
       <div class="col-sm-2">
-        <input id="date_picker" type="text" class="form-control" name="join_date" value='{{isset($employee) ? $employee->join_date : old('join_date')}}'>
+        <input id="date_picker" type="text" class="form-control date_picker_input" name="join_date" value='{{isset($employee) ? $employee->join_date : old('join_date')}}'>
         @if ($errors->has('join_date'))
             <span class="help-block">
                 <strong>{{ $errors->first('join_date') }}</strong>
@@ -175,7 +175,7 @@
         <div class="form-group{{ $errors->has('start_time') ? ' has-error' : '' }}">
           <label class="col-sm-4 control-label">day start time</label>
           <div class="col-sm-2">
-            <input id="time_picker" type="text" class="form-control" name="start_time" value='{{isset($employee) ? $employee->start_time : old('start_time')}}'>
+            <input id="time_picker" type="text" class="form-control time_picker_input" name="start_time" value='{{isset($employee) ? $employee->start_time : old('start_time')}}'>
             @if ($errors->has('start_time'))
                 <span class="help-block">
                     <strong>{{ $errors->first('start_time') }}</strong>

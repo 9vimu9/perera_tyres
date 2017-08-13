@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\SalarysRequest;
-use App\budget_allowances;
-use App\salarys;
+use App\holidays;
 
-class SalarysController extends Controller
+class HolidaysController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +14,8 @@ class SalarysController extends Controller
      */
     public function index()
     {
-      $salarys=salarys::OrderBy('created_at','desc')->get();
-      return view("salarys.index")->with('salarys',$salarys);
-
+      $holidays=holidays::OrderBy('created_at','desc')->get();
+      return view("holidays.index")->with('holidays',$holidays);
     }
 
     /**
@@ -37,14 +34,12 @@ class SalarysController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(SalarysRequest $request)
+    public function store(Request $request)
     {
-      //  $budget_allowance=
-        $salary=new salarys();
-        $budget_allowance_id=budget_allowances::latest()->first()->id;
-        //return $budget_allowance_id;
-        $this->SaveToDb($request,$salary,$budget_allowance_id);
-          return redirect('/salaries');
+
+        $holiday=new holidays();
+        $this->SaveToDb($request,$holiday);
+        return redirect('/holidays');
     }
 
     /**
@@ -78,11 +73,9 @@ class SalarysController extends Controller
      */
     public function update(Request $request, $id)
     {
-      //  return 'fucking update';
-        $salary=salarys::find($id);
-      //  return $salary;
-        $this->SaveToDb($request,$salary);
-          return redirect('/salaries');
+      $holiday=holidays::find($id);
+      $this->SaveToDb($request,$holiday);
+      return redirect('/holidays');
     }
 
     /**
@@ -96,17 +89,12 @@ class SalarysController extends Controller
         //
     }
 
-    public function SaveToDb($request,$salary,$latest_budget_allowence_id=0)
-    {
-      $salary->year=$request['year'];
-      $salary->month=$request['month'];
-      $salary->start_date=$request['start_date'];
-      $salary->end_date=$request['end_date'];
-      if ($latest_budget_allowence_id>0) {
-       $salary->budget_allowance_id=$latest_budget_allowence_id;
-      }
 
-      $salary->save();
+    public function SaveToDb($request,$holiday)
+    {
+      $holiday->date=$request['date'];
+      $holiday->holiday_type_id=$request['holiday_type_id'];
+      $holiday->save();
 
 
 

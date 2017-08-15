@@ -19,10 +19,7 @@ class CreateSalarysTable extends Migration
             $table->integer('month');
             $table->date('start_date');
             $table->date('end_date');
-            $table->integer('budget_allowance_id')->length(10)->unsigned();
-
-            $table->foreign('budget_allowance_id')->references('id')->on('budget_allowances')->onDelete('cascade')->onUpdate('cascade');
-
+            $table->float('budget_allowence', 10, 2);
             $table->timestamps();
         });
     }

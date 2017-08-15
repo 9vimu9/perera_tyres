@@ -1,7 +1,7 @@
 
 {{-- basic details start --}}
 <div class="panel panel-info">
-  <div class="panel-heading">basic</div>
+  <div class="panel-heading">employee information</div>
   <div class="panel-body">
     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
       <label class="col-sm-4 control-label">name</label>
@@ -93,6 +93,20 @@
             @endif
           </div>
         </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label">OT available</label>
+            <div class="col-sm-3">
+              <div class="material-switch">
+                <input id="ot_available" name="ot_available" type="checkbox"
+                @if (isset($employee))
+                  {{ $employee->ot_available== 1 ? "checked" : "" }}
+                @endif
+                />
+                  <label for="ot_available" class="label-success"></label>
+              </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -139,7 +153,7 @@
             <select id="cat_id"  name="cat_id" class="form-control" data-width="100%">
               @if (isset($employee))
                 <option value="{{$employee->cat->id}}" >
-                  {{$employee->cat->name}}
+
                 </option>
               @endif
             </select>
@@ -171,9 +185,16 @@
             @endif
           </div>
         </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="panel panel-danger">
+    <div class="panel-heading">working days / times</div>
+    <div class="panel-body">
+      <div class="form-horizontal">
         <div class="form-group{{ $errors->has('start_time') ? ' has-error' : '' }}">
-          <label class="col-sm-4 control-label">day start time</label>
+          <label class="col-sm-4 control-label">clock in time</label>
           <div class="col-sm-2">
             <input id="time_picker" type="text" class="form-control time_picker_input" name="start_time" value='{{isset($employee) ? $employee->start_time : old('start_time')}}'>
             @if ($errors->has('start_time'))
@@ -183,7 +204,47 @@
             @endif
           </div>
         </div>
+        <div class="form-group{{ $errors->has('end_time') ? ' has-error' : '' }}">
+          <label class="col-sm-4 control-label">clock out time</label>
+          <div class="col-sm-2">
+            <input id="time_picker" type="text" class="form-control time_picker_input" name="end_time" value='{{isset($employee) ? $employee->end_time : old('end_time')}}'>
+            @if ($errors->has('end_time'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('end_time') }}</strong>
+                </span>
+            @endif
+          </div>
+        </div>
+        <label class="col-sm-4 control-label">weekends</label>
 
+        <table  class="table" cellspacing="0" style="table-layout: fixed; width: 30%" >
+
+          <tr>
+            <td>
+              <p>saturday</p>
+              <div class="material-switch">
+                <input id="is_sat_work" name="is_sat_work" type="checkbox"
+                @if (isset($employee))
+                  {{ $employee->is_sat_work== 1 ? "checked" : "" }}
+                @endif
+                />
+                  <label for="is_sat_work" class="label-warning"></label>
+              </div>
+            </td>
+
+            <td>
+                <p>sunday</p>
+              <div class="material-switch">
+                <input id="is_sun_work" name="is_sun_work" type="checkbox"
+                @if (isset($employee))
+                  {{ $employee->is_sun_work== 1 ? "checked" : "" }}
+                @endif
+                />
+                  <label for="is_sun_work" class="label-danger"></label>
+              </div>
+            </td>
+          </tr>
+        </table>
         <div class="form-group">
           <div class="col-sm-6 col-sm-offset-4">
             <button type="submit" class="btn btn-primary">

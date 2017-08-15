@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Helpers\BasicSalary;
-use App\Helpers\designation;
 use App\Http\Requests\StoreEmployees;
 use App\Employees;
 
@@ -29,8 +27,6 @@ class EmployeesController extends Controller
      */
     public function create()
     {
-      // $d=new QuickVali();
-      // return QuickVali::$telephone;
        return view("employees.create");
     }
 
@@ -45,8 +41,6 @@ class EmployeesController extends Controller
       $employee=new Employees();
       $this->SaveToDb($request,$employee);
       return redirect()->back();
-
-
     }
 
     /**
@@ -69,8 +63,6 @@ class EmployeesController extends Controller
     public function edit($id)
     {
         $employee=Employees::find($id);
-        $employee['basic_salary']=BasicSalary::Latest($employee->id);
-        $employee['latest_designation']=Designation::Latest($employee->id);
         return view("employees.edit")->with('employee',$employee);
     }
 
@@ -105,6 +97,7 @@ class EmployeesController extends Controller
     {
       $employee->branch_id=$request['branch_id'];
       $employee->cat_id=$request['cat_id'];
+      $employee->designation_id=$request['designation_id'];
       $employee->fingerprint_no=$request['fingerprint_no'];
       $employee->name=$request['name'];
       $employee->address=$request['address'];
@@ -112,16 +105,13 @@ class EmployeesController extends Controller
       $employee->tel=$request['tel'];
       $employee->epf_no=$request['epf_no'];
       $employee->start_time=$request['start_time'];
+      $employee->end_time=$request['end_time'];
       $employee->join_date=$request['join_date'];
-
+      $employee->basic_salary=$request['basic_salary'];
+      $employee->ot_available=GetCheckBoxValue($request['ot_available']);
+      $employee->is_sun_work=GetCheckBoxValue($request['is_sun_work']);
+      $employee->is_sat_work=GetCheckBoxValue($request['is_sat_work']);
       $employee->save();
-      $saved_employee_id=$employee->id;
-
-      $saved_employee_basic_salary=$request['basic_salary'];
-      $saved_employee_designation_id=$request['designation_id'];
-
-      BasicSalary::Store($saved_employee_id,$saved_employee_basic_salary);
-      designation::Store($saved_employee_id,$saved_employee_designation_id);
     }
 
 

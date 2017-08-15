@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSlipSalaryFixedFeatureValuesTable extends Migration
+class CreateSlipFeatureTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class CreateSlipSalaryFixedFeatureValuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('slip__fixed_feature_values', function (Blueprint $table) {
+        Schema::create('slip_features', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('slip_id')->length(10)->unsigned();
-            $table->integer('fixed_feature_value_id')->length(10)->unsigned();
+            $table->integer('feature_id')->length(10)->unsigned();
+            $table->float('static_value', 10, 2);//if feature static then its static value
+            $table->float('value', 10, 2);
             $table->timestamps();
             $table->foreign('slip_id')->references('id')->on('slips')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('fixed_feature_value_id')->references('id')->on('fixed_feature_values')->onDelete('cascade')->onUpdate('cascade');
-            $table->unique(['slip_id', 'fixed_feature_value_id'],"composite slip__fixed_feature_values");
-
+            $table->foreign('feature_id')->references('id')->on('features')->onDelete('cascade')->onUpdate('cascade');
+            $table->unique(['slip_id', 'feature_id'],"composite slip_features");
 
         });
     }
@@ -33,6 +34,6 @@ class CreateSlipSalaryFixedFeatureValuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('slip__fixed_feature_values');
+        Schema::dropIfExists('slip_features');
     }
 }

@@ -17,6 +17,7 @@ class CreateEmployeesTable extends Migration
             $table->increments('id');
             $table->integer('branch_id')->length(10)->unsigned();
             $table->integer('cat_id')->length(10)->unsigned();
+            $table->integer('designation_id')->length(10)->unsigned();
             $table->integer('fingerprint_no');
             $table->string('name');
             $table->string('address');
@@ -24,9 +25,17 @@ class CreateEmployeesTable extends Migration
             $table->string('tel');
             $table->integer('epf_no');
             $table->time('start_time');
+            $table->time('end_time');
             $table->date('join_date');
+            $table->foreign('designation_id')->references('id')->on('designations')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('branch_id')->references('id')->on('branchs')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('cat_id')->references('id')->on('cats')->onDelete('cascade')->onUpdate('cascade');
+            $table->float('basic_salary', 10, 2);
+            $table->integer('ot_available')->length(1)->unsigned();
+            $table->integer('is_sat_work')->length(1)->unsigned();//1=working 0=holiday
+            $table->integer('is_sun_work')->length(1)->unsigned();//1=working 0=holiday
+
+
             $table->timestamps();
         });
     }

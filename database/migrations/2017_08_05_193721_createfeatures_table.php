@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSalaryFixedFeaturesTable extends Migration
+class CreateFeaturesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateSalaryFixedFeaturesTable extends Migration
      */
     public function up()
     {
-        Schema::create('fixed_features', function (Blueprint $table) {
+        Schema::create('features', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->enum('fixed_method', ['amount', 'precentage']);
-            $table->integer('is_compulsory');//1=yes 0 no
-            $table->enum('feature_type', ['deduction', 'allowance','demo']);
+            $table->integer('is_compulsory_feature');//1=yes 0 no
+            $table->integer('is_dynamic_value');//1=yes dynamic 0=no static
+            $table->integer('value_type');//1=dynamic 0=precentage
+            $table->float('static_value', 10, 2);
+            $table->integer('feature_type');//1=allowence 0=deduction 2=demo
             $table->timestamps();
         });
     }

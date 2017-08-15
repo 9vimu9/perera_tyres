@@ -16,15 +16,17 @@ class CreateSlipsTable extends Migration
         Schema::create('slips', function (Blueprint $table) {
               $table->increments('id');
               $table->integer('salary_id')->length(10)->unsigned();
-              $table->integer('basic_salary_id')->length(10)->unsigned();
-              $table->integer('employee__designation_id')->length(10)->unsigned();
+              $table->integer('employee_id')->length(10)->unsigned();
+              $table->float('basic_salary', 10, 2);
+              $table->float('ot_hours', 10, 2);
+              $table->float('ot_value', 10, 2);
+              $table->float('nopay_days', 10, 2);
+              $table->float('nopay_value', 10, 2);
               $table->timestamps();
-
               $table->foreign('salary_id')->references('id')->on('salarys')->onDelete('cascade')->onUpdate('cascade');
-              $table->foreign('basic_salary_id')->references('id')->on('basic_salarys')->onDelete('cascade')->onUpdate('cascade');
-              $table->foreign('employee__designation_id')->references('id')->on('employee__designations')->onDelete('cascade')->onUpdate('cascade');
+              $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');
 
-              $table->unique(['basic_salary_id', 'salary_id'],"composite slips");
+              $table->unique(['employee_id', 'salary_id'],"composite slips");
 
 
 

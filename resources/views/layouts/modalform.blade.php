@@ -7,6 +7,8 @@
 
       <h3><p class="text-center">@yield('title')</p></h3>
 
+        @yield('optional_space')
+
       <div class="panel panel-info">
         <div class="panel-heading">
         <button type="button" class="btn btn-success create" data-toggle="modal" data-target="#salarys_index_modal" >
@@ -24,7 +26,7 @@
 <form  id='form' action="" method="post">
   {{ csrf_field() }}
 
-
+<input type="hidden" name="_method" id="method">
   <div class="modal fade" id="salarys_index_modal"  role="dialog"  aria-hidden="true">
     <div class="modal-large ">
       <div class="modal-content">
@@ -53,14 +55,14 @@
   <script>
     function create_update_toggle(route,title) {
       $('.create').click(function () {
-        $("input[name='_method']").val('POST');
+        $("#method").val('POST');
         $('#form').attr('action', "/"+route);
         $('#modal_title').html('add new '+title);
         $('#submit').val('create');
       });
 
       $('.edit').click(function () {
-        $("input[name='_method']").val('PUT');
+        $("#method").val('PUT');
         $('#form').attr('action', "/"+route+"/"+$(this).attr('id'));
         $('#modal_title').html('edit '+title);
         $('#submit').val('update');

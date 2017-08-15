@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBudgetallowencesTable extends Migration
+class CreateMetasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateBudgetallowencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('budget_allowances', function (Blueprint $table) {
+        Schema::create('metas', function (Blueprint $table) {
             $table->increments('id');
-            $table->float('amount', 6, 2);
+            $table->string('name');
+            $table->string('value');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateBudgetallowencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('budget_allowances');
+        Schema::dropIfExists('metas');
     }
 }

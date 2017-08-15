@@ -15,11 +15,9 @@
           <tr>
             <th>name</th>
             @php
-              $begin = new DateTime($salary->start_date);
-              $end = new DateTime($salary->end_date);
-              $daterange = new DatePeriod($begin, new DateInterval('P1D'), $end);
+              $daterange = GetEveryDayBetweenTwoDates($salary->start_date,$salary->end_date);
               foreach($daterange as $date){
-                echo '<th>'.$date->format("M/d").'</th>';
+                echo '<th>'.$date->format("M/d D").'</th>';
               }
             @endphp
 
@@ -29,13 +27,20 @@
             @foreach ($employees as $employee)
             <tr>
               <td>{{$employee->name}}</td>
+
               @foreach ($daterange as $date)
+
+
                 <td>
                   {{-- {{ $date->format('m/d/y') }}<br> --}}
                   @php
-                    $times=GetInOutOfDay($employee->fingerprint_no,$date->format("m/d/y"),$finger_print_data);
+                    echo GetInOutOfDayHTML($employee,$date->format("m/d/y"),$finger_print_data);
                   @endphp
-                  {{$times[0]}}<br>{{$times[1]}}
+
+                  {{-- {{IsHoliday($employee,$date->format('Y-m-d'))}} --}}
+                  {{-- <i class="fa fa-sign-out" aria-hidden="true"></i> --}}
+                  {{-- <span class="badge badge-success"><i class="fa fa-sign-in" aria-hidden="true"></i>  {{$times[0]}}<br></span> --}}
+                  {{-- {{$times[1]}} --}}
                   {{-- <tr>
                     <td>{{$times[0]}}</td>
                   </tr> --}}

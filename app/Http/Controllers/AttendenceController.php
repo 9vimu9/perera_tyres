@@ -71,7 +71,8 @@ class AttendenceController extends Controller
 
       $salary=DB::table('salarys')->where('id', '=', $request->salary_id)->first();
       $branch=DB::table('branchs')->where('id', '=', $request->branch_id)->first();
-      $employees = DB::table('employees')->where('branch_id', '=', $branch->id)->get();
+      $employees = Employees::where('branch_id', '=', $branch->id)->get();
+
       return view("attendence.index")->with(['salary'=>$salary,
                                               'branch'=>$branch,
                                               'employees'=>$employees,

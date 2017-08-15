@@ -38,7 +38,9 @@ class StoreEmployees extends FormRequest
           'fingerprint_no'=>'required|numeric',
           'cat_id'=>Config::get('enums.QuickVali.fk'),
           'designation_id'=>Config::get('enums.QuickVali.fk'),
-          'start_time'=>'required'//|'.Config::get('enums.QuickVali.time')
+          'start_time'=>'required',//|'.Config::get('enums.QuickVali.time')
+          'end_time'=>'required'//|'.Config::get('enums.QuickVali.time')
+
             //
         ];
     }

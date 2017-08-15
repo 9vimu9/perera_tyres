@@ -2,19 +2,44 @@
 
 @section('title')SALARIES @endsection
 
+@section('optional_space')
+  <form class="form-horizontal" role="form" method="post" action="/salaries/update_budget_allowence">
+    {{ csrf_field() }}
+    <div class="panel panel-danger">
+      <div class="panel-heading">update budget allowence</div>
+      <div class="panel-body">
+          <div class="form-group{{ $errors->has('budget_allowence') ? ' has-error' : '' }}">
+            <label class="col-sm-4 control-label">budget allowence(Rs.)</label>
+            <div class="col-sm-3">
+              <input id="budget_allowence" type="text" class="form-control" name="budget_allowence" value="{{MetaGet('budget_allowence')}}">
+              @if ($errors->has('budget_allowence'))
+                  <span class="help-block">
+                      <strong>{{ $errors->first('budget_allowence') }}</strong>
+                  </span>
+              @endif
+            </div>
+            <button type="submit" class="btn btn-primary">save</button>
+          </div>
+      </div>
+    </div>
+  </form>
+
+@endsection
+
+
 @section('create_new')create new salary @endsection
 
 @section('table')
   @if (count($salarys)>0)
-  <table id="salarys_index" class="table table-striped table-hover " cellspacing="0" style="table-layout: fixed; width: 100%" >
+  <table id="salarys_index" class="table table-striped table-hover table-center" cellspacing="0" style="table-layout: fixed; width: 100%" >
       <thead>
           <tr>
               <th style="width: 12%">year</th>
               <th style="width: 15%">month</th>
               <th style="width: 20%">from</th>
               <th style="width: 20%">to</th>
-              <th style="width: 12%">budget allowence(Rs)</th>
-              <th style="width: 20%"></th>
+              <th style="width: 20%">budget allowence(Rs)</th>
+              <th style="width: 15%"></th>
 
           </tr>
       </thead>
@@ -37,7 +62,7 @@
               <td>{{date("F", mktime(0, 0, 0, $salary->month, 10))}}</td>
               <td>{{$salary->start_date}}</td>
               <td>{{$salary->end_date}}</td>
-                <td>{{$salary->budget_allowance->amount}}</td>
+                <td>{{$salary->budget_allowence}}</td>
               <td>
                 <button type="button" class="btn btn-basic btn-xs more" id='{{$salary->id}}'>more</button> |
                 <button type="button" class="btn btn-warning btn-xs edit" id='{{$salary->id}}' data-toggle="modal" data-target="#salarys_index_modal">edit</button> |
@@ -108,7 +133,7 @@
       $('#month').val(year_month[1]);
       $('#start_date').val(start_date);
       $('#end_date').val(end_date);
-    
+
 
     });
 

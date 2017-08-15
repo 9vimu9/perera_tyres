@@ -18,8 +18,7 @@ class CreateAttendencesTable extends Migration
             $table->integer('employee_id')->length(10)->unsigned();
             $table->date('date');
             $table->time('time');
-            $table->enum('action', ['in', 'out']);
-            $table->enum('input_mode', ['manual', 'fingerprint']);
+            $table->integer('action')->length(1)->unsigned();//1=in 0=out
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });

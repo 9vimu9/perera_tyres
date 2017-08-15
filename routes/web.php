@@ -47,6 +47,10 @@ Route::post('attendence/new_sheet','AttendenceController@index');
 ////////////salarys routes///////////
 Route::resource('salaries','SalarysController');
 
+////////Update Budget Allowence
+
+Route::post('/salaries/update_budget_allowence','SalarysController@UpdateBudgetAllowence');
+
 
 
 /////////////////ajax

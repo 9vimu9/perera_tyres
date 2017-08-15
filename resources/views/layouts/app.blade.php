@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,18 +14,20 @@
 
     <!-- Styles -->
     {{-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.15/af-2.2.0/b-1.3.1/b-colvis-1.3.1/b-print-1.3.1/cr-1.3.3/r-2.1.1/rr-1.2.0/sc-1.4.2/datatables.min.css"/> --}}
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <link href="{{ asset('css/libries/datatables.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/libries/fixedColumns.dataTables.min.css') }}" rel="stylesheet">
 
     <link href="{{ asset('css/libries/select2.min.css') }}" rel="stylesheet">
 
-    <link href='https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.min.css' rel='stylesheet' />
+    <link href="{{ asset('css/libries/fullcalendar.min.css') }}" rel="stylesheet">
+
+    {{-- <link href='https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.min.css' rel='stylesheet' /> --}}
     <link href='https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.print.min.css' rel='stylesheet' media='print' />
     <link href="{{ asset('css/libries/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
-
-
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/libries/material-checkbox.css') }}" >
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
 
@@ -104,14 +107,11 @@
       {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 
       {{-- <script src="{{ asset('js/libries/jquery.min.js') }}"></script> --}}
-      <script src="{{ asset('js/libries/jquery-2.2.4.min.js') }}"></script>
+<script src="{{ asset('js/libries/jquery-2.2.4.min.js') }}"></script>
 
 <script src="{{ asset('js/libries/moment.min.js') }}"></script>
 <script src="{{ asset('js/libries/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/libries/datatables.min.js') }}"></script>
-
-<script src="{{ asset('js/libries/dataTables.fixedColumns.min.js') }}"></script>
-
 <script src="{{ asset('js/libries/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="{{ asset('js/libries/select2.min.js') }}"></script>
 <script src="{{ asset('js/libries/fullcalendar.min.js') }}"></script>

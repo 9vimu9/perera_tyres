@@ -215,36 +215,19 @@
             @endif
           </div>
         </div>
-        <label class="col-sm-4 control-label">weekends</label>
-
-        <table  class="table" cellspacing="0" style="table-layout: fixed; width: 30%" >
-
-          <tr>
-            <td>
-              <p>saturday</p>
+        <div class="form-group">
+          <label class="col-sm-4 control-label">saturday availability</label>
+            <div class="col-sm-3">
               <div class="material-switch">
                 <input id="is_sat_work" name="is_sat_work" type="checkbox"
                 @if (isset($employee))
                   {{ $employee->is_sat_work== 1 ? "checked" : "" }}
                 @endif
                 />
-                  <label for="is_sat_work" class="label-warning"></label>
+                  <label for="is_sat_work" class="label-success"></label>
               </div>
-            </td>
-
-            <td>
-                <p>sunday</p>
-              <div class="material-switch">
-                <input id="is_sun_work" name="is_sun_work" type="checkbox"
-                @if (isset($employee))
-                  {{ $employee->is_sun_work== 1 ? "checked" : "" }}
-                @endif
-                />
-                  <label for="is_sun_work" class="label-danger"></label>
-              </div>
-            </td>
-          </tr>
-        </table>
+          </div>
+        </div>
         <div class="form-group">
           <div class="col-sm-6 col-sm-offset-4">
             <button type="submit" class="btn btn-primary">

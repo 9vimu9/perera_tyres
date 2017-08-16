@@ -33,7 +33,6 @@ class CreateEmployeesTable extends Migration
             $table->float('basic_salary', 10, 2);
             $table->integer('ot_available')->length(1)->unsigned();
             $table->integer('is_sat_work')->length(1)->unsigned();//1=working 0=holiday
-            $table->integer('is_sun_work')->length(1)->unsigned();//1=working 0=holiday
 
 
             $table->timestamps();

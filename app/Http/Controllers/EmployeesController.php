@@ -109,7 +109,6 @@ class EmployeesController extends Controller
       $employee->join_date=$request['join_date'];
       $employee->basic_salary=$request['basic_salary'];
       $employee->ot_available=GetCheckBoxValue($request['ot_available']);
-      $employee->is_sun_work=GetCheckBoxValue($request['is_sun_work']);
       $employee->is_sat_work=GetCheckBoxValue($request['is_sat_work']);
       $employee->save();
     }

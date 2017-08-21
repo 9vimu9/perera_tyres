@@ -6,6 +6,8 @@ use File;
 use App\salarys;
 use App\Employees;
 use App\branchs;
+use App\attendences;
+use App\working_days;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -60,6 +62,13 @@ class AttendenceController extends Controller
          }
        }
 
+       foreach ($finger_print_data as $fingerprint) {
+         $this->SaveAttendenceToDb($request->branch_id,$request->salary_id,$fingerprint[2],$fingerprint[8],$fingerprint[9]);
+       }
+
+
+       //array('0', '1', '3'user id, 'LAKMAL', '0', '2', '0', '0', '4/20/2017', '17:07', '')
+
 
       //  foreach ($finger_print_data as $value) {
       //    print_r($value);
@@ -79,6 +88,33 @@ class AttendenceController extends Controller
                                               'finger_print_data'=>$finger_print_data
                                             ]);
 
+    }
+
+    public function SaveAttendenceToDb($branch_id,$salary_id,$fingerprint_no,$date,$time)
+    {
+      $date=date('Y-m-d', strtotime($date));
+      $conditions_employee=['branch_id'=>$branch_id,'fingerprint_no'=>$fingerprint_no];
+      $employee = IsRecordExist('employees',$conditions_employee);
+      $conditions_working_days=['date'=>$date];
+      $conditions_attendence=['employee_id'=>$employee->id,'date'=>$date,'time'=>$time];
+
+      $working_day=IsRecordExist('working_days',$conditions_working_days);
+      if (!$working_day) {
+        $working_day=new working_days();
+        $working_day->salary_id=$salary_id;
+        $working_day->date=$date;
+        $working_day->save();
+      }
+
+      if ($employee && !IsRecordExist('attendences',$conditions_attendence)) {
+        $employee_id=$employee->id;
+        $attendence =new attendences();
+        $attendence->employee_id=$employee_id;
+        $attendence->working_day_id=$working_day->id;
+        $attendence->date=$date;
+        $attendence->time=$time;
+        $attendence->save();
+      }
     }
 
     /**

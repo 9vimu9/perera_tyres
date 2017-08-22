@@ -60,7 +60,7 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
 
   }
   elseif ($entrys_for_working_day==1) {
-    # code...
+    echo "1 entry";
   }
   elseif ($entrys_for_working_day>1) {
     $actual_clock_in = $times[0];

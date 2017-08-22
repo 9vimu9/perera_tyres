@@ -65,8 +65,6 @@ class AttendenceController extends Controller
        foreach ($finger_print_data as $fingerprint) {
          $this->SaveAttendenceToDb($request->branch_id,$request->salary_id,$fingerprint[2],$fingerprint[8],$fingerprint[9]);
        }
-
-
        //array('0', '1', '3'user id, 'LAKMAL', '0', '2', '0', '0', '4/20/2017', '17:07', '')
 
 
@@ -76,18 +74,32 @@ class AttendenceController extends Controller
       //  }
 
     // // print_r($finger_print_data);
+
       fclose($finger_print_file);
 
       $salary=DB::table('salarys')->where('id', '=', $request->salary_id)->first();
       $branch=DB::table('branchs')->where('id', '=', $request->branch_id)->first();
       $employees = Employees::where('branch_id', '=', $branch->id)->get();
 
+      // // return view("attendence.index")->with(['salary'=>$salary,
+      // //                                         'branch'=>$branch,
+      // //                                         'employees'=>$employees,
+      // //                                         'finger_print_data'=>$finger_print_data
+      // //                                       ]);
+      //
+      // $salary_id=$request->salary_id;
+      // $data = attendences::with(['employee'],['working_day' => function($query) use ($salary_id)
+      // {
+      //     $query->where('salary_id', '=',$salary_id);
+      //
+      // }])->get();
+      //
+      // return $data;
+
       return view("attendence.index")->with(['salary'=>$salary,
                                               'branch'=>$branch,
-                                              'employees'=>$employees,
-                                              'finger_print_data'=>$finger_print_data
+                                              'employees'=>$employees
                                             ]);
-
     }
 
     public function SaveAttendenceToDb($branch_id,$salary_id,$fingerprint_no,$date,$time)
@@ -97,8 +109,8 @@ class AttendenceController extends Controller
       $employee = IsRecordExist('employees',$conditions_employee);
       $conditions_working_days=['date'=>$date];
       $conditions_attendence=['employee_id'=>$employee->id,'date'=>$date,'time'=>$time];
-
       $working_day=IsRecordExist('working_days',$conditions_working_days);
+
       if (!$working_day) {
         $working_day=new working_days();
         $working_day->salary_id=$salary_id;
@@ -115,6 +127,8 @@ class AttendenceController extends Controller
         $attendence->time=$time;
         $attendence->save();
       }
+
+
     }
 
     /**

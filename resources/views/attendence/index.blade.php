@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+{!! csrf_field() !!}
 <div class="container">
       <h3><p class="text-center">attendence from
       <span class="badge">{{$salary->start_date}}</span> to
@@ -25,6 +25,7 @@
               </tr>
           </thead>
           <tbody>
+
                 @foreach ($employees as $employee)
                 <tr>
                   <td>{{$employee->name}}</td>
@@ -33,7 +34,7 @@
                     <td>
                       {{-- {{ $date->format('m/d/y') }}<br> --}}
                       @php
-                        echo GetInOutOfDayHTML($employee,$date->format("m/d/y"),$salary,$finger_print_data);
+                        echo GetInOutOfDayHTML($employee,$date->format("y-m-d"),$salary);
                       @endphp
 
                       {{-- {{IsHoliday($employee,$date->format('Y-m-d'))}} --}}

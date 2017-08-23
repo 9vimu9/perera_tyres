@@ -31,27 +31,13 @@
                   <td>{{$employee->name}}</td>
 
                   @foreach ($daterange as $date)
-                    <td>
-                      {{-- {{ $date->format('m/d/y') }}<br> --}}
+                    <td class='cell-corner'>
                       @php
                         echo GetInOutOfDayHTML($employee,$date->format("y-m-d"),$salary);
                       @endphp
+                       <span class="br_tri tri" data-target="#modal" data-toggle="modal"></span>
+                     </td>
 
-                      {{-- {{IsHoliday($employee,$date->format('Y-m-d'))}} --}}
-                      {{-- <i class="fa fa-sign-out" aria-hidden="true"></i> --}}
-                      {{-- <span class="badge badge-success"><i class="fa fa-sign-in" aria-hidden="true"></i>  {{$times[0]}}<br></span> --}}
-                      {{-- {{$times[1]}} --}}
-                      {{-- <tr>
-                        <td>{{$times[0]}}</td>
-                      </tr> --}}
-                    </td>
-                    {{--
-                    <td>{{$holiday->date}}</td>
-                    <td>{{$holiday->holiday_type->name}}</td>
-                    <td>
-                      <button type="button" class="btn btn-warning btn-xs edit" id='{{$holiday->id}}' data-toggle="modal" data-target="#salarys_index_modal">edit</button> |
-                      <button type="button" class="btn btn-danger btn-xs delete" id='{{$holiday->id}}'>delete</button>
-                    </td> --}}
                   @endforeach
                 </tr>
                 @endforeach
@@ -61,6 +47,55 @@
 
 
 </div>
+
+<form action="" method="POST">
+  {{ csrf_field() }}
+  <div id="modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit attendence data</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-horizontal">
+            <div class="form-group{{ $errors->has('start_time') ? ' has-error' : '' }}">
+              <label class="col-sm-4 control-label">clock in time</label>
+              <div class="col-sm-2">
+                <input id="time_picker" type="text" class="form-control time_picker_input" name="start_time" value='{{isset($employee) ? $employee->start_time : old('start_time')}}'>
+                @if ($errors->has('start_time'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('start_time') }}</strong>
+                    </span>
+                @endif
+              </div>
+            </div>
+            <div class="form-group{{ $errors->has('end_time') ? ' has-error' : '' }}">
+              <label class="col-sm-4 control-label">clock out time</label>
+              <div class="col-sm-2">
+                <input id="time_picker" type="text" class="form-control time_picker_input" name="end_time" value='{{isset($employee) ? $employee->end_time : old('end_time')}}'>
+                @if ($errors->has('end_time'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('end_time') }}</strong>
+                    </span>
+                @endif
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
+          <input id="submit" type="submit" class="btn btn-primary save">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+</form>
 
 
 @endsection

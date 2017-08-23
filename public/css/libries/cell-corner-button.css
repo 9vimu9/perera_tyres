@@ -1,0 +1,27 @@
+.cell-corner {
+
+  position: relative;
+
+}
+.tri {
+  width: 0px;
+  height: 0px;
+  position: absolute;
+}
+
+
+.br_tri {
+  border-left: 15px solid transparent;
+  border-top: 2px solid transparent;
+  border-bottom: 15px;
+  border-style: solid;
+    border-bottom-color: #356635;
+  bottom: 0px;
+  right: 0px;
+}
+
+.br_tri:hover {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}

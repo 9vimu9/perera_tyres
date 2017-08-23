@@ -17,6 +17,8 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <link href="{{ asset('css/libries/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/libries/cell-corner-button.css') }}" rel="stylesheet">
+
     <link href="{{ asset('css/libries/fixedColumns.dataTables.min.css') }}" rel="stylesheet">
 
     <link href="{{ asset('css/libries/select2.min.css') }}" rel="stylesheet">

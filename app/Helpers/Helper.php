@@ -10,7 +10,6 @@ function GetEveryDayBetweenTwoDates($start_date,$end_date)
 function GetInOutOfDayHTML($employee,$date,$salary)
 {
   $User_att_data=GetUserAttendenceBackGroundDetails($salary,$employee,$date);
-
   if (strtotime($User_att_data['join_date'])<strtotime($date)) {
     $html=GetInOutOfDay($employee,$date,$User_att_data);
   }
@@ -49,15 +48,13 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
   $times=array();
   $html;
   foreach ($attendences as $attendence) {
-       array_push($times,Carbon\Carbon::parse($attendence->date.$attendence->time)->format('Y-m-d H:i'));
+    array_push($times,Carbon\Carbon::parse($attendence->date.$attendence->time)->format('Y-m-d H:i'));
   }
 
   $entrys_for_working_day=count($times);
 
   if ($entrys_for_working_day==0) {
-    $html=AbsentDay($employee,$working_date);
-    return $html;
-
+    return AbsentDayHTML($User_att_data);;
   }
   elseif ($entrys_for_working_day==1) {
     echo "1 entry";
@@ -81,19 +78,17 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
 
 }
 
-function AbsentDay($employee,$working_day)
+function AbsentDayHTML($User_att_data)
 {
-  $holiday=IsHoliday($employee,$working_day);
+  $holiday=$User_att_data['is_holiday'];
     if ($holiday) {
       $html=HtmlCreator('info','',$holiday);
     }
     else {
       $html=HtmlCreator('inverse','plane','AB');
-
     }
 
     return $html;
-
 }
 
 function HtmlCreator($badge_color,$icon,$value)
@@ -102,9 +97,9 @@ function HtmlCreator($badge_color,$icon,$value)
 
 }
 
-function LeaveDeductionCal($late_time_min,$early_time_min,$User_att_data)
+function LeaveDeductionCal($planned_work_time_sec,$actual_work_time_sec,$late_time_min,$early_time_min,$User_att_data)
 {
-  if (!$User_att_data['is_holiday'] ) {
+  if (!$User_att_data['is_holiday'] && $planned_work_time_sec>$actual_work_time_sec) {
     $LeaveDeduction_min=0;
     if ($late_time_min>MetaGet('late_threshold')) {
       $LeaveDeduction_min+=$late_time_min;
@@ -155,11 +150,10 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
     else {
       $planned_clock_out_sec =strtotime($User_att_data['planned_clock_out']);
     }
-
     $planned_work_time_sec=$planned_clock_out_sec-$planned_clock_in_sec;
-
-
     $html="";
+
+
     if($in_date==$out_date)
     {
       $actual_clock_in = date('H:i',strtotime($in_date_time));
@@ -170,7 +164,6 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
 
       $late_time_min = ($actual_clock_in_sec-$planned_clock_in_sec)/60;
       $early_time_min = ($planned_clock_out_sec-$actual_clock_out_sec)/60;
-
 
       if($late_time_min>0 && !$User_att_data['is_holiday']){
         $html=$html.HtmlCreator('warning','sign-in',$actual_clock_in.'<br>'.$late_time_min.'m');
@@ -187,7 +180,7 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
       }
 
       $html=$html.OTcal($actual_clock_in_sec,$planned_clock_in_sec,$actual_work_time_sec,$planned_work_time_sec,$User_att_data);
-      $html=$html.LeaveDeductionCal($late_time_min,$early_time_min,$User_att_data);
+      $html=$html.LeaveDeductionCal($planned_work_time_sec,$actual_work_time_sec,$late_time_min,$early_time_min,$User_att_data);
       echo $html;
     }
     else {
@@ -197,15 +190,14 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
 }
 
 
-function IsHoliday($employee,$date_need_check)
+function IsHoliday($employee,$date_need_check)//returns name of holidayname or weeend_day_name Sat,Sun
 {
   $company_holiday=IsCompanyHoliday($date_need_check);
   $weekend_day=IsWeekend($employee,$date_need_check);
 
   if($company_holiday){
     return $company_holiday;
-  }
-  if ($weekend_day) {
+  }elseif ($weekend_day) {
     return $weekend_day;
   }
 

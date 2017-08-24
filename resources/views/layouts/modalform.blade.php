@@ -11,7 +11,7 @@
 
       <div class="panel panel-info">
         <div class="panel-heading">
-        <button type="button" class="btn btn-success create" data-toggle="modal" data-target="#salarys_index_modal" >
+        <button type="button" class="btn btn-success create" data-toggle="modal" data-target="#modalform_modal" >
           @yield('create_new')
         </button>
         </div>
@@ -27,8 +27,9 @@
   {{ csrf_field() }}
 
 <input type="hidden" name="_method" id="method">
-  <div class="modal fade" id="salarys_index_modal"  role="dialog"  aria-hidden="true">
-    <div class="modal-large ">
+
+  <div class="modal fade" id="modalform_modal"  role="dialog"  aria-hidden="true">
+    <div class="modal-large">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title" id="modal_title"></h4>
@@ -45,6 +46,31 @@
     </div>
   </div>
 </form>
+
+
+
+<div id="modalform_modal" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-large">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal_title"></h4>
+            </div>
+            <div class="modal-body">
+              @yield('modal_form')
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
+              <input id="submit" type="submit" class="btn btn-primary save">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 
 
 

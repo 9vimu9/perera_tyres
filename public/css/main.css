@@ -2,6 +2,12 @@
 /*remove margins */
 h1, h2, h3, h4 {margin:0;}
 
+/*trick for not working inside modal*/
+.select2-container {
+    z-index: 99999;
+}
+
+
 /*this code use for place indivdual search box at top of the table*/
 tfoot {
     display: table-header-group;

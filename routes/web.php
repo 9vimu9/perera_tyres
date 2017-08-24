@@ -33,6 +33,8 @@ Route::resource('employees','EmployeesController');
 
 Route::resource('holidays','HolidaysController');
 
+Route::resource('leaves','LeavesController');
+
 
 
 

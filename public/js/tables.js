@@ -1,4 +1,30 @@
 
+////////////////////////////////batch_receiver_table//////////////////
+var batch_receive_table =   $('#batch_receive_table').DataTable({
+      'paging'      : true,
+      'lengthChange': true,
+      'searching'   : false,
+      'ordering'    : false,
+      'info'        : false,
+      'autoWidth'   : false
+
+    });
+  //  batch_receive_table.column(4).data().unique();
+
+
+/////////////////////////////eof batch_receiver_table/////////////////
+
+///////////////////////////////batch_search_tbl///////////////////////////
+var batch_search_table =   $('#batch_search_table').DataTable({
+      'paging'      : true,
+      'lengthChange': true,
+      'searching'   : true,
+      'ordering'    : false,
+      'info'        : false,
+      'autoWidth'   : false
+
+    });
+/////////////////////////////////eof batch search tabe//////////////////
 ///////////////////////////salarys.index table/////////////////////
 
 

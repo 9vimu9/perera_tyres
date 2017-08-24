@@ -13,7 +13,7 @@ class CreateEmployeeLeavesTable extends Migration
      */
     public function up()
     {
-        Schema::create('employee_leaves', function (Blueprint $table) {
+        Schema::create('leaves', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('leave_type_id')->length(10)->unsigned();
             $table->integer('employee_id')->length(10)->unsigned();
@@ -33,6 +33,6 @@ class CreateEmployeeLeavesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employee_leaves');
+        Schema::dropIfExists('leaves');
     }
 }

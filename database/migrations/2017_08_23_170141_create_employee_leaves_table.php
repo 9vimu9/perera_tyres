@@ -17,8 +17,10 @@ class CreateEmployeeLeavesTable extends Migration
             $table->increments('id');
             $table->integer('leave_type_id')->length(10)->unsigned();
             $table->integer('employee_id')->length(10)->unsigned();
-            $table->dateTime('from_datetime');
-            $table->dateTime('to_datetime');
+            $table->date('from_date');
+            $table->time('from_time');
+            $table->date('to_date');
+            $table->time('to_time');
             $table->string('remarks');
             $table->foreign('leave_type_id')->references('id')->on('leave_types')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');

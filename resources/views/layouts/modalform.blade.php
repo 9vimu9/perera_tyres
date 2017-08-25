@@ -29,7 +29,7 @@
 <input type="hidden" name="_method" id="method">
 
   <div class="modal fade" id="modalform_modal"  role="dialog"  aria-hidden="true">
-    <div class="modal-large">
+    <div class="modal-dialog" style="width:90%;">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title" id="modal_title"></h4>
@@ -41,6 +41,8 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
           <input id="submit" type="submit" class="btn btn-primary save">
+          {{-- <input id="submit" type="" class="btn btn-primary save"> --}}
+
         </div>
       </div>
     </div>

@@ -39,7 +39,12 @@ class LeavesController extends Controller
      */
     public function store(Request $request)
     {
-        return  "employee store";
+        // $bulk_employee_id=explode(",",$request->table_data_employee_id);
+        // foreach ($bulk_employee_id as $employee_id) {
+        //   $leave
+        //    $employee_id;
+        // }
+        return $request->all();
     }
 
     /**

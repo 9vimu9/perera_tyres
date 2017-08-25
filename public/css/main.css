@@ -18,10 +18,16 @@ tfoot input {
   width: 100%;
 }
 
-.modal {
+/*.modal {
      width: 90%;
      left: 5%;
+}*/
+
+.modal-body {
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
 }
+
 
 .btn-file {
     position: relative;

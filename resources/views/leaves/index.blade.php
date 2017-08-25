@@ -127,7 +127,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="get_employees">add employyes</button>
+          <button type="button" class="btn btn-primary" id="get_employees">add employees</button>
         </div>
       </div>
     </div>
@@ -139,9 +139,8 @@
 
 @section('modal_form')
 
-
-
 {{--tabel  --}}
+  <input type="hidden" name="table_data_employee_id" id="table_data_employee_id">
   <div class="content">
     <table id="batch_receive_table" class="table table-striped table-hover table-center" cellspacing="0" style="table-layout: fixed; width: 80%" >
         <thead>
@@ -154,8 +153,7 @@
                     add employees
                   </button>
                 </th>
-                {{--for employee id  --}}
-                <th></th>
+                <th></th>  {{--for employee id  --}}
 
 
             </tr>
@@ -167,22 +165,14 @@
   {{-- eof tabel --}}
 
   <div class="form-horizontal">
-      <div class="form-group{{ $errors->has('leave_type_id') ? ' has-error' : '' }}">
+      <div class="form-group">
         <label class="col-sm-2 control-label">leave type</label>
         <div class="col-sm-5">
           <select id="leave_type_id"  name="leave_type_id" class="form-control" data-width="100%">
-            @if (isset($leave))
-              <option value="{{$leave->leave_type->id}}" >
-                {{$leave->leave_type->name}}
-              </option>
-            @endif
+
           </select>
 
-          @if ($errors->has('leave_type_id'))
-              <span class="help-block">
-                  <strong>{{ $errors->first('leave_type_id') }}</strong>
-              </span>
-          @endif
+
         </div>
       </div>
     <div class="row">
@@ -190,15 +180,18 @@
 
       <div class="col-md-4" >
         <p class="text-center">from</p>
-        <div  class="datetime_picker_fix" id="start_date_picker"></div>
-        <input type="hidden" name="start_date" id="start_date">
+        <div  class="datetime_picker_fix" id="from_datetime_picker"></div>
+        <input type="hidden" name="from_date" id="from_date">
+        <input type="hidden" name="from_time" id="from_time">
+
       </div>
 
 <div class="col-md-2"></div>
       <div class="col-md-4">
           <p class="text-center">to</p>
-        <div  class="datetime_picker_fix" id="end_date_picker"></div>
-        <input type="hidden" name="end_date" id="end_date">
+          <div  class="datetime_picker_fix" id="to_datetime_picker"></div>
+          <input type="hidden" name="to_date" id="to_date">
+          <input type="hidden" name="to_time" id="to_time">
       </div>
     </div>
   </div>
@@ -209,37 +202,36 @@
 @section('form_script')
 
   <script>
+    function IsDuplicated(employee_id) {
+      var IsDuplicated=false;
+      batch_receive_table.column(4, { search:'applied' } ).data().each(function(value, index) {
+        if(employee_id==value){
+          IsDuplicated=true;
+        }
+      });
+      return IsDuplicated;
+    }
 
-    // function IsDuplicated(employee_id) {
-    //   batch_receive_table.column(2, { search:'applied' } ).data().each(function(value, index) {
-    //     if(employee_id==value){
-    //       alert('dup');
-    //     }
-    //   });
-    // }
     $('#get_employees').click(function () {
-
-      let array = [];
-      batch_receive_table.column(4,  { search:'applied' } ).data().each(function(value, index) {
+      var array = [];
+      batch_receive_table.column(4,{ search:'applied'}).data().each(function(value, index) {
         array.push(value);
       });
-      alert(array);
+
       $(".material-child").each(function () {
-        // IsDuplicated($(this).attr('id'));
-        let obj = array.find(o=>o  == $(this).attr('id'));
-alert(obj);
-        if ($(this).is(':checked')) {
+        var employee_id=$(this).attr('id');
+       console.log(IsDuplicated(employee_id));
+      //  console.log(employee_id);
+
+        if ($(this).is(':checked') && !IsDuplicated(employee_id)) {
           var row_detail = batch_search_table.row( $(this).parents('tr') ).data();
 
           //data[0] name   //data[1]branch   //2 cat    //3 checkbo html
           row_detail[3]='<button type="button" class="btn btn-warning btn-xs delete_row">remove</button>';
-          row_detail[4]= $(this).attr('id');
+          row_detail[4]= employee_id;
           batch_receive_table.rows.add([row_detail]).draw();
         }
-
       });
-
-
     });
 
   function Select2ColumnSearch(table,column_id,selecter) {
@@ -293,20 +285,28 @@ alert(obj);
 
     });
 
+    $('.save').click(function () {//modal form save buttton
+      var from_datetime=$('#from_datetime_picker').data("date").split(' ');
+      var from_date=from_datetime[0];
+      var from_time=from_datetime[1];
 
-    //   $('.save').click(function () {
-    //   var year_month=$('#month_picker').data('date').split('/');
-    //
-    //   var start_date=$('#start_date_picker').data("date");
-    //   var end_date=$('#end_date_picker').data("date");
-    //
-    //   $('#year').val(year_month[0]);
-    //   $('#month').val(year_month[1]);
-    //   $('#start_date').val(start_date);
-    //   $('#end_date').val(end_date);
-    //
-    //
-    // });
+      var to_datetime=$('#to_datetime_picker').data("date").split(' ');
+      var to_date=to_datetime[0];
+      var to_time=to_datetime[1];
+
+      $('#from_date').val(from_date);
+      $('#from_time').val(from_time);
+      $('#to_date').val(to_date);
+      $('#to_time').val(to_time);
+
+      var batch_employee_id = [];
+      batch_receive_table.column(4,  { search:'applied' } ).data().each(function(value, index) {
+          batch_employee_id.push(value);
+      });
+      $('#table_data_employee_id').val(batch_employee_id.toString());
+
+
+    });
 
 
    </script>

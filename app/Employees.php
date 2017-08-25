@@ -15,4 +15,9 @@ class Employees extends Model
   {
       return $this->belongsTo('App\branchs');
   }
+
+  public function designation()
+  {
+      return $this->belongsTo('App\designations');
+  }
 }

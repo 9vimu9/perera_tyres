@@ -171,8 +171,8 @@
           <div class="col-sm-3">
             <select id="designation_id"  name="designation_id" class="form-control" data-width="100%">
               @if (isset($employee))
-                <option value="{{$employee->latest_designation->designation->id}}" >
-                  {{$employee->latest_designation->designation->name}}
+                <option value="{{$employee->designation_id}}" >
+                  {{$employee->designation->name}}
                 </option>
               @endif
 

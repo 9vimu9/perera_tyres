@@ -33,6 +33,10 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
 
+
+    <script src="{{ asset('js/libries/jquery-2.2.4.min.js') }}"></script>
+    
+
 </head>
 <body>
     <div id="app">
@@ -109,7 +113,6 @@
       {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 
       {{-- <script src="{{ asset('js/libries/jquery.min.js') }}"></script> --}}
-<script src="{{ asset('js/libries/jquery-2.2.4.min.js') }}"></script>
 
 <script src="{{ asset('js/libries/moment.min.js') }}"></script>
 <script src="{{ asset('js/libries/bootstrap.min.js') }}"></script>

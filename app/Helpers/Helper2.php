@@ -19,4 +19,29 @@ function IsRecordExist($table,$conditions)
 
 }
 
+function GetDurationHumanVersion($start_date,$end_date)
+{
+  $duration=strtotime($start_date)-strtotime($end_date);
+  $days=$duration/86400;
+  $hours=($duration%86400)/3600;
+  $mins=($duration%86400)%3600/60;
+  if($days>=1){
+    echo strtok($days, ".").'d';
+  }
+  if ($hours>=1) {
+    echo ' '.strtok($hours, ".").'h';
+  }
+  if ($mins>=1) {
+    echo ' '.strtok($mins, ".").'m';
+
+  }
+
+
+
+  // if ($duration>0) {
+  //   return Carbon\Carbon::createFromTimeStamp($duration)->diffForHumans();
+  //
+  // }
+}
+
  ?>

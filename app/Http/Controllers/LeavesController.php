@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\LeavesRequest;
 use App\leaves;
 use App\Employees;
+
 
 class LeavesController extends Controller
 {
@@ -37,13 +39,22 @@ class LeavesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        // $bulk_employee_id=explode(",",$request->table_data_employee_id);
-        // foreach ($bulk_employee_id as $employee_id) {
-        //   $leave
-        //    $employee_id;
-        // }
+    public function store(LeavesRequest $request)
+    {//	id	leave_type_id	employee_id	from_date	from_time	to_date	to_time	remarks	created_at	updated_at
+        $from_datetime=explode(' ',$request['from_datetime']);
+        $to_datetime=explode(' ',$request['to_datetime']);
+
+        $bulk_employee_id=explode(",",$request->table_data_employee_id);
+        foreach ($bulk_employee_id as $employee_id) {
+          $leave=new leaves();
+          $leave->leave_type_id=$request['leave_type_id'];
+          $leave->employee_id=$employee_id;
+          $leave->from_date=$from_datetime[0];
+          $leave->to_date=$to_datetime[0];
+          $leave->from_time=$from_datetime[1];
+          $leave->to_time=$to_datetime[1];
+          $leave->save();
+        }
         return $request->all();
     }
 

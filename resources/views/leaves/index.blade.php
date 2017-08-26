@@ -5,34 +5,31 @@
 @section('create_new')ask for a leave @endsection
 
 @section('table')
+  @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
   @if (count($leaves)>0)
-  <table id="leaves_index" class="table table-striped table-hover table-center" cellspacing="0" style="table-layout: fixed; width: 100%" >
+  <table id="leaves_index_table" class="table table-striped table-hover table-center" cellspacing="0" style="table-layout: fixed; width: 100%" >
       <thead>
           <tr>
-              <th style="width: 12%">branch</th>
-              <th style="width: 15%">category</th>
+              <th style="width: 20%">branch</th>
+              <th style="width: 12%">category</th>
               <th style="width: 20%">employee name</th>
-              <th style="width: 20%">reason</th>
-              <th style="width: 20%">from</th>
-              <th style="width: 20%">to</th>
-              <th style="width: 20%">duration</th>
-              <th style="width: 15%"></th>
+              <th style="width: 15%">reason</th>
+              <th style="width: 15%">from</th>
+              <th style="width: 15%">to</th>
+              <th style="width: 10%">duration</th>
+              <th style="width: 20%"></th>
 
           </tr>
       </thead>
-      {{-- <tfoot>
-       <tr>
-
-         <th>branch</th>
-         <th>category</th>
-         <th>employee name</th>
-         <th>reason</th>
-         <th>from</th>
-         <th>to</th>
-         <th>duration</th>
-         <th></th>
-       </tr>
-     </tfoot> --}}
 
       <tbody>
             @foreach ($leaves as $leave)
@@ -41,12 +38,16 @@
               <td>{{$leave->employee->cat->name}}</td>
               <td>{{$leave->employee->name}}</td>
               <td>{{$leave->leave_type->name}}</td>
-              <td>{{$leave->from_datetime}}</td>
-              <td>{{$leave->to_datetime}}</td>
-              <td>duration</td>
+              @php
+                $from_datetime=$leave->from_date.' '.$leave->from_time;
+                $to_datetime=$leave->to_date.' '.$leave->to_time;
+              @endphp
+              <td>{{$from_datetime}}</td>
+              <td>{{$to_datetime}}</td>
+              <td>{{GetDurationHumanVersion($to_datetime,$from_datetime)}}</td>
               <td>
                 <button type="button" class="btn btn-basic btn-xs more" id='{{$leave->id}}'>more</button> |
-                <button type="button" class="btn btn-warning btn-xs edit" id='{{$leave->id}}' data-toggle="modal" data-target="#salarys_index_modal">edit</button> |
+                <button type="button" class="btn btn-warning btn-xs edit" id='{{$leave->id}}' data-toggle="modal" data-target="#modalform_modal">edit</button> |
                 <button type="button" class="btn btn-danger btn-xs delete" id='{{$leave->id}}'>delete</button>
 
               </td>
@@ -57,112 +58,13 @@
   </table>
   @endif
 
-  {{-- sender modal --}}
-  <div class="modal fade" id="modal_search_bulk" aria-hidden="true">
-    <div class="modal-dialog" style="width:90%;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Get Employees</h5>
-        </div>
-        <div class="modal-body">
-          <div class="form-horizontal">
-            <div class="form-group">
-              <label class="col-sm-4 control-label">workpalce name</label>
-              <div class="col-sm-5">
-                <select id="branch_id"  name="branch_id" class="form-control" data-width="100%"></select>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-4 control-label">category</label>
-              <div class="col-sm-5">
-                <select id="cat_id"  name="cat_id" class="form-control" data-width="100%"></select>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-4 control-label">employee name</label>
-              <div class="col-sm-5">
-                <select id="employee_id"  name="employee_id" class="form-control" data-width="100%"></select>
-              </div>
-            </div>
-
-          </div>
-
-          <table id="batch_search_table" class="table table-striped table-hover table-center" cellspacing="0" style="table-layout: fixed; width: 80%" >
-              <thead>
-                  <tr>
-                      <th style="width: 40%">employee name</th>
-                      <th style="width: 25%">branch</th>
-                      <th style="width: 15%">category</th>
-                      <th style="width: 10%">
-                        <div class="material-switch">
-                          <input id="parent_checkbox" name="ot_available" type="checkbox" />
-                            <label for="parent_checkbox" class="label-danger"></label>
-                        </div>
-                      </th>
-                  </tr>
-              </thead>
-              <tbody>
-                @foreach ($employees as $employee)
-                  <tr>
-
-                    <td>{{$employee->name}}</td>
-                    <td>{{$employee->branch->name}}</td>
-                    <td>{{$employee->cat->name}}</td>
-                    <td>
-                      <div class="material-switch ">
-                        <input class="material-child" id="{{$employee->id}}" name="ot_available" type="checkbox" />
-                          <label for="{{$employee->id}}" class="label-warning"></label>
-                      </div>
-                    </td>
-
-
-                  </tr>
-
-                @endforeach
-
-              </tbody>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="get_employees">add employees</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  {{-- end of  sender moal --}}
-
+  @include('layouts/search_modal')
 
 @endsection
 
 @section('modal_form')
 
-{{--tabel  --}}
-  <input type="hidden" name="table_data_employee_id" id="table_data_employee_id">
-  <div class="content">
-    <table id="batch_receive_table" class="table table-striped table-hover table-center" cellspacing="0" style="table-layout: fixed; width: 80%" >
-        <thead>
-            <tr>
-                <th style="width: 40%">employee name</th>
-                <th style="width: 25%">branch</th>
-                <th style="width: 15%">category</th>
-                <th style="width: 10%">
-                  <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal_search_bulk">
-                    add employees
-                  </button>
-                </th>
-                <th></th>  {{--for employee id  --}}
-
-
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-  </div>
-  {{-- eof tabel --}}
+  @include('layouts/receiver_table')
 
   <div class="form-horizontal">
       <div class="form-group">
@@ -181,8 +83,7 @@
       <div class="col-md-4" >
         <p class="text-center">from</p>
         <div  class="datetime_picker_fix" id="from_datetime_picker"></div>
-        <input type="hidden" name="from_date" id="from_date">
-        <input type="hidden" name="from_time" id="from_time">
+        <input type="hidden" name="from_datetime" id="from_datetime">
 
       </div>
 
@@ -190,8 +91,7 @@
       <div class="col-md-4">
           <p class="text-center">to</p>
           <div  class="datetime_picker_fix" id="to_datetime_picker"></div>
-          <input type="hidden" name="to_date" id="to_date">
-          <input type="hidden" name="to_time" id="to_time">
+          <input type="hidden" name="to_datetime" id="to_datetime">
       </div>
     </div>
   </div>
@@ -202,72 +102,13 @@
 @section('form_script')
 
   <script>
-    function IsDuplicated(employee_id) {
-      var IsDuplicated=false;
-      batch_receive_table.column(4, { search:'applied' } ).data().each(function(value, index) {
-        if(employee_id==value){
-          IsDuplicated=true;
-        }
-      });
-      return IsDuplicated;
-    }
-
-    $('#get_employees').click(function () {
-      var array = [];
-      batch_receive_table.column(4,{ search:'applied'}).data().each(function(value, index) {
-        array.push(value);
-      });
-
-      $(".material-child").each(function () {
-        var employee_id=$(this).attr('id');
-       console.log(IsDuplicated(employee_id));
-      //  console.log(employee_id);
-
-        if ($(this).is(':checked') && !IsDuplicated(employee_id)) {
-          var row_detail = batch_search_table.row( $(this).parents('tr') ).data();
-
-          //data[0] name   //data[1]branch   //2 cat    //3 checkbo html
-          row_detail[3]='<button type="button" class="btn btn-warning btn-xs delete_row">remove</button>';
-          row_detail[4]= employee_id;
-          batch_receive_table.rows.add([row_detail]).draw();
-        }
-      });
-    });
-
-  function Select2ColumnSearch(table,column_id,selecter) {
-    $(selecter).on('change', function(){
-      var text=$(this).select2('data')[0].text;
-      table.column(column_id).search(text).draw();
-    });
-    $(selecter).on("select2:unselecting", function (e) {
-      table.column(column_id).search("").draw();
-    });
-  }
-
-  Select2ColumnSearch(batch_search_table,0,'#employee_id');
-  Select2ColumnSearch(batch_search_table,1,'#branch_id');
-  Select2ColumnSearch(batch_search_table,2,'#cat_id');
-
-
-
-    var modal_lv = 0;
-    $('.modal').on('shown.bs.modal', function (e) {
-        $('.modal-backdrop:last').css('zIndex',1051+modal_lv);
-        $(e.currentTarget).css('zIndex',1052+modal_lv);
-        modal_lv++
-    });
-
-    $('.modal').on('hidden.bs.modal', function (e) {
-        modal_lv--
-    });
-
-
-
     create_update_toggle('leaves','leave');
-    var table =   $('leaves_index').DataTable();
+
+    //var leaves_index_table =$('leaves_index_table').DataTable();
 
     $('.edit').click(function () {
-      var rowData = table.row( $(this).parents('tr') ).data();
+      var rowData = leaves_index_table.row( $(this).parents('tr') ).data();
+      alert(rowData);
       var year=rowData[0];
       var month=moment().month(rowData[1]).format("M");
       var start_date=rowData[2];
@@ -278,26 +119,13 @@
       $('#end_date_picker').data("DateTimePicker").date(end_date);
 
     });
-    $("#parent_checkbox").click(function () {
-     $(".material-child").each(function () {
-         $(this).prop("checked", $('#parent_checkbox').is(':checked'));
-     });
 
-    });
 
-    $('.save').click(function () {//modal form save buttton
-      var from_datetime=$('#from_datetime_picker').data("date").split(' ');
-      var from_date=from_datetime[0];
-      var from_time=from_datetime[1];
-
-      var to_datetime=$('#to_datetime_picker').data("date").split(' ');
-      var to_date=to_datetime[0];
-      var to_time=to_datetime[1];
-
-      $('#from_date').val(from_date);
-      $('#from_time').val(from_time);
-      $('#to_date').val(to_date);
-      $('#to_time').val(to_time);
+    $('.save').click(function () {//modalform save buttton
+      var from_datetime=$('#from_datetime_picker').data("date");
+      var to_datetime=$('#to_datetime_picker').data("date");
+      $('#from_datetime').val(from_datetime);
+      $('#to_datetime').val(to_datetime);
 
       var batch_employee_id = [];
       batch_receive_table.column(4,  { search:'applied' } ).data().each(function(value, index) {

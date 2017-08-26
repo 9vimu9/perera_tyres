@@ -1,3 +1,21 @@
+///////////////////////////////////////leaves_index_table/////////////////////////
+
+var leaves_index_table =   $('#leaves_index_table').DataTable({
+      'paging'      : true,
+      'lengthChange': true,
+      'searching'   : true,
+      'ordering'    : true,
+      'info'        : false,
+      'autoWidth'   : false,
+      "order"       : [[ 4, "desc" ]]
+
+    });
+
+
+///////////////////////////////////////eof leaves_index_table//////////////////////
+
+
+
 
 ////////////////////////////////batch_receiver_table//////////////////
 var batch_receive_table =   $('#batch_receive_table').DataTable({

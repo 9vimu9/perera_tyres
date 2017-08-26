@@ -5,7 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Config;
 
-class SalarysRequest extends FormRequest
+
+class LeavesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,10 +26,10 @@ class SalarysRequest extends FormRequest
     public function rules()
     {
         return [
-          'year'=>'required',
-          'month'=>'required',
-          'start_date'=>Config::get('enums.QuickVali.important_date'),
-          'end_date'=>Config::get('enums.QuickVali.important_date')
+          'table_data_employee_id'=>'required',
+          'leave_type_id'=>Config::get('enums.QuickVali.fk'),
+          'from_datetime'=>Config::get('enums.QuickVali.important_date').'|before:to_datetime',
+          'to_datetime'=>Config::get('enums.QuickVali.important_date').'|after:from_datetime'
             //
         ];
     }

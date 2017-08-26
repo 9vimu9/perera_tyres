@@ -1,4 +1,5 @@
 <?php
+
 function GetEveryDayBetweenTwoDates($start_date,$end_date)
 {
   $begin = new DateTime($start_date);
@@ -10,8 +11,19 @@ function GetEveryDayBetweenTwoDates($start_date,$end_date)
 function GetInOutOfDayHTML($employee,$date,$salary)
 {
   $User_att_data=GetUserAttendenceBackGroundDetails($salary,$employee,$date);
+
   if (strtotime($User_att_data['join_date'])<strtotime($date)) {
     $html=GetInOutOfDay($employee,$date,$User_att_data);
+    $leave=$User_att_data['is_on_Leave'];
+
+    if ($leave) {
+      $html=$html.HtmlCreator('inverse','sun-o','LEAVE');
+    }
+    else {
+      if (!$html) {
+        $html=HtmlCreator('inverse','plane','AB');
+      }
+    }
   }
   else{
     $html='<span class="badge badge-default"><i class="fa fa-frown-o" aria-hidden="true"></i> not<br>reg</span>';
@@ -19,19 +31,23 @@ function GetInOutOfDayHTML($employee,$date,$salary)
   return $html;
 }
 
-function GetUserAttendenceBackGroundDetails($salary,$employee,$date)
-{
+function GetUserAttendenceBackGroundDetails($salary,$employee,$date){
+
   $in_out_details=App\slips::where('salary_id',$salary->id)->where('employee_id',$employee->id)->first();
+
   if($in_out_details==NULL){
     $in_out_details=App\Employees::find($employee->id);
   }
-  return ['join_date'=>App\Employees::find($employee->id)->join_date,
+  return [
+          'employee_id'=>$employee->id,
+          'join_date'=>$employee->join_date,
           'is_sat_work'=>$in_out_details->is_sat_work,
           'ot_available'=>$in_out_details->ot_available,
           'planned_clock_in'=>$in_out_details->start_time,
           'planned_clock_out'=>$in_out_details->end_time,
           'day_of_date'=>date("D", strtotime($date)),
-          'is_holiday'=>IsHoliday($employee,$date)
+          'is_holiday'=>IsHoliday($employee,$date),
+          'is_on_Leave'=>IsOnLeave($employee->id,$date)
         ];
 
 }
@@ -46,7 +62,7 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
         ->get(['attendences.date','attendences.time']);
 
   $times=array();
-  $html;
+
   foreach ($attendences as $attendence) {
     array_push($times,Carbon\Carbon::parse($attendence->date.$attendence->time)->format('Y-m-d H:i'));
   }
@@ -57,7 +73,7 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
     return AbsentDayHTML($User_att_data);;
   }
   elseif ($entrys_for_working_day==1) {
-    echo "1 entry";
+  //  echo "1 entry";
   }
   elseif ($entrys_for_working_day>1) {
     $actual_clock_in = $times[0];
@@ -81,14 +97,15 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
 function AbsentDayHTML($User_att_data)
 {
   $holiday=$User_att_data['is_holiday'];
+
+
     if ($holiday) {
       $html=HtmlCreator('info','',$holiday);
-    }
-    else {
-      $html=HtmlCreator('inverse','plane','AB');
+      return $html;
     }
 
-    return $html;
+
+
 }
 
 function HtmlCreator($badge_color,$icon,$value)
@@ -97,9 +114,9 @@ function HtmlCreator($badge_color,$icon,$value)
 
 }
 
-function LeaveDeductionCal($planned_work_time_sec,$actual_work_time_sec,$late_time_min,$early_time_min,$User_att_data)
+function LeaveDeductionCal($work_time_diff_sec,$late_time_min,$early_time_min,$User_att_data)
 {
-  if (!$User_att_data['is_holiday'] && $planned_work_time_sec>$actual_work_time_sec) {
+  if (!$User_att_data['is_holiday'] && $work_time_diff_sec<0) {
     $LeaveDeduction_min=0;
     if ($late_time_min>MetaGet('late_threshold')) {
       $LeaveDeduction_min+=$late_time_min;
@@ -114,26 +131,26 @@ function LeaveDeductionCal($planned_work_time_sec,$actual_work_time_sec,$late_ti
   }
 }
 
-function OTcal($actual_clock_in_sec,$planned_clock_in_sec,$actual_work_time_sec,$planned_work_time_sec,$User_att_data)
+function OTcal($early_ot_sec,$after_ot_sec,$work_time_diff_sec,$actual_work_time_sec,$User_att_data)
 {
   if ($User_att_data['ot_available'] ) {
-    if ($User_att_data['is_holiday']) {
-      $ot_time=$actual_work_time_sec/60;
-    }
-    else {
-      $early_ot_time=$planned_clock_in_sec-$actual_clock_in_sec;
-      if ($early_ot_time<0) {
-        $early_ot_time=0;
-      }
-      $real_ot_time_min=($actual_work_time_sec-$planned_work_time_sec-$early_ot_time)/60;
 
-      if ($real_ot_time_min>MetaGet('ot_threshold')) {
-        $ot_time=$real_ot_time_min;
+    if ($User_att_data['is_holiday']) {
+      $ot_time_min=$actual_work_time_sec/60;
+    }
+    elseif($work_time_diff_sec>0) {
+      if ($early_ot_sec<0 || MetaGet('is_early_OT')==0) {
+        $early_ot_sec=0;
       }
+      if ($after_ot_sec<0 || MetaGet('is_after_OT')==0) {
+        $after_ot_sec=0;
+      }
+      $ot_time_min=($early_ot_sec+$after_ot_sec)/60;
     }
-    if (isset($ot_time)) {
-      return HtmlCreator('info','clock-o',$ot_time.'m');
+    if (isset($ot_time_min) && $ot_time_min>MetaGet('ot_threshold') && (MetaGet('is_early_OT') || MetaGet('is_after_OT'))) {
+      return HtmlCreator('info','clock-o',$ot_time_min.'m');
     }
+
   }
 }
 
@@ -150,12 +167,13 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
     else {
       $planned_clock_out_sec =strtotime($User_att_data['planned_clock_out']);
     }
-    $planned_work_time_sec=$planned_clock_out_sec-$planned_clock_in_sec;
-    $html="";
 
+
+    $planned_work_time_sec=$planned_clock_out_sec-$planned_clock_in_sec;
 
     if($in_date==$out_date)
     {
+      $work_time_diff_sec=$actual_work_time_sec-$planned_work_time_sec;
       $actual_clock_in = date('H:i',strtotime($in_date_time));
       $actual_clock_out =date('H:i',strtotime($out_date_time));
       $actual_clock_out_sec=strtotime($actual_clock_out);
@@ -166,10 +184,10 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
       $early_time_min = ($planned_clock_out_sec-$actual_clock_out_sec)/60;
 
       if($late_time_min>0 && !$User_att_data['is_holiday']){
-        $html=$html.HtmlCreator('warning','sign-in',$actual_clock_in.'<br>'.$late_time_min.'m');
+        $html=HtmlCreator('warning','sign-in',$actual_clock_in.'<br>'.$late_time_min.'m');
       }
       else {
-        $html=$html.HtmlCreator('success','sign-in',$actual_clock_in);
+        $html=HtmlCreator('success','sign-in',$actual_clock_in);
       }
 
       if($early_time_min>0 && !$User_att_data['is_holiday']){
@@ -179,9 +197,27 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
         $html=$html.HtmlCreator('success','sign-out',$actual_clock_out);
       }
 
-      $html=$html.OTcal($actual_clock_in_sec,$planned_clock_in_sec,$actual_work_time_sec,$planned_work_time_sec,$User_att_data);
-      $html=$html.LeaveDeductionCal($planned_work_time_sec,$actual_work_time_sec,$late_time_min,$early_time_min,$User_att_data);
-      echo $html;
+
+      $early_ot_sec=$planned_clock_in_sec-$actual_clock_in_sec;
+      $after_ot_sec=$actual_clock_out_sec-$planned_clock_out_sec;
+      $OT=OTcal($early_ot_sec,$after_ot_sec,$work_time_diff_sec,$actual_work_time_sec,$User_att_data);
+
+      if ($OT) {
+        $html=$html.$OT;
+      }
+
+      $leave_deduction=LeaveDeductionCal($work_time_diff_sec,
+                                          $late_time_min,
+                                          $early_time_min,
+                                          $User_att_data);
+      if ($leave_deduction) {
+        $html=$html.$leave_deduction;
+      }
+      if (isset($html)) {
+        return $html;
+      }
+
+
     }
     else {
       return('spcal');
@@ -220,6 +256,19 @@ function IsWeekend($employee,$date_need_check)
     return $day_of_date;
   }
 }
+
+function IsOnLeave($employee_id,$date)
+{
+  $date=date('Y-m-d',strtotime($date));
+  return App\leaves::
+  where('employee_id','=', $employee_id)
+  ->where('from_date', '<=', $date)
+  ->where('to_date', '>=', $date)
+  ->get()->first();
+}
+
+
+
 
 
 

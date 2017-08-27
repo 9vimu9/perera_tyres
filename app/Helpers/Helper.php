@@ -173,12 +173,13 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
 
     if($in_date==$out_date)
     {
-      $work_time_diff_sec=$actual_work_time_sec-$planned_work_time_sec;
       $actual_clock_in = date('H:i',strtotime($in_date_time));
       $actual_clock_out =date('H:i',strtotime($out_date_time));
       $actual_clock_out_sec=strtotime($actual_clock_out);
       $actual_clock_in_sec=strtotime($actual_clock_in);
       $actual_work_time_sec=$actual_clock_out_sec-$actual_clock_in_sec;
+
+      $work_time_diff_sec=$actual_work_time_sec-$planned_work_time_sec;
 
       $late_time_min = ($actual_clock_in_sec-$planned_clock_in_sec)/60;
       $early_time_min = ($planned_clock_out_sec-$actual_clock_out_sec)/60;

@@ -104,9 +104,10 @@ class AttendenceController extends Controller
 
     public function SaveAttendenceToDb($branch_id,$salary_id,$fingerprint_no,$date,$time)
     {
-      $date=date('Y-m-d', strtotime($date));
       $conditions_employee=['branch_id'=>$branch_id,'fingerprint_no'=>$fingerprint_no];
       $employee = IsRecordExist('employees',$conditions_employee);
+      if($employee){//check for existance of a employee
+      $date=date('Y-m-d', strtotime($date));
       $conditions_working_days=['date'=>$date];
       $conditions_attendence=['employee_id'=>$employee->id,'date'=>$date,'time'=>$time];
       $working_day=IsRecordExist('working_days',$conditions_working_days);
@@ -128,7 +129,7 @@ class AttendenceController extends Controller
         $attendence->save();
       }
 
-
+}
     }
 
     /**

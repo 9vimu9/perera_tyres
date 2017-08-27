@@ -32,12 +32,18 @@
             @foreach ($features as $feature)
             <tr>
               <td>{{$feature->name}}</td>
-              <td></td>
-              <td>{{$feature->is_compulsory_feature}}</td>
-              <td></td>
+              <td>{{GetFeatureTypeName($feature->feature_type)}}</td>
+              <td>{{GetFeatureCompulsoryName($feature->is_compulsory_feature)}}</td>
               <td>
-                <button type="button" class="btn btn-warning btn-xs edit" id='{{$salary->id}}' data-toggle="modal" data-target="#salarys_index_modal">edit</button> |
-                <button type="button" class="btn btn-danger btn-xs delete" id='{{$salary->id}}'>delete</button>
+                @if ($feature->is_static_value)
+                  {{ $feature->value_type==0 ? "Rs. $feature->static_value" : "$feature->static_value% from basic salary " }}
+                @else
+                  customize
+                @endif
+              </td>
+              <td>
+                <button type="button" class="btn btn-warning btn-xs edit" id='{{$feature->id}}' data-toggle="modal" data-target="#modalform_modal">edit</button> |
+                <button type="button" class="btn btn-danger btn-xs delete" id='{{$feature->id}}'>delete</button>
               </td>
             </tr>
             @endforeach
@@ -47,37 +53,80 @@
 @endsection
 
 @section('modal_form')
-  <div class="row">
-    <div class="col-md-3">
-      <p class="text-center">select month and year</p>
-      <div id="month_picker" class="month_picker_fix"></div>
-        <input type="hidden" name="month" id="month" >
-        <input type="hidden" name="year" id="year">
+
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-4 control-label">allowence,deduction or demonstrate</label>
+      <div class="col-sm-3">
+        <select class="form-control" name="feature_type" id="feature_type">
+          <option value="0">deduction</option>
+          <option value="1">allowence</option>
+          <option value="2">for slip only</option>
+        </select>
+      </div>
     </div>
 
-    <div class="col-md-1"></div>
-
-    <div class="col-md-3" >
-      <p class="text-center">from</p>
-      <div  class="date_picker_fix" id="start_date_picker"></div>
-      <input type="hidden" name="start_date" id="start_date">
+    <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+      <label class="col-sm-4 control-label">name</label>
+      <div class="col-sm-5">
+        <input id="name" type="text" class="form-control" name="name" >
+        @if ($errors->has('name'))
+            <span class="help-block">
+                <strong>{{ $errors->first('name') }}</strong>
+            </span>
+        @endif
+      </div>
     </div>
 
-    <div class="col-md-1"></div>
-
-    <div class="col-md-3">
-        <p class="text-center">to</p>
-      <div  class="date_picker_fix" id="end_date_picker"></div>
-      <input type="hidden" name="end_date" id="end_date">
+    <div class="form-group">
+      <label class="col-sm-4 control-label">for every employee?</label>
+        <div class="col-sm-6">
+          <div class="material-switch"><strong>NO!</strong> not for everyone
+            <input id="is_compulsory_feature" name="is_compulsory_feature" type="checkbox"/>
+              <label for="is_compulsory_feature" class="label-success"></label><strong> YES</strong> applies to every employee
+          </div>
+      </div>
     </div>
+
+    <div class="form-group">
+      <label class="col-sm-4 control-label">same value/precentage for every employee</label>
+        <div class="col-sm-8">
+          <div class="material-switch"><strong>NO </strong>value can be vary from employee to employee
+            <input id="is_static_value" name="is_static_value" type="checkbox"/>
+              <label for="is_static_value" class="label-warning"></label><strong> YES </strong>same value for every employee
+          </div>
+      </div>
+    </div>
+
+    <div class="form-group{{ $errors->has('static_value') ? ' has-error' : '' }} static_value_div">
+      <label class="col-sm-4 control-label">enter that value</label>
+      <div class="col-sm-2">
+        <input id="static_value" type="text" class="form-control" name="static_value">
+      </div>
+        <div class="col-sm-2">
+          <select class="form-control" name="value_type" id="value_type">
+            <option value="0">rupees</option>
+            <option value="1">% from basic salaray</option>
+          </select>
+        </div>
+    </div>
+
+
+
   </div>
+
 
 @endsection
 
 @section('form_script')
   <script>
-    create_update_toggle('salaries','salary');
-    var table =   $('#salarys_index').DataTable();
+    create_update_toggle('features','allowence/deduction');
+    var table =$('#salarys_index').DataTable();
+
+    $('#is_static_value').change(function () {
+       $('.static_value_div').fadeToggle(this.checked);
+      }).change(); //ensure visible state matches initially
+
 
     $('.edit').click(function () {
       var rowData = table.row( $(this).parents('tr') ).data();
@@ -103,11 +152,7 @@
       $('#start_date').val(start_date);
       $('#end_date').val(end_date);
 
-
     });
-
-
-
 
   </script>
 

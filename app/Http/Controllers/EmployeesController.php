@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreEmployees;
+use App\Http\Requests\EmployeesRequest;
 use App\Employees;
 
 
@@ -36,7 +36,7 @@ class EmployeesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreEmployees $request)
+    public function store(EmployeesRequest $request)
     {
       $employee=new Employees();
       $this->SaveToDb($request,$employee);

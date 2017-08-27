@@ -18,9 +18,8 @@ class CreateSlipsTable extends Migration
               $table->integer('salary_id')->length(10)->unsigned();
               $table->integer('employee_id')->length(10)->unsigned();
               $table->float('basic_salary', 10, 2);
-              $table->float('ot_value', 10, 2);
-              $table->float('nopay_days', 10, 2);
-              $table->float('nopay_value', 10, 2);
+              $table->float('ot_rate', 10, 2);
+              $table->float('nopay_rate', 10, 2);
               $table->time('start_time');
               $table->time('end_time');
               $table->integer('ot_available')->length(1)->unsigned();//1=available 0=not available

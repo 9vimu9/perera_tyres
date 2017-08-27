@@ -15,7 +15,7 @@
           @yield('create_new')
         </button>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" >
         @yield('table')
         </div>
       </div>
@@ -36,6 +36,7 @@
         </div>
 
         <div class="modal-body">
+
           @yield('modal_form')
         </div>
         <div class="modal-footer">
@@ -51,43 +52,33 @@
 
 
 
-<div id="modalform_modal" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-large">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modal_title"></h4>
-            </div>
-            <div class="modal-body">
-              @yield('modal_form')
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
-              <input id="submit" type="submit" class="btn btn-primary save">
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-
-
-
 
 
 
 @endsection
 
 @section('script')
+
+  @if (count($errors->all())>0)
+    <script>
+    window.onload = function(){
+      $('.create').click();
+    }
+    </script>
+  @endif
   <script>
+  function Route_call(route,title,method,submit_btn_name) {
+    $('.create').click(function () {
+      $("#method").val(method);
+      $('#form').attr('action', "/"+route);
+      $('#modal_title').html('add new '+title);
+      $('#submit').val(submit_btn_name);
+    });
+
+  }
+
     function create_update_toggle(route,title) {
-      $('.create').click(function () {
-        $("#method").val('POST');
-        $('#form').attr('action', "/"+route);
-        $('#modal_title').html('add new '+title);
-        $('#submit').val('create');
-      });
+      Route_call(route,title,'POST','create');
 
       $('.edit').click(function () {
         $("#method").val('PUT');

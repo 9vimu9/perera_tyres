@@ -44,4 +44,32 @@ function GetDurationHumanVersion($start_date,$end_date)
   // }
 }
 
+
+function GetFeatureTypeName($type)
+{
+  switch ($type) {
+    case 0:
+      return 'deduction';
+      break;
+
+    case 1:
+      return 'allowence';
+      break;
+
+    case 2:
+      return 'for slip only';
+      break;
+  }
+}
+
+function GetFeatureCompulsoryName($value){
+  if ($value==0) {
+    return "compulsory";
+  }
+  else {
+    return 'not compulsory';
+  }
+
+}
+
  ?>

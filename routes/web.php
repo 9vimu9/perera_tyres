@@ -35,6 +35,10 @@ Route::resource('holidays','HolidaysController');
 
 Route::resource('leaves','LeavesController');
 
+Route::resource('features','FeaturesController');
+
+Route::resource('slips','SlipsController');
+Route::get('index_with_slips','SlipsController@IndexWithSlips');
 
 
 

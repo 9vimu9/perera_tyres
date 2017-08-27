@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 use Illuminate\Support\Facades\Config;
 
-class StoreEmployees extends FormRequest
+class EmployeesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,7 +32,6 @@ class StoreEmployees extends FormRequest
           'address'=>'required',
           'tel'=>'required|'.Config::get('enums.QuickVali.tel'),
           'join_date'=>'required|date',
-          'address'=>'required',
           'basic_salary' => Config::get('enums.QuickVali.money'),
           'branch_id'=>Config::get('enums.QuickVali.fk'),
           'fingerprint_no'=>'required|numeric',

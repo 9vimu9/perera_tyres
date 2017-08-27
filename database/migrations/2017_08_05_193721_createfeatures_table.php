@@ -17,10 +17,10 @@ class CreateFeaturesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('is_compulsory_feature');//1=yes 0 no
-            $table->integer('is_dynamic_value');//1=yes dynamic 0=no static
-            $table->integer('value_type');//1=dynamic 0=precentage
-            $table->float('static_value', 10, 2);
-            $table->integer('feature_type');//1=allowence 0=deduction 2=demo
+            $table->integer('is_static_value');//0= dynamic 1= static
+            $table->integer('value_type');//0=dynamic 1=precentage
+            $table->float('static_value', 10, 2)->default(0);
+            ;$table->integer('feature_type');//1=allowence 0=deduction 2=demo
             $table->timestamps();
         });
     }

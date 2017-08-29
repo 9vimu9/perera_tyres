@@ -33,11 +33,7 @@ function GetInOutOfDayHTML($employee,$date,$salary)
 
 function GetUserAttendenceBackGroundDetails($salary,$employee,$date){
 
-  $in_out_details=App\slips::where('salary_id',$salary->id)->where('employee_id',$employee->id)->first();
-
-  if($in_out_details==NULL){
-    $in_out_details=App\Employees::find($employee->id);
-  }
+  $in_out_details=EmloyeeDetailsFromSlipForSalary($salary,$employee);
   return [
           'employee_id'=>$employee->id,
           'join_date'=>$employee->join_date,
@@ -59,13 +55,14 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
         ->leftJoin('working_days', 'working_days.id', '=', 'attendences.working_day_id')
         ->where('employees.id',$employee->id)
         ->where('working_days.date',$working_date)
-        ->get(['attendences.date','attendences.time']);
+        ->get(['attendences.date','attendences.time','attendences.id']);
 
   $times=array();
-
   foreach ($attendences as $attendence) {
-    array_push($times,Carbon\Carbon::parse($attendence->date.$attendence->time)->format('Y-m-d H:i'));
+    $date_time=$attendence->date." ".$attendence->time;
+    $times[$attendence->id] = strtotime($date_time);
   }
+  arsort($times);
 
   $entrys_for_working_day=count($times);
 
@@ -73,23 +70,20 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
     return AbsentDayHTML($User_att_data);;
   }
   elseif ($entrys_for_working_day==1) {
-  //  echo "1 entry";
+    echo "1 entry";
   }
   elseif ($entrys_for_working_day>1) {
-    $actual_clock_in = $times[0];
-    $actual_clock_out =$times[0];
+    $actual_clock_in = reset($times);
+    // echo "$actual_clock_in";
+    end($times);
+    $actual_clock_out =current($times);
 
-    foreach($times as $time){
-
-      if(strtotime($time) < strtotime($times[0])){
-          $actual_clock_in = $time;
-      }
-      if(strtotime($time) > strtotime($times[0])){
-          $actual_clock_out = $time;
-      }
+    $attendence_ids=array_keys($times);
+    for ($i=1; $i <count($attendence_ids)-1 ; $i++) {
+      App\attendences::destroy($attendence_ids[$i]);
     }
 
-  return  CompleteDay($actual_clock_in,$actual_clock_out,$User_att_data);
+     return  CompleteDay(date('Y-m-d H:i',$actual_clock_in),date('Y-m-d H:i',$actual_clock_out),$User_att_data);
   }
 
 }
@@ -126,7 +120,8 @@ function LeaveDeductionCal($work_time_diff_sec,$late_time_min,$early_time_min,$U
     }
 
     if ($LeaveDeduction_min>0) {
-        return HtmlCreator('error','','L: '.$LeaveDeduction_min.'m');
+        // return HtmlCreator('error','','L: '.$LeaveDeduction_min.'m');
+        return $LeaveDeduction_min;
     }
   }
 }
@@ -148,16 +143,21 @@ function OTcal($early_ot_sec,$after_ot_sec,$work_time_diff_sec,$actual_work_time
       $ot_time_min=($early_ot_sec+$after_ot_sec)/60;
     }
     if (isset($ot_time_min) && $ot_time_min>MetaGet('ot_threshold') && (MetaGet('is_early_OT') || MetaGet('is_after_OT'))) {
-      return HtmlCreator('info','clock-o',$ot_time_min.'m');
+      // return HtmlCreator('info','clock-o',$ot_time_min.'m');
+      return $ot_time_min;
     }
 
   }
 }
 
-function CompleteDay($in_date_time,$out_date_time,$User_att_data)
+
+
+function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_mode=NULL)
 {
-    $in_date=date('Y-m-d',strtotime($in_date_time));
-    $out_date=date('Y-m-d',strtotime($out_date_time));
+  $data_array;
+
+    $in_date=date('Y-m-d',strtotime($in_date_time_sec));
+    $out_date=date('Y-m-d',strtotime($out_date_time_sec));
 
     $planned_clock_in_sec =strtotime($User_att_data['planned_clock_in']);
 
@@ -173,8 +173,12 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
 
     if($in_date==$out_date)
     {
-      $actual_clock_in = date('H:i',strtotime($in_date_time));
-      $actual_clock_out =date('H:i',strtotime($out_date_time));
+      $actual_clock_in = date('H:i',strtotime($in_date_time_sec));
+      $data_array['actual_clock_in']=$actual_clock_in;
+
+      $actual_clock_out =date('H:i',strtotime($out_date_time_sec));
+      $data_array['actual_clock_out']=$actual_clock_out;
+
       $actual_clock_out_sec=strtotime($actual_clock_out);
       $actual_clock_in_sec=strtotime($actual_clock_in);
       $actual_work_time_sec=$actual_clock_out_sec-$actual_clock_in_sec;
@@ -186,6 +190,8 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
 
       if($late_time_min>0 && !$User_att_data['is_holiday']){
         $html=HtmlCreator('warning','sign-in',$actual_clock_in.'<br>'.$late_time_min.'m');
+        $data_array['late_time_min']=$late_time_min;
+
       }
       else {
         $html=HtmlCreator('success','sign-in',$actual_clock_in);
@@ -193,18 +199,22 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
 
       if($early_time_min>0 && !$User_att_data['is_holiday']){
         $html=$html.HtmlCreator('warning','sign-out',$actual_clock_out.'<br>'.$early_time_min.'m');
+        $data_array['early_time_min']=$early_time_min;
       }
       else {
         $html=$html.HtmlCreator('success','sign-out',$actual_clock_out);
       }
 
-
       $early_ot_sec=$planned_clock_in_sec-$actual_clock_in_sec;
       $after_ot_sec=$actual_clock_out_sec-$planned_clock_out_sec;
       $OT=OTcal($early_ot_sec,$after_ot_sec,$work_time_diff_sec,$actual_work_time_sec,$User_att_data);
 
+
+
       if ($OT) {
-        $html=$html.$OT;
+        $html=$html.HtmlCreator('info','clock-o',$OT.'m');
+        $data_array['OT']=$OT;
+
       }
 
       $leave_deduction=LeaveDeductionCal($work_time_diff_sec,
@@ -212,9 +222,14 @@ function CompleteDay($in_date_time,$out_date_time,$User_att_data)
                                           $early_time_min,
                                           $User_att_data);
       if ($leave_deduction) {
-        $html=$html.$leave_deduction;
+        $html=$html.HtmlCreator('error','','L: '.$leave_deduction.'m');
+        $data_array['leave_deduction']=$leave_deduction;
+
       }
-      if (isset($html)) {
+      if ($data_mode) {
+        return $data_array;
+      }
+      else {
         return $html;
       }
 
@@ -242,7 +257,7 @@ function IsHoliday($employee,$date_need_check)//returns name of holidayname or w
 
 function IsCompanyHoliday($date_need_check)
 {
-  $holiday=App\holidays::where('date' , date("Y-m-d", strtotime($date_need_check)))->first();
+  $holiday=App\holidays::where('date' , $date_need_check)->first();
   // print();
   if ($holiday) {
     return $holiday->holiday_type->name;

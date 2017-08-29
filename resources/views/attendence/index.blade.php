@@ -33,7 +33,7 @@
                   @foreach ($daterange as $date)
                     <td class='cell-corner'>
                       @php
-                        echo GetInOutOfDayHTML($employee,$date->format("y-m-d"),$salary);
+                        echo GetInOutOfDayHTML($employee,$date->format("Y-m-d"),$salary);
                       @endphp
                        <span class="br_tri tri" data-target="#modal" data-toggle="modal"></span>
                      </td>

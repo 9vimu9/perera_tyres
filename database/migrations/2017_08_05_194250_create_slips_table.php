@@ -24,6 +24,7 @@ class CreateSlipsTable extends Migration
               $table->time('end_time');
               $table->integer('ot_available')->length(1)->unsigned();//1=available 0=not available
               $table->integer('is_sat_work')->length(1)->unsigned();//1=woking 0=holiday
+              $table->date('date_paid');
               $table->timestamps();
               $table->foreign('salary_id')->references('id')->on('salarys')->onDelete('cascade')->onUpdate('cascade');
               $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');

@@ -49,12 +49,6 @@
     </div>
   </div>
 </form>
-
-
-
-
-
-
 @endsection
 
 @section('script')
@@ -71,14 +65,14 @@
     $('.create').click(function () {
       $("#method").val(method);
       $('#form').attr('action', "/"+route);
-      $('#modal_title').html('add new '+title);
+      $('#modal_title').html(title);
       $('#submit').val(submit_btn_name);
     });
 
   }
 
     function create_update_toggle(route,title) {
-      Route_call(route,title,'POST','create');
+      Route_call(route,'add new '+title,'POST','create');
 
       $('.edit').click(function () {
         $("#method").val('PUT');

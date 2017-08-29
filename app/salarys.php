@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class salarys extends Model
 {
-  public function budget_allowance()
+  public function working_days()
   {
-      return $this->belongsTo('App\budget_allowances');
+      return $this->hasMany('App\working_days');
   }
 }

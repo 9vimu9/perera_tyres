@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\slips;
 use App\Employees;
+use App\Classes\Slip;
 
 class SlipsController extends Controller
 {
@@ -22,7 +23,15 @@ class SlipsController extends Controller
     {
       $employees=Employees::all();
       foreach ($employees as $employee) {
-        
+        $conditions=['salary_id'=>$request->salary_id,'employee_id'=>$employee->id];
+        $slip=new slip($request->salary_id,$employee->id);
+          if (IsRecordExist('slips',$conditions)) {
+            $slip->UpdateSlip();
+
+          }
+          else {
+            $slip->CreateSlip();
+          }
       }
       return $request->all();
 

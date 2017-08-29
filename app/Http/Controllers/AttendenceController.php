@@ -120,6 +120,7 @@ class AttendenceController extends Controller
       }
 
       if ($employee && !IsRecordExist('attendences',$conditions_attendence)) {
+        
         $employee_id=$employee->id;
         $attendence =new attendences();
         $attendence->employee_id=$employee_id;

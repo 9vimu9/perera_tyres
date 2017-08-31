@@ -1,28 +1,49 @@
 <?php
 namespace App\Classes;
 
+use App\slips;
 /**
  *
  */
 class Slip
 {
-  private $salary_id;
-  private $employee_id;
+  private $salary;
+  private $employee;
 
-  function __construct($salary_id,$employee_id)
+  function __construct($salary,$employee)
   {
-    $this->salary_id=$salary_id;
-    $this->employee_id=$employee_id;
+    $this->salary=$salary;
+    $this->employee=$employee;
   }
 
   public function CreateSlip()
   {
-    $salary_id=$this->salary_id;
-    $employee_id=$this->employee_id;
-    // echo "  $this->salary_id   $this->employee_id";
-    get_ot_hours($salary_id,$employee_id);
+    $salary=$this->salary;
+    $employee=$this->employee;
+    
+    $slips=new slips();
+    $slips->salary_id=$salary->id;
+    $slips->employee_id=$employee->id;
+    $slips->basic_salary=$employee->basic_salary;
+    $slips->ot_rate=get_ot_rate($salary,$employee);
+    $slips->nopay_rate=get_nopay_rate($salary,$employee);
+    $slips->start_time=$employee->start_time;
+    $slips->end_time=$employee->end_time;
+    $slips->ot_available=$employee->ot_available;
+    $slips->is_sat_work=$employee->is_sat_work;
+
+    if(!$slips->date_paid){
+      $slips->date_paid=NULL;
+    }
+
+
+    $slips->save();
+
+
+
 
   }
+
   public function UpdateSlip()
   {
 

@@ -15,4 +15,9 @@ class slips extends Model
   {
       return $this->belongsTo('App\salarys');
   }
+
+  public function slip_features()
+  {
+      return $this->hasMany('App\slip_features');
+  }
 }

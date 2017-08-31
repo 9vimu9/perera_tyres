@@ -65,7 +65,7 @@ function GetFeatureTypeName($type)
 }
 
 function GetFeatureCompulsoryName($value){
-  if ($value==0) {
+  if ($value==1) {
     return "compulsory";
   }
   else {

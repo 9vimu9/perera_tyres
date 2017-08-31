@@ -1,6 +1,20 @@
 @extends('layouts.modalform')
 
-@section('title')PAY SLIPS @endsection
+@section('title')
+  <h3 class="text-center">
+    REMUNERATION RECORD
+    @isset($salary_month)
+
+    @endisset
+  </h3>
+
+  <h4 class="text-center">
+    @isset($salary_month)
+
+    @endisset
+  </h4>
+
+@endsection
 
 @section('create_new')select salary month @endsection
 
@@ -20,6 +34,7 @@
 
       <tbody>
             @foreach ($slips as $slip)
+
             <tr>
               <td>{{$slip->employee->name}}</td>
               <td>{{$slip->employee->designation->name}}</td>
@@ -28,8 +43,8 @@
               <td>{{$slip->salary->budget_allowence+$slip->basic_salary}}</td>
 
               <td>
-                <button type="button" class="btn btn-warning btn-xs more" id='{{$feature->id}}'>all/ded</button> |
-                <a href="#" class="btn btn-warning btn-xs more">all/ded</a>
+                {{-- <button type="button" class="btn btn-warning btn-xs more" id='{{$slip->id}}'>all/ded</button> | --}}
+                <a href="#" class="btn btn-warning btn-xs more"><i class="fa fa-plus" aria-hidden="true"></i> / <i class="fa fa-minus" aria-hidden="true"></i></a>
               </td>
             </tr>
             @endforeach
@@ -43,6 +58,12 @@
 
   @include('layouts.salary_month_selector')
   <input type="hidden" name="salary_id" id="salary_id" >
+  <div class="form-horizontal form-group ">
+    <label class="col-sm-3 control-label">workpalce name</label>
+    <div class="col-sm-4">
+      <select id="branch_id"  name="branch_id" class="form-control" data-width="100%"></select>
+    </div>
+  </div>
 
 
 @endsection

@@ -18,7 +18,7 @@ class CreateFeaturesTable extends Migration
             $table->string('name');
             $table->integer('is_compulsory_feature');//1=yes 0 no
             $table->integer('is_static_value');//0= dynamic 1= static
-            $table->integer('value_type');//0=dynamic 1=precentage
+            $table->integer('value_type');//0=fixed value from salary 1=precentage
             $table->float('static_value', 10, 2)->default(0);
             ;$table->integer('feature_type');//1=allowence 0=deduction 2=demo
             $table->timestamps();

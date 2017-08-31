@@ -21,7 +21,7 @@ function GetInOutOfDayHTML($employee,$date,$salary)
     }
     else {
       if (!$html) {
-        $html=HtmlCreator('inverse','plane','AB');
+        $html=HtmlCreator('error','plane','AB');
       }
     }
   }
@@ -31,7 +31,8 @@ function GetInOutOfDayHTML($employee,$date,$salary)
   return $html;
 }
 
-function GetUserAttendenceBackGroundDetails($salary,$employee,$date){
+function GetUserAttendenceBackGroundDetails($salary,$employee,$working_date)
+{
 
   $in_out_details=EmloyeeDetailsFromSlipForSalary($salary,$employee);
   return [
@@ -41,9 +42,9 @@ function GetUserAttendenceBackGroundDetails($salary,$employee,$date){
           'ot_available'=>$in_out_details->ot_available,
           'planned_clock_in'=>$in_out_details->start_time,
           'planned_clock_out'=>$in_out_details->end_time,
-          'day_of_date'=>date("D", strtotime($date)),
-          'is_holiday'=>IsHoliday($employee,$date),
-          'is_on_Leave'=>IsOnLeave($employee->id,$date)
+          'day_of_date'=>date("D", strtotime($working_date)),
+          'is_holiday'=>IsHoliday($employee,$working_date),
+          'is_on_Leave'=>IsOnLeave($employee->id,$working_date)
         ];
 
 }
@@ -62,7 +63,8 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
     $date_time=$attendence->date." ".$attendence->time;
     $times[$attendence->id] = strtotime($date_time);
   }
-  arsort($times);
+  asort($times);
+  // var_dump($times);
 
   $entrys_for_working_day=count($times);
 
@@ -74,16 +76,17 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
   }
   elseif ($entrys_for_working_day>1) {
     $actual_clock_in = reset($times);
-    // echo "$actual_clock_in";
-    end($times);
+    end($times);//going for last record
     $actual_clock_out =current($times);
 
-    $attendence_ids=array_keys($times);
-    for ($i=1; $i <count($attendence_ids)-1 ; $i++) {
-      App\attendences::destroy($attendence_ids[$i]);
-    }
+    if ($entrys_for_working_day>2) {
+      $attendence_ids=array_keys($times);
 
-     return  CompleteDay(date('Y-m-d H:i',$actual_clock_in),date('Y-m-d H:i',$actual_clock_out),$User_att_data);
+      for ($i=1; $i <count($attendence_ids)-1 ; $i++) {
+        App\attendences::destroy($attendence_ids[$i]);
+      }
+    }
+     return  CompleteDay($actual_clock_in,$actual_clock_out,$User_att_data);
   }
 
 }
@@ -156,8 +159,8 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
 {
   $data_array;
 
-    $in_date=date('Y-m-d',strtotime($in_date_time_sec));
-    $out_date=date('Y-m-d',strtotime($out_date_time_sec));
+    $in_date=date('Y-m-d',$in_date_time_sec);
+    $out_date=date('Y-m-d',$out_date_time_sec);
 
     $planned_clock_in_sec =strtotime($User_att_data['planned_clock_in']);
 
@@ -167,16 +170,14 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
     else {
       $planned_clock_out_sec =strtotime($User_att_data['planned_clock_out']);
     }
-
-
     $planned_work_time_sec=$planned_clock_out_sec-$planned_clock_in_sec;
 
     if($in_date==$out_date)
     {
-      $actual_clock_in = date('H:i',strtotime($in_date_time_sec));
+      $actual_clock_in = date('H:i',$in_date_time_sec);
       $data_array['actual_clock_in']=$actual_clock_in;
 
-      $actual_clock_out =date('H:i',strtotime($out_date_time_sec));
+      $actual_clock_out =date('H:i',$out_date_time_sec);
       $data_array['actual_clock_out']=$actual_clock_out;
 
       $actual_clock_out_sec=strtotime($actual_clock_out);
@@ -188,6 +189,7 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
       $late_time_min = ($actual_clock_in_sec-$planned_clock_in_sec)/60;
       $early_time_min = ($planned_clock_out_sec-$actual_clock_out_sec)/60;
 
+        $data_array['late_time_min']=0;
       if($late_time_min>0 && !$User_att_data['is_holiday']){
         $html=HtmlCreator('warning','sign-in',$actual_clock_in.'<br>'.$late_time_min.'m');
         $data_array['late_time_min']=$late_time_min;
@@ -197,6 +199,7 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
         $html=HtmlCreator('success','sign-in',$actual_clock_in);
       }
 
+      $data_array['early_time_min']=0;
       if($early_time_min>0 && !$User_att_data['is_holiday']){
         $html=$html.HtmlCreator('warning','sign-out',$actual_clock_out.'<br>'.$early_time_min.'m');
         $data_array['early_time_min']=$early_time_min;
@@ -210,22 +213,29 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
       $OT=OTcal($early_ot_sec,$after_ot_sec,$work_time_diff_sec,$actual_work_time_sec,$User_att_data);
 
 
-
+      $data_array['OT']=0;
       if ($OT) {
         $html=$html.HtmlCreator('info','clock-o',$OT.'m');
         $data_array['OT']=$OT;
 
       }
+      $data_array['leave_deduction']=0;
 
-      $leave_deduction=LeaveDeductionCal($work_time_diff_sec,
-                                          $late_time_min,
-                                          $early_time_min,
-                                          $User_att_data);
-      if ($leave_deduction) {
-        $html=$html.HtmlCreator('error','','L: '.$leave_deduction.'m');
-        $data_array['leave_deduction']=$leave_deduction;
+      if (!$User_att_data['is_on_Leave']) {
+        $leave_deduction=LeaveDeductionCal($work_time_diff_sec,
+                                            $late_time_min,
+                                            $early_time_min,
+                                            $User_att_data);
 
-      }
+        if ($leave_deduction) {
+          $html=$html.HtmlCreator('error','','L: '.$leave_deduction.'m');
+          $data_array['leave_deduction']=$leave_deduction;
+
+        }
+
+    }
+
+
       if ($data_mode) {
         return $data_array;
       }

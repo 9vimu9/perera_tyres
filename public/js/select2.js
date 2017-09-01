@@ -1,15 +1,17 @@
 
 //////////////////////////////select2suggestion calls/////////////////
-GetSuggestionsForSelect2("#cat_id",'name','cats');
-GetSuggestionsForSelect2("#branch_id",'name','branchs');
-GetSuggestionsForSelect2("#designation_id",'name','designations');
-GetSuggestionsForSelect2("#holiday_type_id",'name','holiday_types');
-GetSuggestionsForSelect2("#leave_type_id",'name','leave_types');
-GetSuggestionsForSelect2("#employee_id",'name','employees');
+GetSuggestionsForSelect2("#cat_id",'name','cats',0);
+GetSuggestionsForSelect2("#branch_id",'name','branchs',0);
+GetSuggestionsForSelect2("#designation_id",'name','designations',0);
+GetSuggestionsForSelect2("#holiday_type_id",'name','holiday_types',0);
+GetSuggestionsForSelect2("#leave_type_id",'name','leave_types',0);
+GetSuggestionsForSelect2("#employee_id",'name','employees',0);
+GetSuggestionsForSelect2("#allowence_not_compulsory_id",'name','features',1);
+
 
 ///////////////////////////eof selct2 suggestion cals//////////////////////
 
-function GetSuggestionsForSelect2(select2_id,showingCol,table) {
+function GetSuggestionsForSelect2(select2_id,showingCol,table,no) {
 
   $(select2_id).select2({
         //  theme: "bootstrap",
@@ -20,8 +22,8 @@ function GetSuggestionsForSelect2(select2_id,showingCol,table) {
               url: '/get_suggestions_for_select2',
               dataType: 'json',
               data: function (params) {
-                console.log(params.term);
                   return {
+                      id:no,
                       q: $.trim(params.term),
                       c:showingCol,
                       t:table

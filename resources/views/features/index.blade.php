@@ -124,7 +124,7 @@
     var table =$('#salarys_index').DataTable();
 
     $('#is_static_value').change(function () {
-       $('.static_value_div').fadeToggle(this.checked);
+       $('.static_value_div').fadeToggle(!this.checked);
       }).change(); //ensure visible state matches initially
 
 

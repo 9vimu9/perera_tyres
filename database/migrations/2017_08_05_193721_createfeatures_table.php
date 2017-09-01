@@ -16,7 +16,6 @@ class CreateFeaturesTable extends Migration
         Schema::create('features', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('is_compulsory_feature');//1=yes 0 no
             $table->integer('is_static_value');//0= dynamic 1= static
             $table->integer('value_type');//0=fixed value from salary 1=precentage
             $table->float('static_value', 10, 2)->default(0);

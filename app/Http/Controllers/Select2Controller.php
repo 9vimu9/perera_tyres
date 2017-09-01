@@ -33,11 +33,7 @@ class Select2Controller extends Controller
         $data= DB::table($table)->where($column, '=', $term);
         break;
 
-      case 1://allowences not compulsory//is_compulsory_feature//orWhere
-        $data=  DB::table('features')
-        ->where('feature_type', '=', 1)//1=allowences
-        ->where('is_compulsory_feature', '=', 1);
-        // echo "string";
+      case 1:
         break;
 
       default:

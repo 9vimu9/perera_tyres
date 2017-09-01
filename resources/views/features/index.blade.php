@@ -11,7 +11,6 @@
           <tr>
               <th style="width: 30%">name</th>
               <th style="width: 15%">type</th>
-              <th style="width: 20%">is compulsory</th>
               <th style="width: 20%">value</th>
               <th style="width: 15%"></th>
           </tr>
@@ -33,7 +32,6 @@
             <tr>
               <td>{{$feature->name}}</td>
               <td>{{GetFeatureTypeName($feature->feature_type)}}</td>
-              <td>{{GetFeatureCompulsoryName($feature->is_compulsory_feature)}}</td>
               <td>
                 @if ($feature->is_static_value)
                   {{ $feature->value_type==0 ? "Rs. $feature->static_value" : "$feature->static_value% from basic salary " }}
@@ -78,15 +76,7 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label class="col-sm-4 control-label">for every employee?</label>
-        <div class="col-sm-6">
-          <div class="material-switch"><strong>NO!</strong> not for everyone
-            <input id="is_compulsory_feature" name="is_compulsory_feature" type="checkbox"/>
-              <label for="is_compulsory_feature" class="label-success"></label><strong> YES</strong> applies to every employee
-          </div>
-      </div>
-    </div>
+    
 
     <div class="form-group">
       <label class="col-sm-4 control-label">same value/precentage for every employee</label>

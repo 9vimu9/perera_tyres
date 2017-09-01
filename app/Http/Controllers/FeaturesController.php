@@ -42,7 +42,6 @@ class FeaturesController extends Controller
 
       $feature=new features();
       $feature->name=$request->name;
-      $feature->is_compulsory_feature=GetCheckBoxValue($request['is_compulsory_feature']);
       $feature->is_static_value=GetCheckBoxValue($request['is_static_value']);
       $feature->value_type=$request->value_type;
       $feature->static_value=$request->static_value ==NULL ? 0 : $request->static_value;

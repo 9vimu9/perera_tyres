@@ -17,13 +17,13 @@ class CreateSlipFeatureTable extends Migration
             $table->increments('id');
             $table->integer('slip_id')->length(10)->unsigned();
             $table->integer('feature_id')->length(10)->unsigned();
-            $table->float('static_value', 10, 2);//if feature static then its static value
-            $table->float('value', 10, 2);
+            $table->float('static_value', 10, 2)->default(0);//if feature static then its static value
+            $table->float('value', 10, 2)->default(0);
+            $table->integer('value_type')->default(0);;//0=fixed value from salary 1=precentage
             $table->timestamps();
             $table->foreign('slip_id')->references('id')->on('slips')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('feature_id')->references('id')->on('features')->onDelete('cascade')->onUpdate('cascade');
             $table->unique(['slip_id', 'feature_id'],"composite slip_features");
-
         });
     }
 

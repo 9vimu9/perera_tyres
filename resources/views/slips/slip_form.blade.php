@@ -5,7 +5,7 @@
     PAY SLIP for {{date("F", mktime(0, 0, 0, $slip->salary->month, 10))}},{{$slip->salary->year}}
   </h3>
   <h4 class="text-center">
-    {{$slip->employee->name}}
+    ({{$slip->salary->start_date}} to {{$slip->salary->end_date}})
   </h4>
 
 @endsection
@@ -16,6 +16,15 @@
   <div class="panel panel-info">
     <div class="panel-heading">employee information</div>
     <div class="panel-body">
+      <div class="row">
+        <div class="col-sm-4 text-right">
+          <p>name</p>
+        </div>
+        <div class="col-sm-6">
+          <p>{{$slip->employee->name}}</p>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-sm-4 text-right">
           <p>branch</p>
@@ -33,174 +42,77 @@
           <p>{{$slip->employee->designation->name}}</p>
         </div>
       </div>
+
+
+      <div class="row">
+        <div class="col-sm-4 text-right">
+          <p>primary salary</p>
+        </div>
+        <div class="col-sm-6">
+          <p>Rs {{$slip->basic_salary}}</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4 text-right">
+          <p>budget allowence</p>
+        </div>
+        <div class="col-sm-6">
+          <p>Rs {{$slip->salary->budget_allowence}}</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4 text-right">
+          <p>basic salary</p>
+        </div>
+        <div class="col-sm-6">
+          <p>Rs {{$slip->salary->budget_allowence+$slip->basic_salary}}</p>
+        </div>
+      </div>
+<p class="text-right"><i><strong>(basic salary = primary salary + budget allowence)</strong></i></p>
+
     </div>
   </div>
       {{-- basic details end --}}
+
+<form  role="form" method="post" action="/slips">
+  <input type="hidden" name="slip_id" value="{{$slip->id}}">
+        {{ csrf_field() }}
     <div class="panel panel-success">
-      <div class="panel-heading">EARNINGS</div>
+      <div class="panel-heading">
+        ALLOWENCES
+        <button type="submit" class="pull-right btn btn-success btn-sm save">update</button>
+      </div>
       <div class="panel-body">
         @foreach ($features as $feature)
           @if ($feature->feature_type==1){{-- //1=allowence 0=deduction 2=demo ppp--}}
-            @if ($feature->is_compulsory_feature){{--q  --}}
-              <div class="row">
-              @if ($feature->is_static_value)
-                  <div class="col-sm-4 text-right"><p>{{$feature->name}}</p></div>
-                  <div class="col-sm-5 ">
-                    <p>Rs.
-                      @if ($feature->value_type==1){{-- 0=fixed value from slary 1=precentage --}}
-
-                        @if ($feature->slip_static_value)
-                          {{$basic_salary*$feature->slip_static_value/100}} ({{$feature->slip_static_value}}% from basic salary)</p>
-                        @else
-                          {{$basic_salary*$feature->latest_static_value/100}} ({{$feature->latest_static_value}}% from basic salary)</p>
-                        @endif
-                      @else
-                        @if ($feature->slip_static_value)
-                          {{$feature->slip_static_value}}</p>
-                          @else
-                            {{$feature->latest_static_value}}</p>
-                        @endif
-                    @endif
-                  </div>
-              @endif
-              </div>
-            @endif{{-- q--}}
-          @endif{{-- pppp --}}
+            @include('slips.template')
+          @endif
         @endforeach
-
-        @foreach ($features as $feature)
-          @if ($feature->feature_type==1){{-- //1=allowence 0=deduction 2=demo ppp--}}
-            @if ($feature->is_compulsory_feature){{--q  --}}
-              <div class="row form-horizontal">
-              @if ($feature->is_static_value==0)
-                <div class="form-group">
-                  <div class="col-sm-4 text-right">{{$feature->name}}</div>
-                    <div class="col-sm-2">
-                      <input id="nic" type="text" class="form-control" name="nic" value=''>
-                    </div>
-                    <div class="col-sm-3">
-                      <select class="form-control" name="value_type" id="value_type">
-                        <option value="0">rupees</option>
-                        <option value="1">% from basic salaray</option>
-                      </select>
-                    </div>
-                    <button type="button" class="btn btn-success btn-xs">save</button>
-                    <button type="button" class="btn btn-warning btn-xs">update</button>
-                    <button type="button" class="btn btn-danger btn-xs">remove</button>
-                </div>
-              @endif
-              </div>
-            @endif{{-- q--}}
-          @endif{{-- pppp --}}
-        @endforeach
-
-<hr>
-        <div class="row form-horizontal">
-          <div class="form-group">
-            <div class="col-sm-4 text-right">
-              <select id="allowence_not_compulsory_id"  name="feature_id" class="form-control" data-width="80%">
-
-              </select>
-            </div>
-              <div class="col-sm-2">
-                <input id="nic" type="text" class="form-control" name="nic" value=''>
-              </div>
-              <div class="col-sm-3">
-                <select class="form-control" name="value_type" id="value_type">
-                  <option value="0">rupees</option>
-                  <option value="1">% from basic salaray</option>
-                </select>
-              </div>
-              <button type="button" class="btn btn-success btn-sm">save</button>
-
-          </div>
-        </div>
-
-
-
-
-
-
       </div>
     </div>
+</form>
 
-    <div class="panel panel-success">
-      <div class="panel-heading">workplace</div>
+<form  role="form" method="post" action="/slips">
+  <input type="hidden" name="slip_id" value="{{$slip->id}}">
+        {{ csrf_field() }}
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        DEDUCTIONS
+        <button type="submit" class="pull-right btn btn-danger btn-sm save">update</button>
+      </div>
       <div class="panel-body">
-        <div class="form-horizontal">
-
-          <div class="form-group{{ $errors->has('branch_id') ? ' has-error' : '' }}">
-            <label class="col-sm-4 control-label">workplace name</label>
-            <div class="col-sm-6">
-              <select id="branch_id"  name="branch_id" class="form-control" data-width="100%">
-                @if (isset($employee))
-                  <option value="{{$employee->branch->id}}" >
-                    {{$employee->branch->name}}
-                  </option>
-                @endif
-              </select>
-
-              @if ($errors->has('branch_id'))
-                  <span class="help-block">
-                      <strong>{{ $errors->first('branch_id') }}</strong>
-                  </span>
-              @endif
-            </div>
-          </div>
-
-          <div class="form-group{{ $errors->has('fingerprint_no') ? ' has-error' : '' }}">
-            <label class="col-sm-4 control-label">finger print ID</label>
-            <div class="col-sm-2">
-              <input id="fingerprint_no" type="text" class="form-control" name="fingerprint_no" value='{{isset($employee) ? $employee->fingerprint_no : old('fingerprint_no')}}'>
-              @if ($errors->has('fingerprint_no'))
-                  <span class="help-block">
-                      <strong>{{ $errors->first('fingerprint_no') }}</strong>
-                  </span>
-              @endif
-            </div>
-          </div>
-
-          <div class="form-group{{ $errors->has('cat_id') ? ' has-error' : '' }}">
-            <label class="col-sm-4 control-label">category</label>
-            <div class="col-sm-3">
-              <select id="cat_id"  name="cat_id" class="form-control" data-width="100%">
-                @if (isset($employee))
-                  <option value="{{$employee->cat->id}}" >
-
-                  </option>
-                @endif
-              </select>
-
-              @if ($errors->has('cat_id'))
-                  <span class="help-block">
-                      <strong>{{ $errors->first('cat_id') }}</strong>
-                  </span>
-              @endif
-            </div>
-          </div>
-
-          <div class="form-group{{ $errors->has('designation_id') ? ' has-error' : '' }}">
-            <label class="col-sm-4 control-label">designation</label>
-            <div class="col-sm-3">
-              <select id="designation_id"  name="designation_id" class="form-control" data-width="100%">
-                @if (isset($employee))
-                  <option value="{{$employee->designation_id}}" >
-                    {{$employee->designation->name}}
-                  </option>
-                @endif
-
-              </select>
-
-              @if ($errors->has('designation_id'))
-                  <span class="help-block">
-                      <strong>{{ $errors->first('designation_id') }}</strong>
-                  </span>
-              @endif
-            </div>
-          </div>
-        </div>
+        @foreach ($features as $feature)
+          @if ($feature->feature_type==0){{-- //1=allowence 0=deduction 2=demo ppp--}}
+            @include('slips.template')
+          @endif
+        @endforeach
       </div>
     </div>
+</form>
+
+
 
     <div class="panel panel-danger">
       <div class="panel-heading">working days / times</div>

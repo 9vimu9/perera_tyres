@@ -11,6 +11,10 @@ $('.date_picker_input').datetimepicker({
     format: 'YYYY/MM/DD'
 });
 
+$('.datetime_picker_input').datetimepicker({
+    format: 'YYYY/MM/DD HH:mm'
+});
+
 
 $('.time_picker_input').datetimepicker({
     format: 'HH:mm'

@@ -19,21 +19,17 @@ class AjaxController extends Controller
          break;
 
          case 2:
-
           return response()->json($this->GetAllHolidays());
           break;
+
+        case 3:
+         return response()->json($this->GetLeaveFromId($qyeryData));
+         break;
 
         default:
           # code...
           break;
       }
-
-
-      // if ($request->isMethod('post')){
-      //       return response()->json(['response' => 'This is post method']);
-      //   }
-      //
-      //   return response()->json(['response' => 'This is get method']);
 
     }
 
@@ -51,5 +47,11 @@ class AjaxController extends Controller
             ->get(['date AS start','name AS title']);
       return $holidays;
 
+    }
+
+    public function GetLeaveFromId($query)
+    {
+      $leaves= DB::table('leaves')->where('id',$query['leave_id'])->get();
+      return $leaves;
     }
 }

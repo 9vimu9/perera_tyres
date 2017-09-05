@@ -8,7 +8,7 @@
       <div class="col-sm-5">
           <input id="name" type="text" class="form-control" name="name" value='{{isset($employee) ? $employee->name : old('name')}}'>
           @if ($errors->has('name'))
-              <span class="help-block">
+              <span class="help-block >
                   <strong>{{ $errors->first('name') }}</strong>
               </span>
           @endif

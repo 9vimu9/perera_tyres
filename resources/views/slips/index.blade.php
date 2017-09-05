@@ -3,7 +3,8 @@
 @section('title')
   <h3 class="text-center">
     REMUNERATION RECORD
-    @isset($salary_month)
+    @isset($slips)
+    for {{date("F", mktime(0, 0, 0, $slips[0]->salary->month, 10))}},{{$slips[0]->salary->year}}
 
     @endisset
   </h3>
@@ -44,7 +45,7 @@
 
               <td>
                 {{-- <button type="button" class="btn btn-warning btn-xs more" id='{{$slip->id}}'>all/ded</button> | --}}
-                <a href="#" class="btn btn-warning btn-xs more"><i class="fa fa-plus" aria-hidden="true"></i> / <i class="fa fa-minus" aria-hidden="true"></i></a>
+                <a href="/slips/{{$slip->id}}" class="btn btn-warning btn-xs more"><i class="fa fa-plus" aria-hidden="true"></i> / <i class="fa fa-minus" aria-hidden="true"></i></a>
               </td>
             </tr>
             @endforeach

@@ -14,7 +14,16 @@
 
   {{-- basic details start --}}
   <div class="panel panel-info">
-    <div class="panel-heading">employee information</div>
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-sm-2 text-left">employee info</div>
+        <div class="col-sm-3 text-right">final salary</div>
+        <h3><div class="col-sm-4  total_salary"></div></h3>
+        <div class="col-sm-3 text-right">
+          <a href="/slips/{{$slip->id}}" class="btn btn-warning btn-sm"><i class="fa fa-print" aria-hidden="true"></i> print</a>
+        </div>
+      </div>
+    </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-sm-4 text-right">
@@ -67,7 +76,7 @@
           <p>basic salary</p>
         </div>
         <div class="col-sm-6">
-          <p>Rs {{$slip->salary->budget_allowence+$slip->basic_salary}}</p>
+          <span>Rs </span><span id="basic_salary">{{$slip->salary->budget_allowence+$slip->basic_salary}}</span>
         </div>
       </div>
 <p class="text-right"><i><strong>(basic salary = primary salary + budget allowence)</strong></i></p>
@@ -81,13 +90,19 @@
         {{ csrf_field() }}
     <div class="panel panel-success">
       <div class="panel-heading">
-        ALLOWENCES
-        <button type="submit" class="pull-right btn btn-success btn-sm save">update</button>
+        <div class="row">
+          <div class="col-sm-2 text-left">ALLOWENCES</div>
+          <h3><div class="col-sm-8 text-center total_allowences"></div></h3>
+
+          <div class="col-sm-2 text-right">
+            <button type="submit" class="btn btn-success btn-sm save">update</button>
+          </div>
+        </div>
       </div>
-      <div class="panel-body">
+      <div class="panel-body form-horizontal">
         @foreach ($features as $feature)
           @if ($feature->feature_type==1){{-- //1=allowence 0=deduction 2=demo ppp--}}
-            @include('slips.template')
+            @include('slips.feature_template')
           @endif
         @endforeach
       </div>
@@ -99,13 +114,39 @@
         {{ csrf_field() }}
     <div class="panel panel-danger">
       <div class="panel-heading">
-        DEDUCTIONS
-        <button type="submit" class="pull-right btn btn-danger btn-sm save">update</button>
+        <div class="row">
+          <div class="col-sm-2 text-left">DEDUCTIONS</div>
+          <h3>  <div class="col-sm-8 text-center total_deductions"></div></h3>
+          <div class="col-sm-2 text-right">
+            <button type="submit" class="pull-right btn btn-danger btn-sm save">update</button>
+
+          </div>
+        </div>
       </div>
-      <div class="panel-body">
+      <div class="panel-body form-horizontal">
         @foreach ($features as $feature)
           @if ($feature->feature_type==0){{-- //1=allowence 0=deduction 2=demo ppp--}}
-            @include('slips.template')
+            @include('slips.feature_template')
+          @endif
+        @endforeach
+      </div>
+    </div>
+</form>
+
+
+<form  role="form" method="post" action="/slips">
+  <input type="hidden" name="slip_id" value="{{$slip->id}}">
+        {{ csrf_field() }}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        DISPLAY ON SLIP
+        <button type="submit" class="pull-right btn btn-default btn-sm save">update</button>
+      </div>
+      <div class="panel-body form-horizontal">
+        @foreach ($features as $feature)
+          @if ($feature->feature_type==2){{-- //1=allowence 0=deduction 2=demo ppp--}}
+            @include('slips.feature_template')
+
           @endif
         @endforeach
       </div>
@@ -114,54 +155,85 @@
 
 
 
-    <div class="panel panel-danger">
-      <div class="panel-heading">working days / times</div>
-      <div class="panel-body">
-        <div class="form-horizontal">
-          <div class="form-group{{ $errors->has('start_time') ? ' has-error' : '' }}">
-            <label class="col-sm-4 control-label">clock in time</label>
-            <div class="col-sm-2">
-              <input id="time_picker" type="text" class="form-control time_picker_input" name="start_time" value='{{isset($employee) ? $employee->start_time : old('start_time')}}'>
-              @if ($errors->has('start_time'))
-                  <span class="help-block">
-                      <strong>{{ $errors->first('start_time') }}</strong>
-                  </span>
-              @endif
-            </div>
-          </div>
-          <div class="form-group{{ $errors->has('end_time') ? ' has-error' : '' }}">
-            <label class="col-sm-4 control-label">clock out time</label>
-            <div class="col-sm-2">
-              <input id="time_picker" type="text" class="form-control time_picker_input" name="end_time" value='{{isset($employee) ? $employee->end_time : old('end_time')}}'>
-              @if ($errors->has('end_time'))
-                  <span class="help-block">
-                      <strong>{{ $errors->first('end_time') }}</strong>
-                  </span>
-              @endif
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label">saturday availability</label>
-              <div class="col-sm-3">
-                <div class="material-switch">
-                  <input id="is_sat_work" name="is_sat_work" type="checkbox"
-                  @if (isset($employee))
-                    {{ $employee->is_sat_work== 1 ? "checked" : "" }}
-                  @endif
-                  />
-                    <label for="is_sat_work" class="label-success"></label>
-                </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-6 col-sm-offset-4">
-              <button type="submit" class="btn btn-primary">
-               {{isset($employee) ? 'update' : 'create'}}
-              </button>
-            </div>
-          </div>
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-sm-2 text-left">OVER TIME</div>
+          <div class="col-sm-2 text-center ">OT RATE:Rs {{$ot_rate}}</div>
+          <div class="col-sm-3 text-center ">OT HOURS:{{$ot_hours}}</div>
+          <div class="col-sm-5 text-right ">Rs <h3>{{$ot_hours*$ot_rate}}</h3></div>
+
         </div>
       </div>
+      <div class="panel-body">
+        @php
+          $daterange = GetEveryDayBetweenTwoDates($slip->salary->start_date,$slip->salary->end_date);
+        @endphp
+
+        <table class="table table-striped table-hover table-center" cellspacing="0" style="table-layout: fixed; width: 70%" >
+            <thead>
+                <tr>
+                    <th style="width: 25%">date</th>
+                    <th style="width: 25%">type</th>
+                    <th style="width: 15%">clock in</th>
+                    <th style="width: 22%">clock out</th>
+                    <th style="width: 20%">OT (m)</th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+              @foreach ($daterange as $date)
+                @php
+                //  array(
+                // 'actual_clock_in' => '09:27',
+                //  'actual_clock_out' => '15:58',
+                //  'late_time_min' => 87,
+                //  'early_time_min' => 62,
+                //  'OT' => 0,
+                //  'leave_deduction' => 149
+
+                $data=is_date_has_over_time($date->format("Y-m-d"),$slip->salary,$slip->employee);
+                @endphp
+                @if ($data['OT']>0)
+                  <tr>
+                    <td>{{$date->format("Y-m-d")}}</td>
+                    <td>
+                      @php
+                      $holiday=IsHoliday($slip->employee,$date->format("Y-m-d"));
+                      echo $holiday ? $holiday : 'working day' ;
+                      @endphp
+                    </td>
+                    <td>{{$data['actual_clock_in']}}</td>
+                    <td>{{$data['actual_clock_out']}}</td>
+                    <td>{{GetDurationHumanVersion(0,0,$data['OT']*60)}}</td>
+
+
+                  </tr>
+
+
+                @endif
+              @endforeach
+            </tbody>
+        </table>
+
     </div>
+  </div>
+
+@endsection
+
+
+@section('script')
+  <script>
+
+
+  $('.remove').click(function () {
+    var feature_id=$(this).attr('data-feature-id');
+    console.log(feature_id);
+    $("#slip_feature_value_"+feature_id).val('');
+  });
+
+
+  </script>
 
 @endsection

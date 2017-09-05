@@ -31,29 +31,81 @@ function get_nopay_rate($salary,$employee)
   return $ot_rate;
 }
 
+function is_date_has_over_time($date,$salary,$employee)
+{
+  $attendences=Illuminate\Support\Facades\DB::table('attendences')
+        ->leftJoin('employees', 'employees.id', '=', 'attendences.employee_id')
+        ->leftJoin('working_days', 'working_days.id', '=', 'attendences.working_day_id')
+        ->where('employees.id',$employee->id)
+        ->where('working_days.date',$date)
+        ->get();
+        if(count($attendences)==2){
+          $clock_in_datetime_sec=strtotime($attendences[0]->date.$attendences[0]->time);
+          $clock_out_datetime_sec=strtotime($attendences[1]->date.$attendences[1]->time);
+          $User_att_data=GetUserAttendenceBackGroundDetails($salary,$employee,$date);
+          $data=CompleteDay($clock_in_datetime_sec,$clock_out_datetime_sec,$User_att_data,"data");
+// echo $data;
+          return $data;
+
+        }
+}
+
 function get_ot_hours($salary,$employee)
 {
   $working_days=App\working_days::where('salary_id',$salary->id)->get();
   $ot_mins=0;
   $leave_deduction_mins=0;
   foreach ($working_days as $working_day) {
-    $attendences=Illuminate\Support\Facades\DB::table('attendences')
-          ->leftJoin('employees', 'employees.id', '=', 'attendences.employee_id')
-          ->leftJoin('working_days', 'working_days.id', '=', 'attendences.working_day_id')
-          ->where('employees.id',$employee->id)
-          ->where('working_days.date',$working_day->date)
-          ->get();
-          if(count($attendences)==2){
-            $clock_in_datetime_sec=strtotime($attendences[0]->date.$attendences[0]->time);
-            $clock_out_datetime_sec=strtotime($attendences[1]->date.$attendences[1]->time);
-            $User_att_data=GetUserAttendenceBackGroundDetails($salary,$employee,$working_day->date);
-            $data=CompleteDay($clock_in_datetime_sec,$clock_out_datetime_sec,$User_att_data,"data");
-            $ot_mins+=$data["OT"];
-            $leave_deduction_mins+=$data['leave_deduction'];
-
-          }
+    $data=is_date_has_over_time($working_day->date,$salary,$employee);
+// echo "string";
+    if ($data) {
+      $ot_mins+=$data["OT"];
+      $leave_deduction_mins+=$data['leave_deduction'];
+    }
   }
   return ['ot_hours'=>$ot_mins/60,'leave_deduction_mins'=>$leave_deduction_mins];
+}
+
+function PrintFeature($slip,$feature_type)
+{
+  $basic_salary=$slip->basic_salary+$slip->salary->budget_allowence;
+  $processed_features=array();
+  $total_feature_value=0;
+
+  $features=DB::table('slip_features')
+        ->leftJoin('features', 'features.id', '=', 'slip_features.feature_id')
+        ->where('slip_features.value','>',0)
+        ->where('slip_features.slip_id',$slip->id)
+        ->where('features.feature_type',$feature_type)
+        ->get([
+          'features.name AS name',//
+          'slip_features.value AS value',//
+          'slip_features.value_type AS value_type'//0=fixed value from salary 1=precentage
+        ]);
+
+  foreach ($features as $feature) {
+    $name=$feature->name;
+    $value_type=$feature->value_type;
+
+    if ($value_type==0) {
+      $value="Rs ".$feature->value;
+      $value_in_rs=$feature->value;
+    }
+    else {
+      $value=$feature->value."% from basic salary";
+      $value_in_rs=$basic_salary*($feature->value/100);
+    }
+
+    $total_feature_value+=$value_in_rs;
+
+    $processed_feature=['name'=>$name,'value'=>$value,'value_in_rs'=>$value_in_rs];
+    var_dump ($processed_feature);
+
+    array_push($processed_features,$processed_feature);
+
+  }
+  // var_dump ("$processed_features");
+  return [$processed_features,$total_feature_value];
 }
 
  ?>

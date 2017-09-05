@@ -21,9 +21,12 @@ function IsRecordExist($table,$conditions)
 
 
 
-function GetDurationHumanVersion($start_date,$end_date)
+function GetDurationHumanVersion($start_date,$end_date,$duration=0)
 {
-  $duration=strtotime($start_date)-strtotime($end_date);
+  if ($duration==0) {
+    $duration=strtotime($start_date)-strtotime($end_date);
+  }
+
   $days=$duration/86400;
   $hours=($duration%86400)/3600;
   $mins=($duration%86400)%3600/60;

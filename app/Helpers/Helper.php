@@ -17,11 +17,11 @@ function GetInOutOfDayHTML($employee,$date,$salary)
     $leave=$User_att_data['is_on_Leave'];
 
     if ($leave) {
-      $html=$html.HtmlCreator('inverse','sun-o','LEAVE');
+      $html=$html.'<span class="on_leave badge badge-inverse" data-leave_id="'.$leave->id.'"><i class="fa fa-sun-o" aria-hidden="true" ></i>LEAVE</span>';
     }
     else {
       if (!$html) {
-        $html=HtmlCreator('error','plane','AB');
+        $html=HtmlCreator('ab','error','plane','AB');
       }
     }
   }
@@ -72,12 +72,17 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
     return AbsentDayHTML($User_att_data);;
   }
   elseif ($entrys_for_working_day==1) {
-    echo "1 entry";
+    $only_time=date('H:i',reset($times));
+    $attendence_id = key($times);
+
+    return 'one entry<br>'.HtmlCreator('one_entry','inverse','',$only_time,$attendence_id);
   }
   elseif ($entrys_for_working_day>1) {
     $actual_clock_in = reset($times);
+    $clock_in_attendence_id = key($times);
     end($times);//going for last record
     $actual_clock_out =current($times);
+    $clock_out_attendence_id = key($times);
 
     if ($entrys_for_working_day>2) {
       $attendence_ids=array_keys($times);
@@ -86,7 +91,7 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
         App\attendences::destroy($attendence_ids[$i]);
       }
     }
-     return  CompleteDay($actual_clock_in,$actual_clock_out,$User_att_data);
+     return  CompleteDay($actual_clock_in,$actual_clock_out,$User_att_data,NULL,$clock_in_attendence_id,$clock_out_attendence_id);
   }
 
 }
@@ -97,7 +102,7 @@ function AbsentDayHTML($User_att_data)
 
 
     if ($holiday) {
-      $html=HtmlCreator('info','',$holiday);
+      $html=HtmlCreator('holiday','info','',$holiday);
       return $html;
     }
 
@@ -105,9 +110,26 @@ function AbsentDayHTML($User_att_data)
 
 }
 
-function HtmlCreator($badge_color,$icon,$value)
+function HtmlCreator($class,$badge_color,$icon,$value,$attendence_id=0)
 {
-    return '<span class="badge badge-'.$badge_color.'"><i class="fa fa-'.$icon.'" aria-hidden="true"></i> '.$value .'</span>';
+  ///////////class names
+  //clock_in,
+  // early,
+  // clock_out,
+  // ot,
+  // leave_deduction,
+  // on_leave,
+  // ab,
+  //one_entry,
+  // holiday
+  if ($attendence_id>0) {
+    $attendence_id_attr=" data-attendence_id='$attendence_id'";
+  }
+  else {
+    $attendence_id_attr="";
+  }
+
+  return '<span class="'.$class.' badge badge-'.$badge_color.'" '.$attendence_id_attr.'><i class="fa fa-'.$icon.'" aria-hidden="true"></i> '.$value .'</span>';
 
 }
 
@@ -155,7 +177,7 @@ function OTcal($early_ot_sec,$after_ot_sec,$work_time_diff_sec,$actual_work_time
 
 
 
-function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_mode=NULL)
+function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_mode=NULL,$clock_in_attendence_id=0,$clock_out_attendence_id=0)
 {
   $data_array;
 
@@ -191,21 +213,21 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
 
         $data_array['late_time_min']=0;
       if($late_time_min>0 && !$User_att_data['is_holiday']){
-        $html=HtmlCreator('warning','sign-in',$actual_clock_in.'<br>'.$late_time_min.'m');
+        $html=HtmlCreator('late','warning','sign-in',$actual_clock_in.'<br>'.$late_time_min.'m',$clock_in_attendence_id);
         $data_array['late_time_min']=$late_time_min;
 
       }
       else {
-        $html=HtmlCreator('success','sign-in',$actual_clock_in);
+        $html=HtmlCreator('clock_in','success','sign-in',$actual_clock_in,$clock_in_attendence_id);
       }
 
       $data_array['early_time_min']=0;
       if($early_time_min>0 && !$User_att_data['is_holiday']){
-        $html=$html.HtmlCreator('warning','sign-out',$actual_clock_out.'<br>'.$early_time_min.'m');
+        $html=$html.HtmlCreator('early','warning','sign-out',$actual_clock_out.'<br>'.$early_time_min.'m',$clock_out_attendence_id);
         $data_array['early_time_min']=$early_time_min;
       }
       else {
-        $html=$html.HtmlCreator('success','sign-out',$actual_clock_out);
+        $html=$html.HtmlCreator('clock_out','success','sign-out',$actual_clock_out,$clock_out_attendence_id);
       }
 
       $early_ot_sec=$planned_clock_in_sec-$actual_clock_in_sec;
@@ -215,7 +237,7 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
 
       $data_array['OT']=0;
       if ($OT) {
-        $html=$html.HtmlCreator('info','clock-o',$OT.'m');
+        $html=$html.HtmlCreator('ot','info','clock-o',$OT.'m');
         $data_array['OT']=$OT;
 
       }
@@ -228,14 +250,12 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
                                             $User_att_data);
 
         if ($leave_deduction) {
-          $html=$html.HtmlCreator('error','','L: '.$leave_deduction.'m');
+          $html=$html.HtmlCreator('leave_deduction','error','','L: '.$leave_deduction.'m');
           $data_array['leave_deduction']=$leave_deduction;
 
         }
 
     }
-
-
       if ($data_mode) {
         return $data_array;
       }

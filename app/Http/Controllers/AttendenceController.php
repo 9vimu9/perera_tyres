@@ -120,7 +120,7 @@ class AttendenceController extends Controller
       }
 
       if ($employee && !IsRecordExist('attendences',$conditions_attendence)) {
-        
+
         $employee_id=$employee->id;
         $attendence =new attendences();
         $attendence->employee_id=$employee_id;
@@ -151,7 +151,43 @@ class AttendenceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      return $request->all();
+    // "start_datetime_attendence_id":"2",
+    // "start_datetime":"2017\/04\/20 17:01",
+    // "end_datetime_attendence_id":"1",
+    // "end_datetime":"2017\/04\/20 17:57",
+    // "is_on_Leave":"on",
+    // "leave_id":"20",
+    // "from_datetime":"2017\/04\/20 08:00",
+    // "to_datetime":"2017\/04\/20 17:00"
+    $start_datetime_attendence_id=$request->start_datetime_attendence_id;
+    $end_datetime_attendence_id=$request->end_datetime_attendence_id;
+
+    $start_datetime=explode(' ',$request->start_datetime);
+    $start_date=$start_datetime[0];
+    $start_time=$start_datetime[1];
+
+    $end_datetime=explode(' ',$request->end_datetime);
+    $end_date=$end_datetime[0];
+    $end_time=$end_datetime[1];
+
+    $leave_id=$request->leave_id;
+    $leave_from_datetime=$request->from_datetime;
+    $leave_to_datetime=$request->to_datetime;
+    // $=$request->;
+
+    $start_attendence=attendences::find($start_datetime_attendence_id);
+    $start_attendence->date=$start_date;
+    $start_attendence->time=$start_time;
+    $start_attendence->save();
+
+    $end_attendence=attendences::find($end_datetime_attendence_id);
+    $end_attendence->date=$end_date;
+    $end_attendence->time=$end_time;
+    $end_attendence->save();
+
+    return redirect()->back();
+
     }
 
     /**

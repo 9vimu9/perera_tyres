@@ -38,15 +38,12 @@ $(document).ready(function() {
           AjaxGetData(1,'get',queryData).success(function (data) {
             if (data[0]==null) {
               $('.salary_month_display').hide();
-
                 $('.no_salary_month_dispaly').show();
             }
             else
             {
               $('.no_salary_month_dispaly').hide();
-
               $('.salary_month_display').show();
-
               $('#month').html(moment(data[0].month, 'MM').format('MMMM'));
               $('#year').html(data[0].year);
               $('#start_date').html(data[0].start_date);

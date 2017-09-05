@@ -40,9 +40,11 @@ Route::resource('features','FeaturesController');
 Route::resource('slips','SlipsController');
 Route::get('index_with_slips','SlipsController@IndexWithSlips');
 
+Route::get('printouts/slip/{slip_id}','PrintoutsController@PrintSlip');
 
 
-//Route::resource('attendence','AttendenceController');
+
+Route::resource('attendence','AttendenceController');
 Route::get('input_fingerprint_data','AttendenceController@input_fingerprint_data');
 Route::post('attendence/new_sheet','AttendenceController@index');
 

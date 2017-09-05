@@ -19,7 +19,7 @@ class CreateSlipFeatureTable extends Migration
             $table->integer('feature_id')->length(10)->unsigned();
             $table->float('static_value', 10, 2)->default(0);//if feature static then its static value
             $table->float('value', 10, 2)->default(0);
-            $table->integer('value_type')->default(0);;//0=fixed value from salary 1=precentage
+            $table->integer('value_type')->default(0);//0=fixed value from salary 1=precentage
             $table->timestamps();
             $table->foreign('slip_id')->references('id')->on('slips')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('feature_id')->references('id')->on('features')->onDelete('cascade')->onUpdate('cascade');

@@ -113,3 +113,8 @@ tfoot input {
             margin: 0px auto;
             float: none;
         }
+
+
+        select[readonly] option, select[readonly] optgroup {
+            display: none;
+        }

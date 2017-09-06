@@ -5,7 +5,8 @@
     REMUNERATION RECORD
     @isset($slips)
     for {{date("F", mktime(0, 0, 0, $slips[0]->salary->month, 10))}},{{$slips[0]->salary->year}}
-
+    <br>
+    <strong>{{$slips[0]->employee->branch->name}}</strong>
     @endisset
   </h3>
 
@@ -20,34 +21,51 @@
 @section('create_new')select salary month @endsection
 
 @section('table')
+
   @if (isset($slips) && count($slips)>0)
-  <table id="slips_index_table" class="table table-striped table-hover table-center" cellspacing="0" style="table-layout: fixed; width: 100%" >
+  {{-- <table id="slips_index_table" class="display nowrap" cellspacing="0" width="100%"> --}}
+<table id="slips_index_table" class="table table-bordered  " cellspacing="0" style="table-layout: fixed" >
       <thead>
-          <tr>
-              <th style="width: 22%">name</th>
-              <th style="width: 15%">designation</th>
-              <th style="width: 22%">branch</th>
-              <th style="width: 15%">category</th>
-              <th style="width: 15%">basic salary</th>
-              <th style="width: 10%"></th>
-          </tr>
+        <tr>
+            <th rowspan="2">Evaluation</th>
+            <th rowspan="2">Approval</th>
+            <th colspan="2">points</th>
+            <th rowspan="2">Total</th>
+            <th rowspan="2">Date</th>
+            <th rowspan="2">Award Amount</th>
+            <th rowspan="2"> Last Modified By</th>
+            <th rowspan="2">Total</th>
+            <th rowspan="2">Date</th>
+            <th rowspan="2">Award Amount</th>
+            <th rowspan="2"> Last Modified By</th>
+        </tr>
+        <tr>
+            <th> Tangible </th>
+            <th> Intangible </th>
+        </tr>
+
       </thead>
 
       <tbody>
             @foreach ($slips as $slip)
-
-            <tr>
-              <td>{{$slip->employee->name}}</td>
-              <td>{{$slip->employee->designation->name}}</td>
-              <td>{{$slip->employee->branch->name}}</td>
-              <td>{{$slip->employee->cat->name}}</td>
-              <td>{{$slip->salary->budget_allowence+$slip->basic_salary}}</td>
-
-              <td>
-                {{-- <button type="button" class="btn btn-warning btn-xs more" id='{{$slip->id}}'>all/ded</button> | --}}
-                <a href="/slips/{{$slip->id}}" class="btn btn-warning btn-xs more"><i class="fa fa-plus" aria-hidden="true"></i> / <i class="fa fa-minus" aria-hidden="true"></i></a>
-              </td>
-            </tr>
+              @if ($slip->employee->branch_id==$branch_id)
+                <tr>
+           <td>Al/GL</td>
+           <td>Select</td>
+           <td>col1</td>
+           <td>col2</td>
+           <td>col3</td>
+           <td>col4</td>
+           <td>col5</td>
+           <td>col2</td>
+           <td>col3</td>
+           <td>col4</td>
+           <td>col5</td>
+                  <td>
+                    <a href="/slips/{{$slip->id}}" class="btn btn-warning btn-xs more"><i class="fa fa-plus" aria-hidden="true"></i> / <i class="fa fa-minus" aria-hidden="true"></i></a>
+                  </td>
+                </tr>
+              @endif
             @endforeach
       </tbody>
   </table>
@@ -74,38 +92,18 @@
     // create_update_toggle('features','allowence/deduction');
     Route_call('index_with_slips','select salary month','get','create slips');
 
-    var table =$('#salarys_index').DataTable();
+    ///////////////////////////////////////////////////////
+    var table = $('#slips_index_table').DataTable({
 
-    $('#is_static_value').change(function () {
-       $('.static_value_div').fadeToggle(this.checked);
-      }).change(); //ensure visible state matches initially
-
-
-    $('.edit').click(function () {
-      var rowData = table.row( $(this).parents('tr') ).data();
-      var year=rowData[0];
-      var month=moment().month(rowData[1]).format("M");
-      var start_date=rowData[2];
-      var end_date=rowData[3];
-
-      $('#month_picker').data("DateTimePicker").date(year+'/'+month);
-      $('#start_date_picker').data("DateTimePicker").date(start_date);
-      $('#end_date_picker').data("DateTimePicker").date(end_date);
-
+      scrollX:        true,
+      scrollCollapse: true,
+      paging:         false,
+      searching   : true,
+      ordering    : true,
+      info        : true
     });
 
-    $('.save').click(function () {
-      var year_month=$('#month_picker').data('date').split('/');
-
-      var start_date=$('#start_date_picker').data("date");
-      var end_date=$('#end_date_picker').data("date");
-
-      $('#year').val(year_month[0]);
-      $('#month').val(year_month[1]);
-      $('#start_date').val(start_date);
-      $('#end_date').val(end_date);
-
-    });
+    /////////////////////////////////////////////////////////
 
   </script>
 

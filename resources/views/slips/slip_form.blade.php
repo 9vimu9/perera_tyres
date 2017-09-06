@@ -20,7 +20,7 @@
         <div class="col-sm-3 text-right">final salary</div>
         <h3><div class="col-sm-4  total_salary"></div></h3>
         <div class="col-sm-3 text-right">
-          <a href="/slips/{{$slip->id}}" class="btn btn-warning btn-sm"><i class="fa fa-print" aria-hidden="true"></i> print</a>
+          <a href="/printouts/slip/{{$slip->id}}" class="btn btn-warning btn-sm"><i class="fa fa-print" aria-hidden="true"></i> print</a>
         </div>
       </div>
     </div>
@@ -230,7 +230,7 @@
   $('.remove').click(function () {
     var feature_id=$(this).attr('data-feature-id');
     console.log(feature_id);
-    $("#slip_feature_value_"+feature_id).val('');
+    $("#slip_feature_value_"+feature_id).val('0').change();
   });
 
 

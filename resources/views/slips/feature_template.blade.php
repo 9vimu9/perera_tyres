@@ -71,7 +71,6 @@
       value_from_feature=basic_salary*(input_value/100);
     }
 
-    if (value_from_feature>0) {
 
       if (feature_type==0) {
         $('#value_from_feature_{{$feature->id}}').attr('data-deduction',value_from_feature);
@@ -80,8 +79,13 @@
         $('#value_from_feature_{{$feature->id}}').attr('data-allowence',value_from_feature);
 
       }
-      $('#value_from_feature_{{$feature->id}}').text('Rs. '+ value_from_feature);
-    }
+
+      if (value_from_feature>0) {
+        $('#value_from_feature_{{$feature->id}}').text('Rs. '+ value_from_feature);
+      }
+      else {
+        $('#value_from_feature_{{$feature->id}}').text('');
+      }
 
     var total_allowences=0;
     var total_deductions=0;
@@ -99,7 +103,8 @@
 
   }
 
-$("#slip_feature_value_{{$feature->id}}").on('change paste input',input_function).change();
+$("#slip_feature_value_{{$feature->id}}").on('keyup change paste input',input_function).change();
+$("#slip_feature_value_type_{{$feature->id}}").on('keyup paste input',input_function).change();
 
   });
   </script>

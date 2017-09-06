@@ -28,7 +28,10 @@ class SlipsController extends Controller
     public function IndexWithSlips(Request $request)
     {
       $salary_id=$request->salary_id;
-      $employees=Employees::all();
+      $branch_id=$request->branch_id;
+      echo "$branch_id";
+
+      $employees=Employees::where('branch_id',$branch_id)->get();
       $salary=salarys::find($salary_id);
       foreach ($employees as $employee) {
         $conditions=['salary_id'=>$salary_id,'employee_id'=>$employee->id];
@@ -42,7 +45,8 @@ class SlipsController extends Controller
           }
       }
       $slips=slips::where('salary_id',$salary_id)->get();
-      return view('slips.index')->with('slips',$slips);;
+      $data=['branch_id'=>$branch_id,'slips'=>$slips];
+      return view('slips.index',$data);
 
     }
 

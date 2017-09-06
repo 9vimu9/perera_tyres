@@ -200,11 +200,6 @@
         scrollX:        true,
         scrollCollapse: true,
         paging:         false,
-
-        // fixedColumns:   {
-        //     leftcolumns: 1,
-        //
-        // },
         searching   : false,
         ordering    : false,
         info        : false

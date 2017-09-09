@@ -8,7 +8,7 @@
 
 
   @if (count($holidays)>0)
-  <table id="holidays_index" class="table table-striped table-hover " cellspacing="0" style="table-layout: fixed; width: 65%" >
+  <table id="holidays_index" class="table table-striped table-hover table-center " cellspacing="0" style="table-layout: fixed; width: 65%" >
       <thead>
           <tr>
               <th style="width: 30%">date</th>

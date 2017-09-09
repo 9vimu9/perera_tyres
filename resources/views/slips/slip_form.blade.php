@@ -20,6 +20,7 @@
         <div class="col-sm-3 text-right">final salary</div>
         <h3><div class="col-sm-4  total_salary"></div></h3>
         <div class="col-sm-3 text-right">
+          <a href="/printouts/slip/{{$slip->id}}" class="btn btn-success btn-sm"><i class="fa fa-back" aria-hidden="true"></i> back</a>
           <a href="/printouts/slip/{{$slip->id}}" class="btn btn-warning btn-sm"><i class="fa fa-print" aria-hidden="true"></i> print</a>
         </div>
       </div>

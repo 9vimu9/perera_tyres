@@ -2,6 +2,9 @@
 namespace App\Classes;
 
 use App\slips;
+use App\slip_features;
+use App\features;
+
 /**
  *
  */
@@ -20,7 +23,7 @@ class Slip
   {
     $salary=$this->salary;
     $employee=$this->employee;
-    
+
     $slips=new slips();
     $slips->salary_id=$salary->id;
     $slips->employee_id=$employee->id;
@@ -38,6 +41,23 @@ class Slip
 
 
     $slips->save();
+
+    $features=features::all();
+
+    foreach ($features as $feature) {
+      if ($feature->is_static_value) {
+        echo "string";
+
+        $slip_feature=new slip_features();
+        $slip_feature->slip_id=$slips->id;
+        $slip_feature->feature_id=$feature->id;
+        $slip_feature->static_value=$feature->static_value;
+        $slip_feature->value=0;
+        $slip_feature->save();
+
+      }
+    }
+
 
 
 

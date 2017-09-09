@@ -17,6 +17,9 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <link href="{{ asset('css/libries/datatables.min.css') }}" rel="stylesheet">
+
+    <link href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css" rel="stylesheet">
+
     <link href="{{ asset('css/libries/cell-corner-button.css') }}" rel="stylesheet">
 
     <link href="{{ asset('css/libries/fixedColumns.dataTables.min.css') }}" rel="stylesheet">
@@ -35,7 +38,7 @@
 
 
     <script src="{{ asset('js/libries/jquery-2.2.4.min.js') }}"></script>
-    
+
 
 </head>
 <body>
@@ -117,6 +120,13 @@
 <script src="{{ asset('js/libries/moment.min.js') }}"></script>
 <script src="{{ asset('js/libries/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/libries/datatables.min.js') }}"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js">
+
+</script>
 <script src="{{ asset('js/libries/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="{{ asset('js/libries/select2.min.js') }}"></script>
 <script src="{{ asset('js/libries/fullcalendar.min.js') }}"></script>

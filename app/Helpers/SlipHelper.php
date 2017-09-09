@@ -17,7 +17,8 @@ function get_ot_rate($salary,$employee)
   $demnominator=$employee->cat->ot_denominator;
   $multiplier=$employee->cat->ot_multiplier;
   $ot_rate=($salary/$demnominator)*$multiplier;
-  return $ot_rate;
+  return round($ot_rate, 2);
+
 }
 
 
@@ -50,6 +51,8 @@ function is_date_has_over_time($date,$salary,$employee)
         }
 }
 
+
+
 function get_ot_hours($salary,$employee)
 {
   $working_days=App\working_days::where('salary_id',$salary->id)->get();
@@ -63,7 +66,7 @@ function get_ot_hours($salary,$employee)
       $leave_deduction_mins+=$data['leave_deduction'];
     }
   }
-  return ['ot_hours'=>$ot_mins/60,'leave_deduction_mins'=>$leave_deduction_mins];
+  return ['ot_hours'=>round($ot_mins/60, 2),'leave_deduction_mins'=>round($leave_deduction_mins,2)];
 }
 
 function PrintFeature($slip,$feature_type)
@@ -78,6 +81,7 @@ function PrintFeature($slip,$feature_type)
         ->where('slip_features.slip_id',$slip->id)
         ->where('features.feature_type',$feature_type)
         ->get([
+          'slip_features.feature_id AS feature_id',//
           'features.name AS name',//
           'slip_features.value AS value',//
           'slip_features.value_type AS value_type'//0=fixed value from salary 1=precentage
@@ -92,20 +96,28 @@ function PrintFeature($slip,$feature_type)
       $value_in_rs=$feature->value;
     }
     else {
-      $value=$feature->value."% from basic salary";
+      $value=$feature->value."%";
       $value_in_rs=$basic_salary*($feature->value/100);
     }
 
     $total_feature_value+=$value_in_rs;
 
-    $processed_feature=['name'=>$name,'value'=>$value,'value_in_rs'=>$value_in_rs];
-    var_dump ($processed_feature);
+    $processed_feature=['feature_id'=>$feature->feature_id,'name'=>$name,'value'=>$value,'value_in_rs'=>$value_in_rs];
+    // var_dump ($processed_feature);
 
     array_push($processed_features,$processed_feature);
 
   }
   // var_dump ("$processed_features");
   return [$processed_features,$total_feature_value];
+}
+
+
+
+function get_ot_in_rs($salary,$employee)
+{
+  $ot_in_rs= get_ot_hours($salary,$employee)['ot_hours']*get_ot_rate($salary,$employee);
+  return round($ot_in_rs, 2);
 }
 
  ?>

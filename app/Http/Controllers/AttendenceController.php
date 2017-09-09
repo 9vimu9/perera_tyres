@@ -38,10 +38,8 @@ class AttendenceController extends Controller
       {
           $array_word_line=array();
           $var=fgetcsv($finger_print_file)[0];
-            $string = str_replace("\0", '', $var);
+          $string = str_replace("\0", '', $var);
           $string = preg_replace('/\s+/', '_', $string);
-
-
 
           $array_word_line=explode("_",$string);
 
@@ -61,40 +59,27 @@ class AttendenceController extends Controller
           $i--;
          }
        }
-
        foreach ($finger_print_data as $fingerprint) {
-         $this->SaveAttendenceToDb($request->branch_id,$request->salary_id,$fingerprint[2],$fingerprint[8],$fingerprint[9]);
+        //  var_dump($fingerprint);
+        //  echo "<br>";
+         if (count($fingerprint)==11) {
+           $this->SaveAttendenceToDb($request->branch_id,$request->salary_id,$fingerprint[2],$fingerprint[8],$fingerprint[9]);
+
+         }
+         else {
+           $this->SaveAttendenceToDb($request->branch_id,$request->salary_id,$fingerprint[2],$fingerprint[7],$fingerprint[8]);
+         }
        }
-       //array('0', '1', '3'user id, 'LAKMAL', '0', '2', '0', '0', '4/20/2017', '17:07', '')
-
-
-      //  foreach ($finger_print_data as $value) {
-      //    print_r($value);
-      //    echo "<br>";
-      //  }
-
-    // // print_r($finger_print_data);
-
       fclose($finger_print_file);
 
-      $salary=DB::table('salarys')->where('id', '=', $request->salary_id)->first();
-      $branch=DB::table('branchs')->where('id', '=', $request->branch_id)->first();
-      $employees = Employees::where('branch_id', '=', $branch->id)->get();
+    return $this->go_for_attendence_mark_view($request->salary_id,$request->branch_id);
+    }
 
-      // // return view("attendence.index")->with(['salary'=>$salary,
-      // //                                         'branch'=>$branch,
-      // //                                         'employees'=>$employees,
-      // //                                         'finger_print_data'=>$finger_print_data
-      // //                                       ]);
-      //
-      // $salary_id=$request->salary_id;
-      // $data = attendences::with(['employee'],['working_day' => function($query) use ($salary_id)
-      // {
-      //     $query->where('salary_id', '=',$salary_id);
-      //
-      // }])->get();
-      //
-      // return $data;
+    public function go_for_attendence_mark_view($salary_id,$branch_id)
+    {
+      $salary=DB::table('salarys')->where('id', '=', $salary_id)->first();
+      $branch=DB::table('branchs')->where('id', '=', $branch_id)->first();
+      $employees = Employees::where('branch_id', '=', $branch->id)->get();
 
       return view("attendence.index")->with(['salary'=>$salary,
                                               'branch'=>$branch,
@@ -151,15 +136,7 @@ class AttendenceController extends Controller
      */
     public function store(Request $request)
     {
-      return $request->all();
-    // "start_datetime_attendence_id":"2",
-    // "start_datetime":"2017\/04\/20 17:01",
-    // "end_datetime_attendence_id":"1",
-    // "end_datetime":"2017\/04\/20 17:57",
-    // "is_on_Leave":"on",
-    // "leave_id":"20",
-    // "from_datetime":"2017\/04\/20 08:00",
-    // "to_datetime":"2017\/04\/20 17:00"
+      // return $request->all();
     $start_datetime_attendence_id=$request->start_datetime_attendence_id;
     $end_datetime_attendence_id=$request->end_datetime_attendence_id;
 
@@ -174,19 +151,36 @@ class AttendenceController extends Controller
     $leave_id=$request->leave_id;
     $leave_from_datetime=$request->from_datetime;
     $leave_to_datetime=$request->to_datetime;
-    // $=$request->;
+
+    $working_day_id=working_days::where('date',$start_date)->first()->id;
+    $employee_id=$request->employee_id;
 
     $start_attendence=attendences::find($start_datetime_attendence_id);
+    if(!$start_attendence && $start_time){
+      $start_attendence=new attendences();
+      $start_attendence->working_day_id=$working_day_id;
+      $start_attendence->employee_id=$employee_id;
+
+
+    }
     $start_attendence->date=$start_date;
     $start_attendence->time=$start_time;
     $start_attendence->save();
 
     $end_attendence=attendences::find($end_datetime_attendence_id);
+    if(!$end_attendence && $end_time){
+      $end_attendence=new attendences();
+      $end_attendence->working_day_id=$working_day_id;
+      $end_attendence->employee_id=$employee_id;
+
+
+    }
     $end_attendence->date=$end_date;
     $end_attendence->time=$end_time;
     $end_attendence->save();
 
-    return redirect()->back();
+    return $this->go_for_attendence_mark_view($request->salary_id,$request->branch_id);
+
 
     }
 

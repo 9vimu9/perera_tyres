@@ -7,6 +7,7 @@ use App\slips;
 use App\Employees;
 use App\salarys;
 use App\features;
+use App\branchs;
 
 use App\slip_features;
 use Illuminate\Support\Facades\DB;
@@ -29,10 +30,11 @@ class SlipsController extends Controller
     {
       $salary_id=$request->salary_id;
       $branch_id=$request->branch_id;
-      echo "$branch_id";
+      // echo "$branch_id";
 
       $employees=Employees::where('branch_id',$branch_id)->get();
       $salary=salarys::find($salary_id);
+
       foreach ($employees as $employee) {
         $conditions=['salary_id'=>$salary_id,'employee_id'=>$employee->id];
 
@@ -44,8 +46,28 @@ class SlipsController extends Controller
             $slip->CreateSlip();
           }
       }
+//featrure type 1=allowence 0=deduction 2=demo
+      $allowences=features::where('feature_type',1)->get();
+      $deductions=features::where('feature_type',0)->get();
+      $demos=features::where('feature_type',2)->get();
+      $slip_features= DB::table('slip_features')
+       ->leftJoin('slips', 'slips.id', '=', 'slip_features.slip_id')
+       ->where('slips.salary_id',$salary_id)
+       ->get();
+
+
+
+
       $slips=slips::where('salary_id',$salary_id)->get();
-      $data=['branch_id'=>$branch_id,'slips'=>$slips];
+      $data=[
+        'branch_id'=>$branch_id,
+        'branch_name'=>branchs::find($branch_id)->name,
+        'slips'=>$slips,
+        'allowences'=>$allowences,
+        'deductions'=>$deductions,
+        'demos'=>$demos,
+        'slip_features'=>$slip_features
+      ];
       return view('slips.index',$data);
 
     }
@@ -88,7 +110,6 @@ class SlipsController extends Controller
           else {
             $slip_feature=new slip_features();
           }
-
           $slip_feature->slip_id=$slip_id;
           $slip_feature->feature_id=$feature_id_array[$i];
           $slip_feature->static_value=$slip_feature_static_value_array[$i];
@@ -123,20 +144,13 @@ class SlipsController extends Controller
         $ot_rate=get_ot_rate($salary,$employee);
         $late_early_mins=$data['leave_deduction_mins'];
 
+        $features=features::orderBy('is_static_value', 'desc')->get();
+        $slip_features=slip_features::where('slip_id',$id)->get();
 
-
-              // var_dump($features);
-              $features=features::orderBy('is_static_value', 'desc')->get();
-              $slip_features=slip_features::where('slip_id',$id)->get();
-              foreach ($features as $feature) {
-                $slip_feature=slip_features::where('slip_id',$id)->where('feature_id',$feature->id)->first();
-// echo($slip_feature);
-                $feature['slip_feature']=$slip_feature;
-              }
-
-echo "$ot_hours";
-// return $features;
-
+        foreach ($features as $feature) {
+          $slip_feature=slip_features::where('slip_id',$id)->where('feature_id',$feature->id)->first();
+          $feature['slip_feature']=$slip_feature;
+        }
 
         $data=['basic_salary'=>$basic_salary,'slip'=>$slip,'ot_rate'=>$ot_rate,'ot_hours'=>$ot_hours,'late_early_mins'=>$late_early_mins,'features'=>$features];
         return view('slips.slip_form',$data);

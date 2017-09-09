@@ -14,6 +14,7 @@
         <button type="button" class="btn btn-success create" data-toggle="modal" data-target="#modalform_modal" >
           @yield('create_new')
         </button>
+        @yield('panel_heding_right_side_button')
         </div>
         <div class="panel-body" >
         @yield('table')

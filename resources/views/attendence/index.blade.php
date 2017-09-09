@@ -35,7 +35,7 @@
                       @php
                         echo GetInOutOfDayHTML($employee,$date->format("Y-m-d"),$salary);
                       @endphp
-                       <span class="br_tri tri" data-target="#modal" data-toggle="modal" data-date="{{$date->format("Y-m-d")}}"></span>
+                       <span class="br_tri tri" data-target="#modal" data-toggle="modal" data-date="{{$date->format("Y-m-d")}}" data-employee_id="{{$employee->id}}"></span>
                      </td>
 
                   @endforeach
@@ -50,6 +50,11 @@
 
 <form action="/attendence" method="POST">
   {{ csrf_field() }}
+  <input type="hidden" name="salary_id" value='{{$salary->id}}' >
+  <input type="hidden" name="branch_id" value='{{$branch->id}} '>
+
+  <input type="hidden" name="employee_id" id="employee_id">
+
 
   <div id="modal" class="modal fade" role="dialog">
     <div class="modal-dialog" style="width:90%;">
@@ -113,23 +118,43 @@
 @endsection
 
 @section('script')
+
+<style media="screen">
+  .modal-dialog,
+.modal-content {
+  /* 80% of window height */
+  height: 90%;
+}
+
+.modal-body {
+  /* 100% = dialog height, 120px = header + footer */
+height: calc(100% - 120px);
+  /*overflow-y: scroll;*/
+}
+  </style>
+
   <script>
 
     var clock_in_attendence_id=0;
     var clock_out_attendence_id=0;
     var leave_id=0;
+    var employee_id=0;
 
     $('.save').click(function () {//modalform save buttton(submit button)
       // alert(clock_in_attendence_id);
       $('#start_datetime_attendence_id').val(clock_in_attendence_id);
       $('#end_datetime_attendence_id').val(clock_out_attendence_id);
       $('#leave_id').val(leave_id);
+      $('#employee_id').val(employee_id);
+
 
     });
 
     $('.br_tri').click(function(){
 
       var cell_date=$(this).attr('data-date');
+      employee_id=$(this).attr('data-employee_id');
+
 
       clock_in_attendence_id=$(this).parent().find('.clock_in').attr('data-attendence_id');
       clock_out_attendence_id=$(this).parent().find('.clock_out').attr('data-attendence_id');
@@ -140,10 +165,15 @@
       leave_id=$(this).parent().find('.on_leave').attr('data-leave_id');
 
       var clock_in=$(this).parent().find('.clock_in').text();
+      var one_entry=$(this).parent().find('.one_entry').text();
       var late=$(this).parent().find('.late').text().slice(0,5);
       var clock_out=$(this).parent().find('.clock_out').text();
       var early=$(this).parent().find('.early').text().slice(0,5);
       var is_ab=$(this).parent().find('.ab');
+      if(one_entry)
+      {
+        clock_in=clock_out=one_entry;
+      }
 
 
       if(!clock_in){

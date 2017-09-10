@@ -56,7 +56,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <a class="navbar-brand" href="#">
                         <strong><big>PTS |</big></strong>  payroll
                     </a>
                 </div>
@@ -64,18 +64,13 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
+                      <li><a href="/employees">employees</a></li>
+                      <li><a href="/holidays">holidays</a></li>
+                      <li><a href="/features">allowences/deductions</a></li>
 
-                      <li class="dropdown">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                              EMPLOYEES<span class="caret"></span>
-                          </a>
-                          <ul class="dropdown-menu" role="menu">
-                              <li>
-                                <a href="#">add employee</a>
-                              </li>
-                          </ul>
-                      </li>
-
+                      <li><a href="/salaries">salary month</a></li>
+                      <li><a href="/input_fingerprint_data">mark attendence</a></li>
+                      <li><a href="/slips">pay slips</a></li>
 
                     </ul>
 

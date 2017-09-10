@@ -64,8 +64,8 @@
               <td>{{$salary->end_date}}</td>
                 <td>{{$salary->budget_allowence}}</td>
               <td>
-                <button type="button" class="btn btn-basic btn-xs more" id='{{$salary->id}}'>more</button> |
-                <button type="button" class="btn btn-warning btn-xs edit" id='{{$salary->id}}' data-toggle="modal" data-target="#salarys_index_modal">edit</button> |
+                {{-- <button type="button" class="btn btn-basic btn-xs more" id='{{$salary->id}}'>more</button> | --}}
+                <button type="button" class="btn btn-warning btn-xs edit" id='{{$salary->id}}' data-toggle="modal" data-target="#modalform_modal">edit</button> |
                 <button type="button" class="btn btn-danger btn-xs delete" id='{{$salary->id}}'>delete</button>
 
               </td>

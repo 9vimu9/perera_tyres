@@ -20,7 +20,17 @@
         <div class="col-sm-3 text-right">final salary</div>
         <h3><div class="col-sm-4  total_salary"></div></h3>
         <div class="col-sm-3 text-right">
-          <a href="/printouts/slip/{{$slip->id}}" class="btn btn-success btn-sm"><i class="fa fa-back" aria-hidden="true"></i> back</a>
+
+        <form  role="form" method="get" action="/index_with_slips">
+          <input type="hidden" name="salary_id" value="{{$slip->salary->id}}">
+          <input type="hidden" name="branch_id" value="{{$slip->employee->branch->id}}">
+          <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>back</button>
+        </form>
+
+          <form  role="form" method="post" action="/slips">
+            <input type="hidden" name="slip_id" value="{{$slip->id}}">
+                  {{ csrf_field() }}
+          <button type="submit" class="btn btn-info btn-sm save">update</button>
           <a href="/printouts/slip/{{$slip->id}}" class="btn btn-warning btn-sm"><i class="fa fa-print" aria-hidden="true"></i> print</a>
         </div>
       </div>
@@ -86,9 +96,7 @@
   </div>
       {{-- basic details end --}}
 
-<form  role="form" method="post" action="/slips">
-  <input type="hidden" name="slip_id" value="{{$slip->id}}">
-        {{ csrf_field() }}
+
     <div class="panel panel-success">
       <div class="panel-heading">
         <div class="row">
@@ -96,7 +104,6 @@
           <h3><div class="col-sm-8 text-center total_allowences"></div></h3>
 
           <div class="col-sm-2 text-right">
-            <button type="submit" class="btn btn-success btn-sm save">update</button>
           </div>
         </div>
       </div>
@@ -108,18 +115,17 @@
         @endforeach
       </div>
     </div>
-</form>
+{{-- </form>
 
 <form  role="form" method="post" action="/slips">
   <input type="hidden" name="slip_id" value="{{$slip->id}}">
-        {{ csrf_field() }}
+        {{ csrf_field() }} --}}
     <div class="panel panel-danger">
       <div class="panel-heading">
         <div class="row">
           <div class="col-sm-2 text-left">DEDUCTIONS</div>
           <h3>  <div class="col-sm-8 text-center total_deductions"></div></h3>
           <div class="col-sm-2 text-right">
-            <button type="submit" class="pull-right btn btn-danger btn-sm save">update</button>
 
           </div>
         </div>
@@ -135,13 +141,9 @@
 </form>
 
 
-<form  role="form" method="post" action="/slips">
-  <input type="hidden" name="slip_id" value="{{$slip->id}}">
-        {{ csrf_field() }}
     <div class="panel panel-default">
       <div class="panel-heading">
         DISPLAY ON SLIP
-        <button type="submit" class="pull-right btn btn-default btn-sm save">update</button>
       </div>
       <div class="panel-body form-horizontal">
         @foreach ($features as $feature)
@@ -152,7 +154,6 @@
         @endforeach
       </div>
     </div>
-</form>
 
 
 

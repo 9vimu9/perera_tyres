@@ -26,8 +26,9 @@ class FileUploadRequest extends FormRequest
     {
         return [
           'salary_id'=>Config::get('enums.QuickVali.fk'),
-          'branch_id'=>Config::get('enums.QuickVali.fk'),
-          'fileToUpload'=>'required|max:1999'
+          'branch_id'=>Config::get('enums.QuickVali.fk')
+          // 'branch_id'=>Config::get('enums.QuickVali.fk'),
+          // 'fileToUpload'=>'required|max:1999'
 
 
             //

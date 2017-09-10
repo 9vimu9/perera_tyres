@@ -76,7 +76,7 @@
       </div>
     </div>
 
-    
+
 
     <div class="form-group">
       <label class="col-sm-4 control-label">same value/precentage for every employee</label>
@@ -114,7 +114,7 @@
     var table =$('#salarys_index').DataTable();
 
     $('#is_static_value').change(function () {
-       $('.static_value_div').fadeToggle(!this.checked);
+       $('.static_value_div').fadeToggle(this.checked);
       }).change(); //ensure visible state matches initially
 
 

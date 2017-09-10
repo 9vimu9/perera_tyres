@@ -1,7 +1,11 @@
 
 {{-- basic details start --}}
 <div class="panel panel-info">
-  <div class="panel-heading">employee information</div>
+  <div class="panel-heading">
+    employee information
+    <a href="/employees" class="btn btn-success btn-sm pull-right "><i class="fa fa-arrow-left" aria-hidden="true"></i> back</a>
+
+  </div>
   <div class="panel-body">
     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
       <label class="col-sm-4 control-label">name</label>

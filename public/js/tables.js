@@ -68,7 +68,29 @@ var batch_search_table =   $('#batch_search_table').DataTable({
 
 ////////////////////////////// eof salarys.index ////////////////////
 
+///////////////////////////////emloyees.index///////////////////////////////
+var employees_index_table =   $('#employees_index').DataTable({
+   scrollX:        true,
+   scrollCollapse: true,
+  paging:         false,
+  searching   : true,
+  ordering    : false,
+  info        : false,
+  'autoWidth'   : true
 
+    });
+
+
+
+
+
+    // var searchArray = {
+    //   0:"branch",//table column:id date
+    //   1:"name"
+    // };
+    //
+    // AddColumnSearch(employees_index_table,searchArray,'#employees_index');
+//////////////////////////////////eof emplouees.index////////////////////
 
 /////////////////////////////////holidays.index table//////////////////////////////
 

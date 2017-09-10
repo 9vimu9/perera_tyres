@@ -41,15 +41,15 @@
             <th >OT</th>
             <th >no pay</th>
             @foreach ($allowences as $allowence)
-              <th>{{$allowence->name}}</th>
+              <th>
+                {{get_feature_column_header($allowence)}}
+
+              </th>
             @endforeach
             <th >total allowences</th>
             @foreach ($deductions as $deduction)
               <th>
-                {{$deduction->name}}
-                @if ($deduction)
-
-                @endif
+                {{get_feature_column_header($deduction)}}
               </th>
             @endforeach
             <th >total deductions</th>

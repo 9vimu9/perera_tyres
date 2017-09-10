@@ -30,7 +30,6 @@ class SlipsController extends Controller
     {
       $salary_id=$request->salary_id;
       $branch_id=$request->branch_id;
-      // echo "$branch_id";
 
       $employees=Employees::where('branch_id',$branch_id)->get();
       $salary=salarys::find($salary_id);
@@ -46,7 +45,6 @@ class SlipsController extends Controller
             $slip->CreateSlip();
           }
       }
-//featrure type 1=allowence 0=deduction 2=demo
       $allowences=features::where('feature_type',1)->get();
       $deductions=features::where('feature_type',0)->get();
       $demos=features::where('feature_type',2)->get();
@@ -54,9 +52,6 @@ class SlipsController extends Controller
        ->leftJoin('slips', 'slips.id', '=', 'slip_features.slip_id')
        ->where('slips.salary_id',$salary_id)
        ->get();
-
-
-
 
       $slips=slips::where('salary_id',$salary_id)->get();
       $data=[
@@ -68,6 +63,7 @@ class SlipsController extends Controller
         'demos'=>$demos,
         'slip_features'=>$slip_features
       ];
+      // return $data;
       return view('slips.index',$data);
 
     }

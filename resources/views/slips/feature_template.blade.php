@@ -91,8 +91,10 @@
     var total_deductions=0;
 
     $('.value_from_feature').each(function () {
-      total_allowences+=parseInt($(this).attr('data-allowence'));
-      total_deductions+=parseInt($(this).attr('data-deduction'));
+      var allowence=parseInt($(this).attr('data-allowence'))||0;
+      var deduction=parseInt($(this).attr('data-deduction'))||0;
+      total_allowences+=allowence;
+      total_deductions+=deduction;
     });
     var total_salary=parseInt({{$ot_hours*$ot_rate}})+parseInt(basic_salary)+(total_allowences-total_deductions);
 

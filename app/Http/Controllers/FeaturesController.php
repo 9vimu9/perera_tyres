@@ -47,6 +47,7 @@ class FeaturesController extends Controller
       $feature->static_value=$request->static_value ==NULL ? 0 : $request->static_value;
       $feature->feature_type=$request->feature_type;
       $feature->save();
+      return redirect('/features');
 
     }
 

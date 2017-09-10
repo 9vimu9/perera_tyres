@@ -46,15 +46,13 @@ class Slip
 
     foreach ($features as $feature) {
       if ($feature->is_static_value) {
-        echo "string";
-
         $slip_feature=new slip_features();
         $slip_feature->slip_id=$slips->id;
         $slip_feature->feature_id=$feature->id;
         $slip_feature->static_value=$feature->static_value;
-        $slip_feature->value=0;
+        $slip_feature->value_type=$feature->value_type;
+        $slip_feature->value=$feature->static_value;
         $slip_feature->save();
-
       }
     }
 

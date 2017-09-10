@@ -28,50 +28,52 @@ class AttendenceController extends Controller
     // public function index(Request $request)
 
     {
-      $fileName=time().'.txt';
-      $request->file('fileToUpload')->storeAs('public/attendence_files',$fileName);
-      $path = storage_path("app\public\attendence_files/".$fileName);
-      $finger_print_file = fopen($path, "r") or exit("Unable to open file!");
-      $finger_print_data=array();
+      if ($request->file('fileToUpload')!=NULL) {
+        # code...
+        $fileName=time().'.txt';
+        $request->file('fileToUpload')->storeAs('public/attendence_files',$fileName);
+        $path = storage_path("app\public\attendence_files/".$fileName);
+        $finger_print_file = fopen($path, "r") or exit("Unable to open file!");
+        $finger_print_data=array();
 
-      while(!feof($finger_print_file))
-      {
-          $array_word_line=array();
-          $var=fgetcsv($finger_print_file)[0];
-          $string = str_replace("\0", '', $var);
-          $string = preg_replace('/\s+/', '_', $string);
+        while(!feof($finger_print_file))
+        {
+            $array_word_line=array();
+            $var=fgetcsv($finger_print_file)[0];
+            $string = str_replace("\0", '', $var);
+            $string = preg_replace('/\s+/', '_', $string);
 
-          $array_word_line=explode("_",$string);
+            $array_word_line=explode("_",$string);
 
-          // for ($i=0; $i < count($array_word_line); $i++) {
-          //   if (strlen($array_word_line[$i])==0) {
-          //    array_splice($array_word_line,$i,1);
-          //   }
-          // }
-          array_push($finger_print_data,$array_word_line);
-      }
-       array_splice($finger_print_data,0,1);
-       array_splice($finger_print_data,count($finger_print_data)-1,1);
+            // for ($i=0; $i < count($array_word_line); $i++) {
+            //   if (strlen($array_word_line[$i])==0) {
+            //    array_splice($array_word_line,$i,1);
+            //   }
+            // }
+            array_push($finger_print_data,$array_word_line);
+        }
+         array_splice($finger_print_data,0,1);
+         array_splice($finger_print_data,count($finger_print_data)-1,1);
 
-       for ($i=0; $i < count($finger_print_data); $i++) {
-         if ($finger_print_data[$i][2]==0) {
-          array_splice($finger_print_data,$i,1);
-          $i--;
+         for ($i=0; $i < count($finger_print_data); $i++) {
+           if ($finger_print_data[$i][2]==0) {
+            array_splice($finger_print_data,$i,1);
+            $i--;
+           }
          }
-       }
-       foreach ($finger_print_data as $fingerprint) {
-        //  var_dump($fingerprint);
-        //  echo "<br>";
-         if (count($fingerprint)==11) {
-           $this->SaveAttendenceToDb($request->branch_id,$request->salary_id,$fingerprint[2],$fingerprint[8],$fingerprint[9]);
+         foreach ($finger_print_data as $fingerprint) {
+          //  var_dump($fingerprint);
+          //  echo "<br>";
+           if (count($fingerprint)==11) {
+             $this->SaveAttendenceToDb($request->branch_id,$request->salary_id,$fingerprint[2],$fingerprint[8],$fingerprint[9]);
 
+           }
+           else {
+             $this->SaveAttendenceToDb($request->branch_id,$request->salary_id,$fingerprint[2],$fingerprint[7],$fingerprint[8]);
+           }
          }
-         else {
-           $this->SaveAttendenceToDb($request->branch_id,$request->salary_id,$fingerprint[2],$fingerprint[7],$fingerprint[8]);
-         }
-       }
-      fclose($finger_print_file);
-
+        fclose($finger_print_file);
+    }
     return $this->go_for_attendence_mark_view($request->salary_id,$request->branch_id);
     }
 

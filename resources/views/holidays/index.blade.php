@@ -31,7 +31,7 @@
               <td>{{$holiday->date}}</td>
               <td>{{$holiday->holiday_type->name}}</td>
               <td>
-                <button type="button" class="btn btn-warning btn-xs edit" id='{{$holiday->id}}' data-toggle="modal" data-target="#salarys_index_modal">edit</button> |
+                <button type="button" class="btn btn-warning btn-xs edit" id='{{$holiday->id}}' data-toggle="modal" data-target="#modalform_modal">edit</button> |
                 <button type="button" class="btn btn-danger btn-xs delete" id='{{$holiday->id}}'>delete</button>
               </td>
             </tr>
@@ -67,6 +67,13 @@
   });
     create_update_toggle('holidays','holiday');
 
+  var table =   $('#holidays_index').DataTable();
+      $('.edit').click(function(){
+        var rowData = table.row( $(this).parents('tr') ).data();
+        var date=rowData[0];
+        console.log(date);
+        $('#calendar').fullCalendar('gotoDate',date)
+      });
 
   </script>
 

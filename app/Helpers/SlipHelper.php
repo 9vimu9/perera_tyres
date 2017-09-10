@@ -120,4 +120,26 @@ function get_ot_in_rs($salary,$employee)
   return round($ot_in_rs, 2);
 }
 
+
+function get_feature_column_header($feature)
+{
+  $value_type=$feature->value_type;
+  $feature_name=$feature->name;
+  $static_value=$feature->static_value;
+  $is_static_value=$feature->is_static_value;
+
+  if ($is_static_value) {
+    if ($value_type==0) {
+      return $feature_name." (Rs ".$static_value.")";
+    }
+    else {
+      return $feature_name." (".$static_value."%)";
+    }
+  }
+  else {
+      return $feature_name;
+  }
+
+}
+
  ?>

@@ -1,7 +1,7 @@
 @extends('layouts.printouts.app')
 
 @section('title')
-  PAY SLIP for {{date("F", mktime(0, 0, 0, $slip->salary->month, 10))}},{{$slip->salary->year}}
+  {{$slip->employee->branch->name}}<br>PAY SLIP for {{date("F", mktime(0, 0, 0, $slip->salary->month, 10))}},{{$slip->salary->year}}
 
 
 @endsection
@@ -13,15 +13,23 @@
 
 
 @section('content')
+  @php
+    $ot_in_rs=round($ot_rate*$ot_hours,2);
+    $basic_salary=$slip->salary->budget_allowence+$slip->basic_salary;
+    $total_allowences_in_rs=$allowences[1]+$ot_in_rs;
+    $total_deductions_in_rs=$deductions[1];
+    $total_salary=$ot_in_rs+$basic_salary+$total_allowences_in_rs-$total_deductions_in_rs;
+
+  @endphp
   <div class="row">
     <div class="col-xs-1"></div>
-    <div class="col-xs-3 text-right">name </div>
+    <div class="col-xs-3 text-right">name</div>
     <div class="col-xs-6 ">{{$slip->employee->name}} </div>
   </div>
   <div class="row">
     <div class="col-xs-1"></div>
-    <div class="col-xs-3 text-right">branch </div>
-    <div class="col-xs-6 ">{{$slip->employee->branch->name}} </div>
+    <div class="col-xs-3 text-right">EPF no </div>
+    <div class="col-xs-6 ">{{$slip->employee->epf_no}} </div>
   </div>
 
   <div class="row">
@@ -46,70 +54,60 @@
   <div class="row">
     <div class="col-xs-1"></div>
     <div class="col-xs-3 text-right">basic salary</div>
-    <div class="col-xs-6 ">Rs {{$slip->salary->budget_allowence+$slip->basic_salary}}</div>
+    <div class="col-xs-6 ">Rs {{$basic_salary}}</div>
   </div>
 
 <br>
   <div class="row">
     <div class="col-xs-1"></div>
     <div class="col-xs-3 text-right">allowences </div>
-    <div class="col-xs-3 ">Rs {{$allowences[1]}} </div>
+    {{-- <div class="col-xs-3 ">Rs {{$allowences[1]}} </div> --}}
 
   </div>
 
     @foreach ($allowences[0] as $allowence)
       <div class="row">
-        <div class="col-xs-2"></div>
-        <div class="col-xs-2 text-right">{{$allowence['name']}}</div>
-        <div class="col-xs-3 text-center">{{$allowence['value']}}</div>
+        <div class="col-xs-3"></div>
+        <div class="col-xs-3 text-right">{{$allowence['name']}}</div>
         <div class="col-xs-3 text-left">Rs {{$allowence['value_in_rs']}}</div>
       </div>
-
-
-    </div>
     @endforeach
+
+    <div class="row">
+      <div class="col-xs-3"></div>
+      <div class="col-xs-3 text-right">over time</div>
+      <div class="col-xs-3 ">Rs {{$ot_in_rs}}</div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-3"></div>
+      <div class="col-xs-3 text-right">TOTAL</div>
+      <div class="col-xs-3 ">Rs {{$total_allowences_in_rs}}</div>
+    </div>
+
 
     <br>
     <div class="row">
       <div class="col-xs-1"></div>
       <div class="col-xs-3 text-right">deductions </div>
-      <div class="col-xs-3 ">Rs {{$deductions[1]}} </div>
+      {{-- <div class="col-xs-3 ">Rs {{$deductions[1]}} </div> --}}
 
     </div>
 
       @foreach ($deductions[0] as $deduction)
         <div class="row">
-          <div class="col-xs-2"></div>
-          <div class="col-xs-2 text-right">{{$deduction['name']}}</div>
-          <div class="col-xs-3 text-center">{{$deduction['value']}}</div>
+          <div class="col-xs-3"></div>
+          <div class="col-xs-3 text-right">{{$deduction['name']}}</div>
           <div class="col-xs-3 text-left">Rs {{$deduction['value_in_rs']}}</div>
         </div>
 
-
-      </div>
       @endforeach
+      <div class="row">
+        <div class="col-xs-3"></div>
+        <div class="col-xs-3 text-right">TOTAL</div>
+        <div class="col-xs-3 ">Rs {{$total_deductions_in_rs}}</div>
+      </div>
 <br>
-      <div class="row">
-        <div class="col-xs-1"></div>
-        <div class="col-xs-3 text-right">over time </div>
-        <div class="col-xs-3 ">Rs {{$ot_rate*$ot_hours}}</div>
-
-      </div>
-
-      <div class="row">
-        <div class="col-xs-2"></div>
-        <div class="col-xs-3 text-right">OT rate</div>
-        <div class="col-xs-3 ">Rs {{$ot_rate}}</div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-2"></div>
-        <div class="col-xs-3 text-right">OT hours</div>
-        <div class="col-xs-3 ">Rs {{$ot_hours}}</div>
-      </div>
-
-
-
 
 
 

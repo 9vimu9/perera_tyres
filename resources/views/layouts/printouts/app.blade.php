@@ -49,7 +49,7 @@
       <div class="col-xs-10">
         <h3>
           <p class="text-center" >
-            PERERA TYRE SERVICES<br>
+            PERERA TYRES<br>
             <font size="6">
               @yield('title')
             </font>

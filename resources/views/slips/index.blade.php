@@ -46,7 +46,7 @@
 
               </th>
             @endforeach
-            <th >total allowences</th>
+            <th >total earning</th>
             @foreach ($deductions as $deduction)
               <th>
                 {{get_feature_column_header($deduction)}}
@@ -75,10 +75,10 @@
               $no_pay_in_rs=0;
               $slip_feature_demos=PrintFeature($slip,2);
               $slip_feature_allowences=PrintFeature($slip,1);
-              $total_allowences_in_rs=$slip_feature_allowences[1];
+              $total_earning_in_rs=$slip_feature_allowences[1]+$ot_in_rs+$basic_salary;
               $slip_feature_deductions=PrintFeature($slip,0);//slip,feature_type
               $total_deductions_in_rs=$slip_feature_deductions[1];
-              $total_salary=$basic_salary+$ot_in_rs+$total_allowences_in_rs-$total_deductions_in_rs-$no_pay_in_rs;
+              $total_salary=$total_earning_in_rs-$total_deductions_in_rs-$no_pay_in_rs;
             @endphp
             <tr>
               <td>{{$slip->employee->name}}</td>
@@ -101,7 +101,7 @@
                     @endforeach
                   </td>
                 @endforeach
-                <td>{{$total_allowences_in_rs}}</td>
+                <td>{{$total_earning_in_rs}}</td>
                   @foreach ($deductions as $deduction)
                     <td>
                       @foreach ($slip_feature_deductions[0] as $slip_feature_deduction)

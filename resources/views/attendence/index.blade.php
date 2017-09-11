@@ -230,7 +230,7 @@ height: calc(100% - 120px);
         scrollX:        true,
         scrollCollapse: true,
         paging:         false,
-        searching   : false,
+        searching   : true,
         ordering    : false,
         info        : false
 

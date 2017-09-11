@@ -67,6 +67,7 @@
                       <li><a href="/employees">employees</a></li>
                       <li><a href="/holidays">holidays</a></li>
                       <li><a href="/features">allowences/deductions</a></li>
+                      <li><a href="/leaves">leaves</a></li>
 
                       <li><a href="/salaries">salary month</a></li>
                       <li><a href="/input_fingerprint_data">mark attendence</a></li>

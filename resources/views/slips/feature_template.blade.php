@@ -91,12 +91,12 @@
     var total_deductions=0;
 
     $('.value_from_feature').each(function () {
-      var allowence=parseInt($(this).attr('data-allowence'))||0;
-      var deduction=parseInt($(this).attr('data-deduction'))||0;
+      var allowence=parseFloat($(this).attr('data-allowence'))||0;
+      var deduction=parseFloat($(this).attr('data-deduction'))||0;
       total_allowences+=allowence;
       total_deductions+=deduction;
     });
-    var total_salary=parseInt({{$ot_hours*$ot_rate}})+parseInt(basic_salary)+(total_allowences-total_deductions);
+    var total_salary=parseFloat({{$ot_hours*$ot_rate}})+parseFloat(basic_salary)+(total_allowences-total_deductions);
 
     $('.total_salary').text('Rs. '+total_salary);
     $('.total_deductions').text('Rs. '+total_deductions);

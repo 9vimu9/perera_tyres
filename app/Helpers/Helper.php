@@ -19,6 +19,9 @@ function GetInOutOfDayHTML($employee,$date,$salary)
     if ($leave) {
       $html=$html.'<span class="on_leave badge badge-inverse" data-leave_id="'.$leave->id.'"><i class="fa fa-sun-o" aria-hidden="true" ></i>LEAVE</span>';
     }
+    elseif (!($User_att_data['cat_id']==2 && $User_att_data['day_of_date']=="Sun")) {
+
+    }
     else {
       if (!$html) {
         $html=HtmlCreator('ab','error','plane','AB');
@@ -37,6 +40,7 @@ function GetUserAttendenceBackGroundDetails($salary,$employee,$working_date)
   $in_out_details=EmloyeeDetailsFromSlipForSalary($salary,$employee);
   return [
           'employee_id'=>$employee->id,
+          'cat_id'=>$employee->cat_id,
           'join_date'=>$employee->join_date,
           'is_sat_work'=>$in_out_details->is_sat_work,
           'ot_available'=>$in_out_details->ot_available,
@@ -236,7 +240,9 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
 
 
       $data_array['OT']=0;
-      if ($OT) {
+      if ($OT && !($User_att_data['cat_id']==2 && $User_att_data['day_of_date']=="Sun") ) {
+      // if ($OT  ) {
+
         $html=$html.HtmlCreator('ot','info','clock-o',$OT.'m');
         $data_array['OT']=$OT;
 
@@ -298,7 +304,7 @@ function IsCompanyHoliday($date_need_check)
 function IsWeekend($employee,$date_need_check)
 {
   $day_of_date=date("D", strtotime($date_need_check));
-  if(($employee->is_sat_work==0 && $day_of_date=="Sat")||$day_of_date=="Sun"){
+  if((($employee->is_sat_work==0 && $day_of_date=="Sat")||$day_of_date=="Sun")){
     return $day_of_date;
   }
 }

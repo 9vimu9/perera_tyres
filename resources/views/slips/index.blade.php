@@ -53,10 +53,13 @@
               </th>
             @endforeach
             <th >total deductions</th>
+              <th >net payable</th>
             @foreach ($demos as $demo)
-              <th >{{$demo->name}}</th>
+              <th >
+              {{get_feature_column_header($demo)}}
+              </th>
             @endforeach
-            <th >net payable</th>
+
             <th ></th>
             <th >signature</th>
 
@@ -70,6 +73,7 @@
               $basic_salary=$slip->basic_salary+$slip->salary->budget_allowence;
               $ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee);
               $no_pay_in_rs=0;
+              $slip_feature_demos=PrintFeature($slip,2);
               $slip_feature_allowences=PrintFeature($slip,1);
               $total_allowences_in_rs=$slip_feature_allowences[1];
               $slip_feature_deductions=PrintFeature($slip,0);//slip,feature_type
@@ -108,14 +112,17 @@
                     </td>
                   @endforeach
                   <td>{{$total_deductions_in_rs}}</td>
-                  @php
-                    $slip_feature_demos=PrintFeature($slip,2);//slip,feature_type
-                  @endphp
-                  @foreach ($slip_feature_demos[0] as $slip_feature_demo)
-                    <td>{{$slip_feature_demo['value_in_rs']}}</td>
-
-                  @endforeach
                   <td>{{$total_salary}}</td>
+                  @foreach ($demos as $demo)
+                    <td>
+                      @foreach ($slip_feature_demos[0] as $slip_feature_demo)
+                        @if ($slip_feature_demo['feature_id']==$demo->id)
+                          {{$slip_feature_demo['value_in_rs']}}
+                        @endif
+                      @endforeach
+                    </td>
+                  @endforeach
+
 {{-- //0767918151 --}}
               <td>
                 <a href="/slips/{{$slip->id}}" class="btn btn-warning btn-xs more"><i class="fa fa-plus" aria-hidden="true"></i>  <i class="fa fa-minus" aria-hidden="true"></i></a>

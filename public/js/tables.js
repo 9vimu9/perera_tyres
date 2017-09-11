@@ -72,11 +72,24 @@ var batch_search_table =   $('#batch_search_table').DataTable({
 var employees_index_table =   $('#employees_index').DataTable({
    scrollX:        true,
    scrollCollapse: true,
-  paging:         false,
-  searching   : true,
-  ordering    : false,
-  info        : false,
-  'autoWidth'   : true
+    paging:         true,
+    searching   : true,
+    ordering    : true,
+    info        : true,
+    'autoWidth'   : true,
+    dom         : 'Bfrtip',
+    buttons     : [
+
+               {
+              extend: 'pdfHtml5',
+              orientation: 'landscape',
+              pageSize: 'LEGAL',
+              title:'employee details',
+              exportOptions: {
+                  columns: [ 0, 1, 2, 3,4,5,6,7,8,9,10,11,12 ]
+             }
+          }
+        ]
 
     });
 

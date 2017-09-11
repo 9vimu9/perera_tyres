@@ -28,16 +28,16 @@ class EmployeesRequest extends FormRequest
         return [
           'name'=>'required',
           'epf_no'=>'numeric',
-          'nic'=>Config::get('enums.QuickVali.nic'),
-          'address'=>'required',
-          'tel'=>'required|'.Config::get('enums.QuickVali.tel'),
-          'join_date'=>'required|date',
+          // 'nic'=>Config::get('enums.QuickVali.nic'),
+          // 'address'=>'required',
+          // 'tel'=>'required|'.Config::get('enums.QuickVali.tel'),
+          // 'join_date'=>'required|date',
           'basic_salary' => Config::get('enums.QuickVali.money'),
           'branch_id'=>Config::get('enums.QuickVali.fk'),
           'fingerprint_no'=>'required|numeric',
           'cat_id'=>Config::get('enums.QuickVali.fk'),
           'designation_id'=>Config::get('enums.QuickVali.fk'),
-          'start_time'=>'required',//|'.Config::get('enums.QuickVali.time')
+          // 'start_time'=>'required',//|'.Config::get('enums.QuickVali.time')
           'end_time'=>'required'//|'.Config::get('enums.QuickVali.time')
 
             //

@@ -55,7 +55,7 @@ class LeavesController extends Controller
           $leave->to_time=$to_datetime[1];
           $leave->save();
         }
-        return $request->all();
+        return redirect('/leaves/');
     }
 
     /**

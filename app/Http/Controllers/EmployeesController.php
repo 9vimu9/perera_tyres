@@ -42,7 +42,7 @@ class EmployeesController extends Controller
     {
       $employee=new Employees();
       $this->SaveToDb($request,$employee);
-      return redirect()->back();
+      return view("employees.create");
     }
 
     /**
@@ -79,7 +79,7 @@ class EmployeesController extends Controller
     {
       $employee=Employees::find($id);
       $this->SaveToDb($request,$employee);
-      return "updatd";
+      return redirect('/employees/');
       // return view("employees.create");
 
     }
@@ -102,16 +102,30 @@ class EmployeesController extends Controller
       $employee->designation_id=$request['designation_id'];
       $employee->fingerprint_no=$request['fingerprint_no'];
       $employee->name=$request['name'];
-      $employee->address=$request['address'];
-      $employee->nic=$request['nic'];
-      $employee->tel=$request['tel'];
+      // $employee->address=$request['address'];
+      $employee->address='DFDFSDFSF';
+
+      // $employee->nic=$request['nic'];
+      $employee->nic='812310310';
+
+      // $employee->tel=$request['tel'];
+      $employee->tel='0123456789';
+
       $employee->epf_no=$request['epf_no'];
-      $employee->start_time=$request['start_time'];
+      // $employee->start_time=$request['start_time'];
+      $employee->start_time='08:00';
+
       $employee->end_time=$request['end_time'];
-      $employee->join_date=$request['join_date'];
+      // $employee->join_date=$request['join_date'];
+      $employee->join_date='2016-12-12';
+
       $employee->basic_salary=$request['basic_salary'];
-      $employee->ot_available=GetCheckBoxValue($request['ot_available']);
-      $employee->is_sat_work=GetCheckBoxValue($request['is_sat_work']);
+      // $employee->ot_available=GetCheckBoxValue($request['ot_available']);
+      $employee->ot_available=1;
+
+      // $employee->is_sat_work=GetCheckBoxValue($request['is_sat_work']);
+      $employee->is_sat_work=1;
+
       $employee->save();
     }
 

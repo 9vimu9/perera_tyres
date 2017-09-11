@@ -19,9 +19,7 @@ function GetInOutOfDayHTML($employee,$date,$salary)
     if ($leave) {
       $html=$html.'<span class="on_leave badge badge-inverse" data-leave_id="'.$leave->id.'"><i class="fa fa-sun-o" aria-hidden="true" ></i>LEAVE</span>';
     }
-    elseif (!($User_att_data['cat_id']==2 && $User_att_data['day_of_date']=="Sun")) {
 
-    }
     else {
       if (!$html) {
         $html=HtmlCreator('ab','error','plane','AB');
@@ -171,6 +169,15 @@ function OTcal($early_ot_sec,$after_ot_sec,$work_time_diff_sec,$actual_work_time
       }
       $ot_time_min=($early_ot_sec+$after_ot_sec)/60;
     }
+    if ($User_att_data['day_of_date']=="Sat") {
+      if ($ot_time_min>60) {
+        $ot_time_min-=60;
+      }
+      else {
+        $ot_time_min=0;
+      }
+    }
+    
     if (isset($ot_time_min) && $ot_time_min>MetaGet('ot_threshold') && (MetaGet('is_early_OT') || MetaGet('is_after_OT'))) {
       // return HtmlCreator('info','clock-o',$ot_time_min.'m');
       return $ot_time_min;

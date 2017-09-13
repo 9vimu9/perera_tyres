@@ -14,11 +14,11 @@
 
 @section('content')
   @php
-    $ot_in_rs=round($ot_rate*$ot_hours,2);
+    $ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee,$slip);
     $basic_salary=$slip->salary->budget_allowence+$slip->basic_salary;
     $total_allowences_in_rs=$allowences[1]+$ot_in_rs;
     $total_deductions_in_rs=$deductions[1];
-    $total_salary=$ot_in_rs+$basic_salary+$total_allowences_in_rs-$total_deductions_in_rs;
+    $total_salary=round($ot_in_rs+$basic_salary+$total_allowences_in_rs-$total_deductions_in_rs,2);
 
   @endphp
   <div class="row">
@@ -36,6 +36,12 @@
     <div class="col-xs-1"></div>
     <div class="col-xs-3 text-right">designation </div>
     <div class="col-xs-6 ">{{$slip->employee->designation->name}} </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-1"></div>
+    <div class="col-xs-3 text-right"><h4>SALARY</h4></div>
+    <div class="col-xs-6 "><h4>{{$total_salary}}</h4> </div>
   </div>
   <hr>
 

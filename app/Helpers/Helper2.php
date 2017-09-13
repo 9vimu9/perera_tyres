@@ -41,12 +41,6 @@ function GetDurationHumanVersion($start_date,$end_date,$duration=0)
 
   }
 
-
-
-  // if ($duration>0) {
-  //   return Carbon\Carbon::createFromTimeStamp($duration)->diffForHumans();
-  //
-  // }
 }
 
 
@@ -80,11 +74,12 @@ function GetFeatureCompulsoryName($value){
 function worked_days_in_salary_month($employee,$salary)
 {
   $dates=GetEveryDayBetweenTwoDates($salary->start_date,$salary->end_date);
+  // echo(count($dates).'ddd');
   $number_of_days=0;
 
   foreach ($dates as $date) {
-    $times=is_employee_worked_that_date($employee,$date->format("d-m-Y"));
-    if (count($times==2)) {
+    $times=is_employee_worked_that_date($employee,$date->format("Y-m-d"));
+    if (count($times)>0) {
       $number_of_days++;
     }
   }

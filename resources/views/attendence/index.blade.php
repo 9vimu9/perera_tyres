@@ -227,14 +227,17 @@ height: calc(100% - 120px);
 
 
     var table = $('#attendence_index').DataTable( {
+        scrollY:        '300px',
         scrollX:        true,
         scrollCollapse: true,
         paging:         false,
         searching   : true,
         ordering    : false,
-        info        : false
+        info        : false,
 
     } );
+
+
 
 
   </script>

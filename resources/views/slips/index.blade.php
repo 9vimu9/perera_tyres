@@ -65,6 +65,10 @@
             <th >primary salary</th>
             <th >budget allowence</th>
             <th >basic salary</th>
+            <th >per day pay</th>
+            <th >days worked</th>
+            <th >monthly salary</th>
+
             <th >OT rate</th>
             <th >OT hours</th>
             <th >OT</th>
@@ -129,6 +133,9 @@
               <td>{{$slip->basic_salary}}</td>{{-- primary slary --}}
               <td>{{$slip->salary->budget_allowence}}</td>
               <td>{{$basic_salary}}</td>
+              <td>{{$slip->per_day_salary}}</td>
+              <td>{{worked_days_in_salary_month($slip->employee,$slip->salary)}}</td>
+              <td>{{$slip->actual_salary}}</td>
               <td>{{$ot_rate}}</td>
               <td>{{$ot_hours}}</td>
               <td>{{$ot_in_rs}}</td>

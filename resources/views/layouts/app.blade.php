@@ -17,12 +17,11 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <link href="{{ asset('css/libries/datatables.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/3.2.3/css/fixedColumns.dataTables.min.css">
 
     <link href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css" rel="stylesheet">
 
     <link href="{{ asset('css/libries/cell-corner-button.css') }}" rel="stylesheet">
-
-    <link href="{{ asset('css/libries/fixedColumns.dataTables.min.css') }}" rel="stylesheet">
 
     <link href="{{ asset('css/libries/select2.min.css') }}" rel="stylesheet">
 
@@ -115,17 +114,19 @@
 
 <script src="{{ asset('js/libries/moment.min.js') }}"></script>
 <script src="{{ asset('js/libries/bootstrap.min.js') }}"></script>
+
 <script src="{{ asset('js/libries/datatables.min.js') }}"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/3.2.3/js/dataTables.fixedColumns.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
 
-</script>
 <script src="{{ asset('js/libries/bootstrap-datetimepicker.min.js') }}"></script>
-<script src="{{ asset('js/libries/select2.min.js') }}"></script>
 <script src="{{ asset('js/libries/fullcalendar.min.js') }}"></script>
+<script src="{{ asset('js/libries/select2.min.js') }}"></script>
+
 
 
 

@@ -19,17 +19,7 @@
       </div>
     </div>
 
-    <div class="form-group{{ $errors->has('epf_no') ? ' has-error' : '' }}">
-      <label class="col-sm-4 control-label">EPF no</label>
-      <div class="col-sm-2">
-        <input id="epf_no" type="text" class="form-control" name="epf_no" value='{{isset($employee) ? $employee->epf_no : old('epf_no')}}'>
-        @if ($errors->has('epf_no'))
-            <span class="help-block">
-                <strong>{{ $errors->first('epf_no') }}</strong>
-            </span>
-        @endif
-      </div>
-    </div>
+
 
     <div class="form-group{{ $errors->has('nic') ? ' has-error' : '' }}">
       <label class="col-sm-4 control-label">NIC</label>
@@ -99,6 +89,18 @@
                 />
                   <label for="is_epf" class="label-warning"></label>
               </div>
+          </div>
+        </div>
+
+        <div class="form-group{{ $errors->has('epf_no') ? ' has-error' : '' }} epf_no">
+          <label class="col-sm-4 control-label">EPF no</label>
+          <div class="col-sm-2">
+            <input id="epf_no" type="text" class="form-control" name="epf_no" value='{{isset($employee) ? $employee->epf_no : old('epf_no')}}'>
+            @if ($errors->has('epf_no'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('epf_no') }}</strong>
+                </span>
+            @endif
           </div>
         </div>
 
@@ -301,8 +303,6 @@
 
 <script>
   $('#is_monthly_salary').change(function () {
-
-
      if (this.checked) {
        $('.actual_salary').fadeIn();
        $('.per_day_salary').fadeOut();
@@ -310,8 +310,16 @@
      else {
        $('.actual_salary').fadeOut();
        $('.per_day_salary').fadeIn();
-
      }
-
     }).change(); //ensure visible state matches initially
+
+    $('#is_epf').change(function () {
+        if (this.checked) {
+          $('.epf_no').fadeIn();
+        }
+        else {
+          $('.epf_no').fadeOut();
+        }
+      }).change(); //ensure visible state matches initially
+
 </script>

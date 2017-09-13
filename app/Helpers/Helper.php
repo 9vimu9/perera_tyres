@@ -4,6 +4,7 @@ function GetEveryDayBetweenTwoDates($start_date,$end_date)
 {
   $begin = new DateTime($start_date);
   $end = new DateTime($end_date);
+  $end->add(new DateInterval('P1D'));
   $daterange = new DatePeriod($begin, new DateInterval('P1D'), $end);
   return $daterange;
 }
@@ -158,21 +159,29 @@ function LeaveDeductionCal($work_time_diff_sec,$late_time_min,$early_time_min,$U
   }
 }
 
-function OTcal($early_ot_sec,$after_ot_sec,$work_time_diff_sec,$actual_work_time_sec,$User_att_data)
+
+function OTcal($actual_clock_in_sec,$actual_clock_out_sec,$planned_clock_in_sec,$planned_clock_out_sec,$work_time_diff_sec,$actual_work_time_sec,$User_att_data)
 {
+
   if ($User_att_data['ot_available'] ) {
+    $ot_in_sec=$work_time_diff_sec;
 
     if ($User_att_data['is_holiday']) {
       $ot_time_min=$actual_work_time_sec/60;
     }
     elseif($work_time_diff_sec>0) {
-      if ($early_ot_sec<0 || MetaGet('is_early_OT')==0) {
-        $early_ot_sec=0;
+      $early_ot=$planned_clock_in_sec-$actual_clock_in_sec;
+      $after_ot=$actual_clock_out_sec-$planned_clock_out_sec;
+
+      if (MetaGet('is_early_OT')==0 && $early_ot>0) {
+        $ot_in_sec=$ot_in_sec-$early_ot;
       }
-      if ($after_ot_sec<0 || MetaGet('is_after_OT')==0) {
-        $after_ot_sec=0;
+      if (MetaGet('is_after_OT')==0 && $after_ot>0) {
+        $ot_in_sec=$ot_in_sec-$after_ot;
       }
-       $ot_time_min=($early_ot_sec+$after_ot_sec)/60;
+
+       $ot_time_min=($ot_in_sec)/60;
+
        if ($User_att_data['day_of_date']=="Sat") {
          if ($ot_time_min>60) {
            $ot_time_min-=60;
@@ -185,7 +194,6 @@ function OTcal($early_ot_sec,$after_ot_sec,$work_time_diff_sec,$actual_work_time
 
 
     if (isset($ot_time_min) && $ot_time_min>MetaGet('ot_threshold') && (MetaGet('is_early_OT') || MetaGet('is_after_OT'))) {
-      // return HtmlCreator('info','clock-o',$ot_time_min.'m');
       return $ot_time_min;
     }
 
@@ -247,9 +255,9 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
         $html=$html.HtmlCreator('clock_out','success','sign-out',$actual_clock_out,$clock_out_attendence_id);
       }
 
-      $early_ot_sec=$planned_clock_in_sec-$actual_clock_in_sec;
-      $after_ot_sec=$actual_clock_out_sec-$planned_clock_out_sec;
-      $OT=OTcal($early_ot_sec,$after_ot_sec,$work_time_diff_sec,$actual_work_time_sec,$User_att_data);
+
+      echo $work_time_diff_sec/60;
+      $OT=OTcal($actual_clock_in_sec,$actual_clock_out_sec,$planned_clock_in_sec,$planned_clock_out_sec,$work_time_diff_sec,$actual_work_time_sec,$User_att_data);
 
 
       $data_array['OT']=0;

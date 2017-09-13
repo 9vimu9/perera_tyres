@@ -24,8 +24,14 @@
                 <th style="width: 15%" >join date</th>
                 <th style="width: 10%" >fp id</th>
                 <th style="width: 10%" >EPF no</th>
+                <th style="width: 8%" >EPF availability</th>
+                <th style="width: 8%" >salary type</th>
                 <th style="width: 15%" >primary salary</th>
                 <th style="width: 8%" >ot available</th>
+
+
+
+
                 <th style="width: 15%" >planned in</th>
                 <th style="width: 15%" >planned out</th>
                 <th style="width: 20%" ></th>
@@ -43,6 +49,8 @@
                   <td>{{$employee->join_date}}</td>
                   <td>{{$employee->fingerprint_no}}</td>
                   <td>{{$employee->epf_no}}</td>
+                  <td>{{$employee->is_epf==1 ? 'yes' : 'no'}}</td>
+                  <td>{{$employee->per_day_salary>0 ? 'per day' : 'monthly'}}</td>
                   <td>{{$employee->basic_salary}}</td>
                   <td>{{$employee->ot_available==1 ? 'yes' : 'no'}}</td>
                   <td>{{$employee->start_time}}</td>

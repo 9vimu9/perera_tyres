@@ -51,7 +51,7 @@ function GetUserAttendenceBackGroundDetails($salary,$employee,$working_date)
 
 }
 
-function GetInOutOfDay($employee,$working_date,$User_att_data)
+function is_employee_worked_that_date($employee,$working_date)
 {
   $attendences=Illuminate\Support\Facades\DB::table('attendences')
         ->leftJoin('employees', 'employees.id', '=', 'attendences.employee_id')
@@ -66,7 +66,12 @@ function GetInOutOfDay($employee,$working_date,$User_att_data)
     $times[$attendence->id] = strtotime($date_time);
   }
   asort($times);
-  // var_dump($times);
+  return $times;
+}
+
+function GetInOutOfDay($employee,$working_date,$User_att_data)
+{
+  $times=is_employee_worked_that_date($employee,$working_date);
 
   $entrys_for_working_day=count($times);
 
@@ -167,17 +172,18 @@ function OTcal($early_ot_sec,$after_ot_sec,$work_time_diff_sec,$actual_work_time
       if ($after_ot_sec<0 || MetaGet('is_after_OT')==0) {
         $after_ot_sec=0;
       }
-      $ot_time_min=($early_ot_sec+$after_ot_sec)/60;
+       $ot_time_min=($early_ot_sec+$after_ot_sec)/60;
+       if ($User_att_data['day_of_date']=="Sat") {
+         if ($ot_time_min>60) {
+           $ot_time_min-=60;
+         }
+         else {
+           $ot_time_min=0;
+         }
+       }
     }
-    if ($User_att_data['day_of_date']=="Sat") {
-      if ($ot_time_min>60) {
-        $ot_time_min-=60;
-      }
-      else {
-        $ot_time_min=0;
-      }
-    }
-    
+
+
     if (isset($ot_time_min) && $ot_time_min>MetaGet('ot_threshold') && (MetaGet('is_early_OT') || MetaGet('is_after_OT'))) {
       // return HtmlCreator('info','clock-o',$ot_time_min.'m');
       return $ot_time_min;

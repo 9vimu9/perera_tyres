@@ -30,6 +30,8 @@ class SlipsController extends Controller
     {
       $salary_id=$request->salary_id;
       $branch_id=$request->branch_id;
+      $is_epf_version=$request->is_epf_version;
+
 
       $employees=Employees::where('branch_id',$branch_id)->get();
       $salary=salarys::find($salary_id);
@@ -54,8 +56,10 @@ class SlipsController extends Controller
        ->get();
 
       $slips=slips::where('salary_id',$salary_id)->get();
+
       $data=[
         'branch_id'=>$branch_id,
+        'salary_id'=>$salary_id,
         'branch_name'=>branchs::find($branch_id)->name,
         'slips'=>$slips,
         'allowences'=>$allowences,
@@ -63,7 +67,10 @@ class SlipsController extends Controller
         'demos'=>$demos,
         'slip_features'=>$slip_features
       ];
-      // return $data;
+
+      if ($is_epf_version) {
+        $data['is_epf_version']=1;
+      }
       return view('slips.index',$data);
 
     }
@@ -137,7 +144,7 @@ class SlipsController extends Controller
         $basic_salary=$salary->basic_salary+$salary->budget_allowence;
         $data=get_ot_hours($salary,$employee);
         $ot_hours=$data['ot_hours'];
-        $ot_rate=get_ot_rate($salary,$employee);
+        $ot_rate=$slip->ot_rate;
         $late_early_mins=$data['leave_deduction_mins'];
 
         $features=features::orderBy('is_static_value', 'desc')->get();

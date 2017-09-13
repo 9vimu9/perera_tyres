@@ -85,9 +85,25 @@
   <div class="panel panel-danger">
     <div class="panel-heading">salary details</div>
     <div class="panel-body">
+
       <div class="form-horizontal">
+
+        <div class="form-group">
+          <label class="col-sm-4 control-label">EPF enabled?</label>
+            <div class="col-sm-3">
+              <div class="material-switch">
+                <input id="is_epf" name="is_epf" type="checkbox"
+                @if (isset($employee))
+                  {{ $employee->is_epf== 1 ? "checked" : "" }}
+                @endif
+                />
+                  <label for="is_epf" class="label-warning"></label>
+              </div>
+          </div>
+        </div>
+
         <div class="form-group{{ $errors->has('basic_salary') ? ' has-error' : '' }}">
-          <label class="col-sm-4 control-label">basic salary(Rs.)</label>
+          <label class="col-sm-4 control-label">primary salary(Rs.)</label>
           <div class="col-sm-3">
             <input id="basic_salary" type="text" class="form-control" name="basic_salary" value='{{isset($employee) ? $employee->basic_salary : old('basic_salary')}}'>
             @if ($errors->has('basic_salary'))
@@ -97,6 +113,7 @@
             @endif
           </div>
         </div>
+
         <div class="form-group">
           <label class="col-sm-4 control-label">OT available</label>
             <div class="col-sm-3">
@@ -110,6 +127,45 @@
               </div>
           </div>
         </div>
+
+        <div class="form-group">
+          <label class="col-sm-4 control-label">salary type</label>
+            <div class="col-sm-4">
+              <div class="material-switch">per day salary
+                <input id="is_monthly_salary" name="is_monthly_salary" type="checkbox"
+                @if (isset($employee))
+                  {{ $employee->per_day_salary== 0 ? "checked" : "" }}
+                @endif
+                />
+                  <label for="is_monthly_salary" class="label-info"></label>monthly salary
+              </div>
+          </div>
+        </div>
+
+        <div class="form-group{{ $errors->has('actual_salary') ? ' has-error' : '' }} actual_salary">
+          <label class="col-sm-4 control-label">actual salary(Rs.)</label>
+          <div class="col-sm-3">
+            <input id="actual_salary" type="text" class="form-control" name="actual_salary" value='{{isset($employee) ? $employee->actual_salary : old('actual_salary')}}'>
+            @if ($errors->has('actual_salary'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('actual_salary') }}</strong>
+                </span>
+            @endif
+          </div>
+        </div>
+
+        <div class="form-group{{ $errors->has('per_day_salary') ? ' has-error' : '' }} per_day_salary">
+          <label class="col-sm-4 control-label">per day salary(Rs.)</label>
+          <div class="col-sm-3">
+            <input id="per_day_salary" type="text" class="form-control" name="per_day_salary" value='{{isset($employee) ? $employee->per_day_salary : old('per_day_salary')}}'>
+            @if ($errors->has('per_day_salary'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('per_day_salary') }}</strong>
+                </span>
+            @endif
+          </div>
+        </div>
+
 
       </div>
     </div>
@@ -242,3 +298,20 @@
       </div>
     </div>
   </div>
+
+<script>
+  $('#is_monthly_salary').change(function () {
+
+
+     if (this.checked) {
+       $('.actual_salary').fadeIn();
+       $('.per_day_salary').fadeOut();
+     }
+     else {
+       $('.actual_salary').fadeOut();
+       $('.per_day_salary').fadeIn();
+
+     }
+
+    }).change(); //ensure visible state matches initially
+</script>

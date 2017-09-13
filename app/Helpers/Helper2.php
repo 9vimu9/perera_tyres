@@ -77,4 +77,18 @@ function GetFeatureCompulsoryName($value){
 
 }
 
+function worked_days_in_salary_month($employee,$salary)
+{
+  $dates=GetEveryDayBetweenTwoDates($salary->start_date,$salary->end_date);
+  $number_of_days=0;
+
+  foreach ($dates as $date) {
+    $times=is_employee_worked_that_date($employee,$date->format("d-m-Y"));
+    if (count($times==2)) {
+      $number_of_days++;
+    }
+  }
+  return $number_of_days;
+}
+
  ?>

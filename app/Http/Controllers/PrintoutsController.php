@@ -12,7 +12,7 @@ class PrintoutsController extends Controller
       $slip=slips::find($slip_id);
       $salary=$slip->salary;
       $employee=$slip->employee;
-      $ot_rate=get_ot_rate($salary,$employee);
+      $ot_rate=$slip->ot_rate;
       $ot_hours=get_ot_hours($salary,$employee)['ot_hours'];
       $allowences=PrintFeature($slip,1);//slip,feature_type
       $deductions=PrintFeature($slip,0);//slip,feature_type

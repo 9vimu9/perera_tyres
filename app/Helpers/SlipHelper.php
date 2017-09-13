@@ -114,9 +114,9 @@ function PrintFeature($slip,$feature_type)
 
 
 
-function get_ot_in_rs($salary,$employee)
+function get_ot_in_rs($salary,$employee,$slip)
 {
-  $ot_in_rs= get_ot_hours($salary,$employee)['ot_hours']*get_ot_rate($salary,$employee);
+  $ot_in_rs= get_ot_hours($salary,$employee)['ot_hours']*$slip->ot_rate;
   return round($ot_in_rs, 2);
 }
 

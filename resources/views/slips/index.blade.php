@@ -14,20 +14,49 @@
     @endisset
   </h3>
 
-  <h4 class="text-center">
-    @isset($salary_month)
-
-    @endisset
-  </h4>
 
 @endsection
 
 @section('create_new')select salary month @endsection
 
 
+  @section('panel_heding_right_side_button')
+    @isset($slips)
+      <div class="text-right">
+        @if (isset($is_epf_version))
+          EPF
+        @else
+          OFFICE
+        @endif
+      </div>
+    @endisset
+  @endsection
+
+
+
 @section('table')
 
   @if (isset($slips) && count($slips)>0)
+
+@if (!isset($is_epf_version))
+  <form  role="form" method="get" action="/index_with_slips">
+    <input type="hidden" name="salary_id" value="{{$salary_id}}">
+    <input type="hidden" name="branch_id" value="{{$branch_id}}">
+    <input type="hidden" name="is_epf_version" value="1">
+    <button type="submit" class="btn btn-danger btn-sm">EPF version</button>
+  </form>
+  @else
+    <form  role="form" method="get" action="/index_with_slips">
+      <input type="hidden" name="salary_id" value="{{$salary_id}}">
+      <input type="hidden" name="branch_id" value="{{$branch_id}}">
+      <button type="submit" class="btn btn-danger btn-sm">office version</button>
+    </form>
+
+@endif
+
+<br>
+
+
     <table id="slips_index_table" class="table table-bordered  " cellspacing="0" style="table-layout: fixed" >
       <thead>
         <tr>
@@ -70,13 +99,27 @@
         @foreach ($slips as $slip)
           @if ($slip->employee->branch_id==$branch_id)
             @php
-              $basic_salary=$slip->basic_salary+$slip->salary->budget_allowence;
-              $ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee);
-              $no_pay_in_rs=0;
               $slip_feature_demos=PrintFeature($slip,2);
               $slip_feature_allowences=PrintFeature($slip,1);
-              $total_earning_in_rs=$slip_feature_allowences[1]+$ot_in_rs+$basic_salary;
               $slip_feature_deductions=PrintFeature($slip,0);//slip,feature_type
+
+              $basic_salary=$slip->basic_salary+$slip->salary->budget_allowence;
+              $ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee,$slip);
+              $ot_rate=$slip->ot_rate;
+              $ot_hours=get_ot_hours($slip->salary,$slip->employee)['ot_hours'];
+
+              if (isset($is_epf_version)) {
+                $ot_rate=$slip->epf_ot_rate;
+                if ($ot_rate!=0) {
+                  $ot_hours=round($ot_in_rs/$ot_rate,2);
+                }
+                else {
+                  $ot_hours=0;
+                }
+              }
+
+              $no_pay_in_rs=0;
+              $total_earning_in_rs=$slip_feature_allowences[1]+$ot_in_rs+$basic_salary;
               $total_deductions_in_rs=$slip_feature_deductions[1];
               $total_salary=$total_earning_in_rs-$total_deductions_in_rs-$no_pay_in_rs;
             @endphp
@@ -86,9 +129,8 @@
               <td>{{$slip->basic_salary}}</td>{{-- primary slary --}}
               <td>{{$slip->salary->budget_allowence}}</td>
               <td>{{$basic_salary}}</td>
-              <td>{{get_ot_rate($slip->salary,$slip->employee)}}</td>
-              <td>{{get_ot_hours($slip->salary,$slip->employee)['ot_hours']}}</td>
-
+              <td>{{$ot_rate}}</td>
+              <td>{{$ot_hours}}</td>
               <td>{{$ot_in_rs}}</td>
               <td>{{$no_pay_in_rs}}</td>
 
@@ -165,7 +207,7 @@
 
       scrollX:        true,
       scrollCollapse: true,
-      paging:         false,
+      paging:         true,
       searching   : true,
       ordering    : true,
       info        : true,

@@ -92,7 +92,7 @@
               {{get_feature_column_header($demo)}}
               </th>
             @endforeach
-
+            <th >date of paid</th>
             <th ></th>
             <th >signature</th>
 
@@ -128,21 +128,21 @@
               $total_salary=$total_earning_in_rs-$total_deductions_in_rs-$no_pay_in_rs;
             @endphp
             <tr>
-              <td>{{$slip->employee->name}}</td>
-              <td>{{$slip->employee->designation->name}}</td>
-              <td>{{$slip->basic_salary}}</td>{{-- primary slary --}}
-              <td>{{$slip->salary->budget_allowence}}</td>
-              <td>{{$basic_salary}}</td>
-              <td>{{$slip->per_day_salary}}</td>
-              <td>{{worked_days_in_salary_month($slip->employee,$slip->salary)}}</td>
-              <td>{{$slip->actual_salary}}</td>
-              <td>{{$ot_rate}}</td>
-              <td>{{$ot_hours}}</td>
-              <td>{{$ot_in_rs}}</td>
-              <td>{{$no_pay_in_rs}}</td>
+              <td >{{$slip->employee->name}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->employee->designation->name}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->basic_salary}}</td>{{-- primary slary --}}
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->salary->budget_allowence}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$basic_salary}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->per_day_salary}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{worked_days_in_salary_month($slip->employee,$slip->salary)}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->actual_salary}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$ot_rate}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$ot_hours}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$ot_in_rs}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$no_pay_in_rs}}</td>
 
                 @foreach ($allowences as $allowence)
-                  <td>
+                  <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">
                     @foreach ($slip_feature_allowences[0] as $slip_feature_allowence)
                       @if ($slip_feature_allowence['feature_id']==$allowence->id)
                         {{$slip_feature_allowence['value_in_rs']}}
@@ -150,9 +150,9 @@
                     @endforeach
                   </td>
                 @endforeach
-                <td>{{$total_earning_in_rs}}</td>
+                <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$total_earning_in_rs}}</td>
                   @foreach ($deductions as $deduction)
-                    <td>
+                    <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">
                       @foreach ($slip_feature_deductions[0] as $slip_feature_deduction)
                         @if ($slip_feature_deduction['feature_id']==$deduction->id)
                           {{$slip_feature_deduction['value_in_rs']}}
@@ -160,10 +160,10 @@
                       @endforeach
                     </td>
                   @endforeach
-                  <td>{{$total_deductions_in_rs}}</td>
-                  <td>{{$total_salary}}</td>
+                  <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$total_deductions_in_rs}}</td>
+                  <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$total_salary}}</td>
                   @foreach ($demos as $demo)
-                    <td>
+                    <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">
                       @foreach ($slip_feature_demos[0] as $slip_feature_demo)
                         @if ($slip_feature_demo['feature_id']==$demo->id)
                           {{$slip_feature_demo['value_in_rs']}}
@@ -173,7 +173,19 @@
                   @endforeach
 
 {{-- //0767918151 --}}
-              <td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">
+                @if ($slip->date_paid)
+                  {{$slip->date_paid}}
+                  @else
+                    not marked
+                @endif
+              @if ($slip->date_paid)
+                <a href="/slips/is_paid/{{$slip->id}}" class="btn btn-danger btn-xs">mark as unpaid</a>
+                @else
+                <a href="/slips/is_paid/{{$slip->id}}" class="btn btn-success btn-xs">mark as paid</a>
+              @endif
+              </td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">
                 <a href="/slips/{{$slip->id}}" class="btn btn-warning btn-xs more"><i class="fa fa-plus" aria-hidden="true"></i>  <i class="fa fa-minus" aria-hidden="true"></i></a>
               </td>
               <td></td>
@@ -213,6 +225,7 @@
     var slips_index_table = $('#slips_index_table').DataTable({
 
       scrollX:        true,
+      scrollY:        '400px',
       scrollCollapse: true,
       paging:         true,
       searching   : true,
@@ -231,7 +244,7 @@
                  {
                 extend: 'pdfHtml5',
                 orientation: 'landscape',
-                pageSize: 'LEGAL',
+                pageSize: 'A2',
                 title:title,
                 exportOptions: {
                   //  columns: [ 0, 1, 2, 5 ]

@@ -26,11 +26,9 @@ class SlipsController extends Controller
         return view('slips.index');
     }
 
-    public function IndexWithSlips(Request $request)
+    public function index_with_slips($salary_id,$branch_id,$is_epf_version)
     {
-      $salary_id=$request->salary_id;
-      $branch_id=$request->branch_id;
-      $is_epf_version=$request->is_epf_version;
+
 
 
       $employees=Employees::where('branch_id',$branch_id)->get();
@@ -40,8 +38,9 @@ class SlipsController extends Controller
         $conditions=['salary_id'=>$salary_id,'employee_id'=>$employee->id];
 
         $slip=new slip($salary,$employee);
-          if (IsRecordExist('slips',$conditions)) {
-            $slip->UpdateSlip();
+        $existed_slip=IsRecordExist('slips',$conditions);
+          if ($existed_slip) {
+            $slip->UpdateSlip($existed_slip->id);
           }
           else {
             $slip->CreateSlip();
@@ -73,6 +72,34 @@ class SlipsController extends Controller
       }
       return view('slips.index',$data);
 
+    }
+
+    public function IndexWithSlips(Request $request)
+    {
+      $salary_id=$request->salary_id;
+      $branch_id=$request->branch_id;
+      $is_epf_version=$request->is_epf_version;
+      return $this->index_with_slips($salary_id,$branch_id,$is_epf_version);
+    }
+
+
+
+
+    public function IsPaid($slip_id)
+    {
+      // return 'ddd';
+      $slip=slips::find($slip_id);
+      if ($slip->date_paid) {
+        $slip->date_paid=NULL;
+
+      }
+      else {
+        $slip->date_paid=date("Y-m-d");
+      }
+      $slip->save();
+      $salary_id=$slip->salary->id;
+      $branch_id=$slip->employee->branch->id;
+      return $this->index_with_slips($salary_id,$branch_id,0);
     }
 
     /**

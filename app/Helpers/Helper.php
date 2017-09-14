@@ -144,13 +144,13 @@ function HtmlCreator($class,$badge_color,$icon,$value,$attendence_id=0)
 function LeaveDeductionCal($work_time_diff_sec,$late_time_min,$early_time_min,$User_att_data)
 {
   if (!$User_att_data['is_holiday'] && $work_time_diff_sec<0) {
-    $LeaveDeduction_min=0;
-    if ($late_time_min>MetaGet('late_threshold')) {
-      $LeaveDeduction_min+=$late_time_min;
+    $LeaveDeduction_min=$work_time_diff_sec/(-60);
+    if ($late_time_min<=MetaGet('late_threshold')) {//if employee late for coming $late_time_min>0
+      $LeaveDeduction_min-=$late_time_min;
     }
-    if ($early_time_min>0) {
-      $LeaveDeduction_min+=$early_time_min;
-    }
+    // if ($early_time_min>0) {//if employee went early $early_time_min>0
+    //   $LeaveDeduction_min+=$early_time_min;
+    // }
 
     if ($LeaveDeduction_min>0) {
         // return HtmlCreator('error','','L: '.$LeaveDeduction_min.'m');
@@ -256,7 +256,7 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
       }
 
 
-      echo $work_time_diff_sec/60;
+      // echo $work_time_diff_sec/60;
       $OT=OTcal($actual_clock_in_sec,$actual_clock_out_sec,$planned_clock_in_sec,$planned_clock_out_sec,$work_time_diff_sec,$actual_work_time_sec,$User_att_data);
 
 

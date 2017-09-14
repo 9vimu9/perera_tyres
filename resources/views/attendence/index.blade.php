@@ -3,10 +3,10 @@
 @section('content')
 {!! csrf_field() !!}
 <div class="container">
-      <h3><p class="text-center">attendence from
+      <h3><p class="text-center"><strong>{{$branch->name}}</strong> attendence from
       <span class="badge">{{$salary->start_date}}</span> to
       <span class="badge">{{$salary->end_date}}</span>
-      <hr>{{$branch->name}}</p></h3>
+      </p></h3>
 
       @if (count($employees)>0)
       <table id="attendence_index" class="table table-bordered  " cellspacing="0" style="table-layout: fixed" >
@@ -27,11 +27,11 @@
           <tbody>
 
                 @foreach ($employees as $employee)
-                <tr>
+                <tr >
                   <td>{{$employee->name}}</td>
 
                   @foreach ($daterange as $date)
-                    <td class='cell-corner' >
+                    <td class='cell-corner' data-container="body" data-toggle="tooltip" title="{{$employee->name}}">
                       @php
                         echo GetInOutOfDayHTML($employee,$date->format("Y-m-d"),$salary);
                       @endphp
@@ -227,7 +227,7 @@ height: calc(100% - 120px);
 
 
     var table = $('#attendence_index').DataTable( {
-        scrollY:        '300px',
+        scrollY:        '400px',
         scrollX:        true,
         scrollCollapse: true,
         paging:         false,

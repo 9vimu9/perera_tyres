@@ -39,6 +39,8 @@ Route::resource('features','FeaturesController');
 
 Route::resource('slips','SlipsController');
 Route::get('index_with_slips','SlipsController@IndexWithSlips');
+Route::get('slips/is_paid/{slip_id}','SlipsController@IsPaid');
+
 
 Route::get('printouts/slip/{slip_id}','PrintoutsController@PrintSlip');
 

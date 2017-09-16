@@ -161,9 +161,8 @@
       <div class="panel-heading">
         <div class="row">
           <div class="col-sm-2 text-left">OVER TIME</div>
-          <div class="col-sm-2 text-center ">OT RATE:Rs {{$ot_rate}}</div>
-          <div class="col-sm-3 text-center ">OT HOURS:{{$ot_hours}}</div>
-          <div class="col-sm-5 text-right ">Rs <h3>{{$ot_hours*$ot_rate}}</h3></div>
+
+          <div class="col-sm-5 text-right ">Rs <h3>{{$ot_in_rs}}</h3></div>
 
         </div>
       </div>

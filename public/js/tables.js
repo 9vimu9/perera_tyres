@@ -70,6 +70,7 @@ var batch_search_table =   $('#batch_search_table').DataTable({
 
 ///////////////////////////////emloyees.index///////////////////////////////
 var employees_index_table =   $('#employees_index').DataTable({
+    scrollY:        '300px',
    scrollX:        true,
    scrollCollapse: true,
     paging:         true,

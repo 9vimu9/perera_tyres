@@ -192,9 +192,9 @@ class AttendenceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($attendence_id)
     {
-        //
+        return $attendence_id;
     }
 
     /**

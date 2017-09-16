@@ -9,7 +9,7 @@ function EmloyeeDetailsFromSlipForSalary($salary,$employee)
   return $in_out_details;
 }
 
-function get_ot_rate($salary,$employee)
+function get_epf_ot_rate($salary,$employee)
 {
   // echo "$salary";
   $relevent_salary_details=EmloyeeDetailsFromSlipForSalary($salary,$employee);
@@ -19,6 +19,15 @@ function get_ot_rate($salary,$employee)
   $ot_rate=($salary/$demnominator)*$multiplier;
   return round($ot_rate, 2);
 
+}
+function get_ot_rate($salary,$employee)
+{
+  if (MetaGet('is_fixed_ot_rate')==1) {
+    return MetaGet('fixed_ot_rate');
+  }
+  else {
+    return get_epf_ot_rate($salary,$employee);
+  }
 }
 
 
@@ -53,21 +62,51 @@ function is_date_has_over_time($date,$salary,$employee)
 
 
 
-function get_ot_hours($salary,$employee)
+function get_ot_hours_leave_deduction_mins($salary,$employee)
 {
   $working_days=App\working_days::where('salary_id',$salary->id)->get();
   $ot_mins=0;
+  $double_ot_mins=0;
   $leave_deduction_mins=0;
   foreach ($working_days as $working_day) {
     $data=is_date_has_over_time($working_day->date,$salary,$employee);
 // echo "string";
     if ($data) {
       $ot_mins+=$data["OT"];
+      $double_ot_mins+=$data["double_OT"];
       $leave_deduction_mins+=$data['leave_deduction'];
     }
   }
-  return ['ot_hours'=>round($ot_mins/60, 2),'leave_deduction_mins'=>round($leave_deduction_mins,2)];
+  return ['ot_hours'=>round($ot_mins/60, 2),'double_ot_hours'=>round($double_ot_mins/60, 2),'leave_deduction_mins'=>round($leave_deduction_mins,2)];
 }
+
+function get_ot_hours_normal($salary,$employee)
+{
+  return get_ot_hours_leave_deduction_mins($salary,$employee)['ot_hours'];
+}
+
+function get_ot_hours_double($salary,$employee)
+{
+  return get_ot_hours_leave_deduction_mins($salary,$employee)['double_ot_hours'];
+}
+
+function get_ot_hours_all($salary,$employee)
+{
+  return get_ot_hours_normal($salary,$employee)+get_ot_hours_double($salary,$employee);
+}
+
+
+function get_ot_in_rs($salary,$employee,$rate)
+{
+  $ot_in_rs= (get_ot_hours_normal($salary,$employee)+2*get_ot_hours_double($salary,$employee))*$rate;
+  return round($ot_in_rs, 2);
+}
+
+function get_leave_deduction_mins($salary,$employee)
+{
+  return get_ot_hours_leave_deduction_mins($salary,$employee)['leave_deduction_mins'];
+}
+
 
 function PrintFeature($slip,$feature_type)
 {
@@ -114,11 +153,7 @@ function PrintFeature($slip,$feature_type)
 
 
 
-function get_ot_in_rs($salary,$employee,$slip)
-{
-  $ot_in_rs= get_ot_hours($salary,$employee)['ot_hours']*$slip->ot_rate;
-  return round($ot_in_rs, 2);
-}
+
 
 
 function get_feature_column_header($feature)

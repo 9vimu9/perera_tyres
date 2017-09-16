@@ -4,7 +4,7 @@
         <input {{$feature->is_static_value==1 ? " readonly " : ""}} id="slip_feature_value_{{$feature->id}}" type="text" class="form-control value_input" name="slip_feature_value[]"
           @if ($feature->is_static_value==1)
             @if ($feature->slip_feature!=NULL)
-              value='{{$feature->slip_feature['static_value']}}'
+              value='{{$feature->slip_feature['value']}}'
             @else
               value='{{$feature->static_value}}'
             @endif
@@ -96,8 +96,8 @@
       total_allowences+=allowence;
       total_deductions+=deduction;
     });
-    var total_salary=parseFloat({{$ot_hours*$ot_rate}})+parseFloat(basic_salary)+(total_allowences-total_deductions);
-
+    var total_salary=parseFloat({{$ot_in_rs}})+parseFloat(basic_salary)+(total_allowences-total_deductions);
+    total_salary=Number((total_salary).toFixed(2));
     $('.total_salary').text('Rs. '+total_salary);
     $('.total_deductions').text('Rs. '+total_deductions);
     $('.total_allowences').text('Rs. '+total_allowences);

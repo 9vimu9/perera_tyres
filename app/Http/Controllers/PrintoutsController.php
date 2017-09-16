@@ -13,7 +13,7 @@ class PrintoutsController extends Controller
       $salary=$slip->salary;
       $employee=$slip->employee;
       $ot_rate=$slip->ot_rate;
-      $ot_hours=get_ot_hours($salary,$employee)['ot_hours'];
+      $ot_hours=get_ot_hours_all($salary,$employee);
       $allowences=PrintFeature($slip,1);//slip,feature_type
       $deductions=PrintFeature($slip,0);//slip,feature_type
       $display_only=PrintFeature($slip,2);//slip,feature_type

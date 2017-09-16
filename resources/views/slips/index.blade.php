@@ -23,11 +23,7 @@
   @section('panel_heding_right_side_button')
     @isset($slips)
       <div class="text-right">
-        @if (isset($is_epf_version))
-          EPF
-        @else
-          OFFICE
-        @endif
+
       </div>
     @endisset
   @endsection
@@ -38,21 +34,6 @@
 
   @if (isset($slips) && count($slips)>0)
 
-@if (!isset($is_epf_version))
-  <form  role="form" method="get" action="/index_with_slips">
-    <input type="hidden" name="salary_id" value="{{$salary_id}}">
-    <input type="hidden" name="branch_id" value="{{$branch_id}}">
-    <input type="hidden" name="is_epf_version" value="1">
-    <button type="submit" class="btn btn-danger btn-sm">EPF version</button>
-  </form>
-  @else
-    <form  role="form" method="get" action="/index_with_slips">
-      <input type="hidden" name="salary_id" value="{{$salary_id}}">
-      <input type="hidden" name="branch_id" value="{{$branch_id}}">
-      <button type="submit" class="btn btn-danger btn-sm">office version</button>
-    </form>
-
-@endif
 
 <br>
 
@@ -62,13 +43,13 @@
         <tr>
             <th >name</th>
             <th >designation</th>
+            <th>EPF no</th>
+            <th >monthly salary</th>
+            <th >per day pay</th>
+            <th >days worked</th>
             <th >primary salary</th>
             <th >budget allowence</th>
             <th >basic salary</th>
-            <th >per day pay</th>
-            <th >days worked</th>
-            <th >monthly salary</th>
-
             <th >OT rate</th>
             <th >OT hours</th>
             <th >OT</th>
@@ -108,34 +89,33 @@
               $slip_feature_deductions=PrintFeature($slip,0);//slip,feature_type
 
               $basic_salary=$slip->basic_salary+$slip->salary->budget_allowence;
-              $ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee,$slip);
-              $ot_rate=$slip->ot_rate;
-              $ot_hours=get_ot_hours($slip->salary,$slip->employee)['ot_hours'];
+              $ot_rate=$slip->epf_ot_rate;
+              $ot_hours=get_ot_hours_all($slip->salary,$slip->employee);
+              // $ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee,$slip);
+              $ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee,$slip->epf_ot_rate);
 
-              if (isset($is_epf_version)) {
-                $ot_rate=$slip->epf_ot_rate;
-                if ($ot_rate!=0) {
-                  $ot_hours=round($ot_in_rs/$ot_rate,2);
-                }
-                else {
-                  $ot_hours=0;
-                }
-              }
 
               $no_pay_in_rs=0;
               $total_earning_in_rs=$slip_feature_allowences[1]+$ot_in_rs+$basic_salary;
-              $total_deductions_in_rs=$slip_feature_deductions[1];
+              $total_deductions_in_rs=$slip_feature_deductions[1]+$no_pay_in_rs;
               $total_salary=$total_earning_in_rs-$total_deductions_in_rs-$no_pay_in_rs;
             @endphp
             <tr>
+              {{-- <th >name</th>
+              <th >designation</th>
+              <th>EPF no</th>
+              <th >monthly salary</th>
+              <th >per day pay</th>
+              <th >days worked</th> --}}
               <td >{{$slip->employee->name}}</td>
               <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->employee->designation->name}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->employee->epf_no}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->actual_salary}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->per_day_salary}}</td>
+              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{worked_days_in_salary_month($slip->employee,$slip->salary)}}</td>
               <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->basic_salary}}</td>{{-- primary slary --}}
               <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->salary->budget_allowence}}</td>
               <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$basic_salary}}</td>
-              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->per_day_salary}}</td>
-              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{worked_days_in_salary_month($slip->employee,$slip->salary)}}</td>
-              <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$slip->actual_salary}}</td>
               <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$ot_rate}}</td>
               <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$ot_hours}}</td>
               <td data-container="body" data-toggle="tooltip" title="{{$slip->employee->name}}">{{$ot_in_rs}}</td>

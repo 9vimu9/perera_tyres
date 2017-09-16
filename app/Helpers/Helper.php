@@ -58,7 +58,7 @@ function is_employee_worked_that_date($employee,$working_date)
         ->leftJoin('employees', 'employees.id', '=', 'attendences.employee_id')
         ->leftJoin('working_days', 'working_days.id', '=', 'attendences.working_day_id')
         ->where('employees.id',$employee->id)
-        ->where('working_days.date',$working_date)
+        ->where('working_days.date',  date('Y-m-d',strtotime($working_date)))
         ->get(['attendences.date','attendences.time','attendences.id']);
 
   $times=array();
@@ -261,12 +261,16 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
 
 
       $data_array['OT']=0;
+      $data_array['double_OT']=0;
+
       if ($OT && !($User_att_data['cat_id']==2 && $User_att_data['day_of_date']=="Sun") ) {
-      // if ($OT  ) {
 
         $html=$html.HtmlCreator('ot','info','clock-o',$OT.'m');
         $data_array['OT']=$OT;
 
+        if (($User_att_data['cat_id']!=2 && $User_att_data['day_of_date']=="Sun") || IsCompanyHoliday($in_date)) {
+          $data_array['double_OT']=$OT;
+        }
       }
       $data_array['leave_deduction']=0;
 
@@ -314,7 +318,7 @@ function IsHoliday($employee,$date_need_check)//returns name of holidayname or w
 
 function IsCompanyHoliday($date_need_check)
 {
-  $holiday=App\holidays::where('date' , $date_need_check)->first();
+  $holiday=App\holidays::where('date' , date('Y-m-d',strtotime($date_need_check)))->first();
   // print();
   if ($holiday) {
     return $holiday->holiday_type->name;

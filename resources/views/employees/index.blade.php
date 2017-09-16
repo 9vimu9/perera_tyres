@@ -50,8 +50,11 @@
                   <td>{{$employee->start_time}}</td>
                   <td>{{$employee->end_time}}</td>
                   <td>
+                    <a href="/attendence/{{$employee->id}}" class="btn btn-success btn-xs">attendence</a>
+                    <a href="/employees/" class="btn btn-info btn-xs">leaves</a>
+
                     <a href="/employees/{{$employee->id}}/edit" class="btn btn-warning btn-xs edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>edit</a>
-                    <button type="button" class="btn btn-danger btn-xs delete">delete</button>
+                    <button type="button" class="btn btn-danger btn-xs delete">remove</button>
                   </td>
                 </tr>
                 @endforeach

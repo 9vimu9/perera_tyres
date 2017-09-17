@@ -180,8 +180,10 @@
 
 @section('modal_form')
 
+
   @include('layouts.salary_month_selector')
   <input type="hidden" name="salary_id" id="salary_id" >
+  {{-- $salary_id for salary_month_selector --}}
   <div class="form-horizontal form-group ">
     <label class="col-sm-3 control-label">workpalce name</label>
     <div class="col-sm-4">

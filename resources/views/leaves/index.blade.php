@@ -65,6 +65,7 @@
 @section('modal_form')
 
   @include('layouts/receiver_table')
+
   @include('leaves/leave_template')
 
 

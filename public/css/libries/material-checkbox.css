@@ -39,8 +39,10 @@
 .material-switch > input[type="checkbox"]:checked + label::before {
     background: inherit;
     opacity: 0.5;
+    display: block;
 }
 .material-switch > input[type="checkbox"]:checked + label::after {
     background: inherit;
     left: 20px;
+    display: block;
 }

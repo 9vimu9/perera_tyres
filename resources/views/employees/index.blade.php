@@ -12,7 +12,7 @@
     <div class="panel-body" >
       @if (count($employees)>0)
 
-        <table id="employees_index" class="table table-striped table-hover table-center" cellspacing="0" style="table-layout: fixed; width: 230%" >
+        <table id="employees_index" class="table table-striped table-hover table-center" cellspacing="0" style="table-layout: fixed; width: 260%" >
           <thead>
               <tr>
                 <th style="width: 60%" >branch name</th>
@@ -29,7 +29,7 @@
                 <th style="width: 8%" >ot </th>
                 <th style="width: 10%" >planned in</th>
                 <th style="width: 10%" >planned out</th>
-                <th style="width: 20%" ></th>
+                <th style="width: 30%" ></th>
               </tr>
           </thead>
           <tbody>

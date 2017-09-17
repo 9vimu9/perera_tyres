@@ -138,7 +138,6 @@ class AttendenceController extends Controller
      */
     public function store(Request $request)
     {
-      // return $request->all();
     $start_datetime_attendence_id=$request->start_datetime_attendence_id;
     $end_datetime_attendence_id=$request->end_datetime_attendence_id;
 
@@ -192,9 +191,23 @@ class AttendenceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($attendence_id)
+    public function show(Request $request, $employee_id)
     {
-        return $attendence_id;
+
+      $employee=employees::find($employee_id);
+      $working_days=NULL;
+
+      if (isset($request->range_by_salary) && $request->salary_id) {
+        $salary=salarys::find($request->salary_id);
+        $working_days=$salary->working_days;
+      }
+      elseif (isset($request->range_by_custom)) {
+        $working_days=working_days::where('date','>=',$request->from_datetime)
+        ->where('date','<=',$request->to_datetime)
+        ->get();
+      }
+      $data=['working_days'=>$working_days,'employee'=>$employee];
+      return view('attendence.employee_attendences',$data);
     }
 
     /**

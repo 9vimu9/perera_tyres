@@ -128,6 +128,16 @@ var holidays_index_table =   $('#holidays_index').DataTable({
 ////////////////////////////////////eof holidays.index////////////////////////////////
 
 
+var employee_attendence_index =   $('#employee_attendence_index').DataTable({
+      'paging'      : true,
+      'lengthChange': true,
+      'searching'   : true,
+      'ordering'    : true,
+      'info'        : false,
+      'autoWidth'   : false
+
+    });
+
 var salarys_index_table =   $('#input_fingerprint_data').DataTable({
       'paging'      : false,
       'lengthChange': true,
@@ -137,6 +147,19 @@ var salarys_index_table =   $('#input_fingerprint_data').DataTable({
       'autoWidth'   : false
 
     });
+
+
+    var attendence_index = $('#attendence_index').DataTable( {
+        scrollY:        '400px',
+        scrollX:        true,
+        scrollCollapse: true,
+        paging:         false,
+        searching   : true,
+        ordering    : false,
+        info        : false,
+
+    } );
+
 
 
 ////////////////////////////////////table functions/////////////////////

@@ -1,5 +1,4 @@
 <div class="row">
-  {{-- <input type="hidden" name="salary_id" id="salary_id" > --}}
 
   <div class="col-sm-2"></div>
     <div class="col-sm-4">

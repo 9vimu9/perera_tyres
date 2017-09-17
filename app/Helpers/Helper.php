@@ -9,28 +9,78 @@ function GetEveryDayBetweenTwoDates($start_date,$end_date)
   return $daterange;
 }
 
-function GetInOutOfDayHTML($employee,$date,$salary)
+function GetInOutOfDay($employee,$date,$salary,$data_mode=NULL)
 {
-  $User_att_data=GetUserAttendenceBackGroundDetails($salary,$employee,$date);
 
+  $User_att_data=GetUserAttendenceBackGroundDetails($salary,$employee,$date);
+  $data_array=array();
   if (strtotime($User_att_data['join_date'])<strtotime($date)) {
-    $html=GetInOutOfDay($employee,$date,$User_att_data);
+
+    $times=is_employee_worked_that_date($employee,$date);
+    $entrys_for_working_day=count($times);
+
+    if ($entrys_for_working_day==0) {
+      $html= AbsentDayHTML($User_att_data);
+      $data_array['status']=$User_att_data['is_holiday'];
+    }
+    elseif ($entrys_for_working_day==1) {
+      $only_time=date('H:i',reset($times));
+      $attendence_id = key($times);
+      $html= 'one entry<br>'.HtmlCreator('one_entry','inverse','',$only_time,$attendence_id);
+      $data_array['actual_clock_in']=$only_time;
+      $data_array['actual_clock_out']=$only_time;
+      $data_array['one_entry_attendence_id']=$attendence_id;
+      $data_array['status']='one entry';
+
+    }
+    elseif ($entrys_for_working_day>1) {
+      $actual_clock_in = reset($times);
+      $clock_in_attendence_id = key($times);
+      end($times);//going for last record
+      $actual_clock_out =current($times);
+      $clock_out_attendence_id = key($times);
+
+      if ($entrys_for_working_day>2) {
+        $attendence_ids=array_keys($times);
+
+        for ($i=1; $i <count($attendence_ids)-1 ; $i++) {
+          App\attendences::destroy($attendence_ids[$i]);
+        }
+      }
+      if ($data_mode) {
+        var_dump($data_array);
+        $data_array['status']='';
+        $data_array['2_entries']=1;
+        $data_array_2=CompleteDay($actual_clock_in,$actual_clock_out,$User_att_data,1,$clock_in_attendence_id,$clock_out_attendence_id);
+        $data_array=array_merge($data_array, $data_array_2);
+      }
+      else {
+        $html=CompleteDay($actual_clock_in,$actual_clock_out,$User_att_data,NULL,$clock_in_attendence_id,$clock_out_attendence_id);
+
+      }
+    }
     $leave=$User_att_data['is_on_Leave'];
 
     if ($leave) {
       $html=$html.'<span class="on_leave badge badge-inverse" data-leave_id="'.$leave->id.'"><i class="fa fa-sun-o" aria-hidden="true" ></i>LEAVE</span>';
+      $data_array['status']='leave';
     }
-
     else {
-      if (!$html) {
+      if (!isset($html)) {
         $html=HtmlCreator('ab','error','plane','AB');
       }
     }
   }
   else{
     $html='<span class="badge badge-default"><i class="fa fa-frown-o" aria-hidden="true"></i> not<br>reg</span>';
+    $data_array['status']='not registered';
   }
-  return $html;
+  if ($data_mode) {
+    return $data_array;
+  }
+  else {
+    return $html;
+  }
 }
 
 function GetUserAttendenceBackGroundDetails($salary,$employee,$working_date)
@@ -70,39 +120,6 @@ function is_employee_worked_that_date($employee,$working_date)
   return $times;
 }
 
-function GetInOutOfDay($employee,$working_date,$User_att_data)
-{
-  $times=is_employee_worked_that_date($employee,$working_date);
-
-  $entrys_for_working_day=count($times);
-
-  if ($entrys_for_working_day==0) {
-    return AbsentDayHTML($User_att_data);;
-  }
-  elseif ($entrys_for_working_day==1) {
-    $only_time=date('H:i',reset($times));
-    $attendence_id = key($times);
-
-    return 'one entry<br>'.HtmlCreator('one_entry','inverse','',$only_time,$attendence_id);
-  }
-  elseif ($entrys_for_working_day>1) {
-    $actual_clock_in = reset($times);
-    $clock_in_attendence_id = key($times);
-    end($times);//going for last record
-    $actual_clock_out =current($times);
-    $clock_out_attendence_id = key($times);
-
-    if ($entrys_for_working_day>2) {
-      $attendence_ids=array_keys($times);
-
-      for ($i=1; $i <count($attendence_ids)-1 ; $i++) {
-        App\attendences::destroy($attendence_ids[$i]);
-      }
-    }
-     return  CompleteDay($actual_clock_in,$actual_clock_out,$User_att_data,NULL,$clock_in_attendence_id,$clock_out_attendence_id);
-  }
-
-}
 
 function AbsentDayHTML($User_att_data)
 {
@@ -270,6 +287,8 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
 
         if (($User_att_data['cat_id']!=2 && $User_att_data['day_of_date']=="Sun") || IsCompanyHoliday($in_date)) {
           $data_array['double_OT']=$OT;
+          $data_array['OT']=0;
+
         }
       }
       $data_array['leave_deduction']=0;
@@ -297,7 +316,7 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
 
     }
     else {
-      return('spcal');
+      return('special');
     }
 
 }

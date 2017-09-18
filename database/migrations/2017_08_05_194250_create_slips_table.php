@@ -25,6 +25,11 @@ class CreateSlipsTable extends Migration
               $table->integer('ot_available')->length(1)->unsigned();//1=available 0=not available
               $table->integer('is_sat_work')->length(1)->unsigned();//1=woking 0=holiday
               $table->date('date_paid');
+              $table->float('epf_ot_rate',10,2);//0=fixed value from salary 1=precentage
+              $table->integer('is_epf');//0=fixed value from salary 1=precentage
+              $table->float('per_day_salary',10,2);//0=fixed value from salary 1=precentage
+              $table->float('actual_salary',10,2);//0=fixed value from salary 1=precentage
+
               $table->timestamps();
               $table->foreign('salary_id')->references('id')->on('salarys')->onDelete('cascade')->onUpdate('cascade');
               $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade')->onUpdate('cascade');

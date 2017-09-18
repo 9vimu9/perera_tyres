@@ -54,6 +54,9 @@
 
 
   <script>
+    $('#salary_id').val({{$salary->id}})
+    $('#branch_id').val({{$branch->id}})
+
       $('.br_tri').click(function(){
 
       var cell_date=$(this).attr('data-date');

@@ -16,6 +16,8 @@ class CreateCatsTable extends Migration
         Schema::create('cats', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->integer('ot_denominator');
+            $table->double('ot_multiplier');
 
         });
     }

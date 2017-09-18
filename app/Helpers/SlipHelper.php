@@ -43,12 +43,21 @@ function get_nopay_rate($salary,$employee)
 
 function is_date_has_over_time($date,$salary,$employee)
 {
-  $attendences=Illuminate\Support\Facades\DB::table('attendences')
+  $attendences=array();
+  $a=Illuminate\Support\Facades\DB::table('attendences')
         ->leftJoin('employees', 'employees.id', '=', 'attendences.employee_id')
         ->leftJoin('working_days', 'working_days.id', '=', 'attendences.working_day_id')
-        ->where('employees.id',$employee->id)
-        ->where('working_days.date',$date)
-        ->get();
+        // ->where('employees.id',$employee->id)
+        // ->where('working_days.date',$date)
+        ->get(['attendences.date AS date',
+                'attendences.time AS time',
+                'employees.id AS employee_id',
+                'working_days.date AS working_day_date']);
+        foreach ($a as $b) {
+          if ($b->employee_id==$employee->id && $b->working_day_date==$date) {
+            array_push($attendences,$b);
+          }
+        }
         if(count($attendences)==2){
           $clock_in_datetime_sec=strtotime($attendences[0]->date.$attendences[0]->time);
           $clock_out_datetime_sec=strtotime($attendences[1]->date.$attendences[1]->time);
@@ -73,6 +82,8 @@ function get_ot_hours_leave_deduction_mins($salary,$employee)
 // echo "string";
     if ($data) {
       $ot_mins+=$data["OT"];
+      echo $employee->name.$data["OT"];
+      echo "<br>";
       $double_ot_mins+=$data["double_OT"];
       $leave_deduction_mins+=$data['leave_deduction'];
     }

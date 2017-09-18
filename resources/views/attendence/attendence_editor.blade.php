@@ -1,7 +1,7 @@
 <form action="/attendence" method="POST">
   {{ csrf_field() }}
-  <input type="hidden" name="salary_id" value='{{$salary->id}}' >
-  <input type="hidden" name="branch_id" value='{{$branch->id}} '>
+  <input type="hidden" name="salary_id" id="salary_id" >
+  <input type="hidden" name="branch_id" id="branch_id">
 
   <input type="hidden" name="employee_id" id="employee_id">
 

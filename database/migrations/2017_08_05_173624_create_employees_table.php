@@ -33,6 +33,9 @@ class CreateEmployeesTable extends Migration
             $table->float('basic_salary', 10, 2);
             $table->integer('ot_available')->length(1)->unsigned();
             $table->integer('is_sat_work')->length(1)->unsigned();//1=working 0=holiday
+            $table->integer('is_epf');//0=fixed value from salary 1=precentage
+            $table->float('per_day_salary',10,2);//0=fixed value from salary 1=precentage
+            $table->float('actual_salary',10,2);//0=fixed value from salary 1=precentage
 
 
             $table->timestamps();

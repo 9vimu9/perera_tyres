@@ -8,7 +8,7 @@
 
   @if (count($working_days)>0)
     @php
-      
+
     @endphp
   <table id="employee_attendence_index" class="table table-striped table-hover table-center " cellspacing="0" style="table-layout: fixed; width: 70%" >
       <thead>
@@ -43,7 +43,7 @@
               <td>{{isset($data_array['double_OT']) ? $data_array['double_OT'] : ""}}</td>
               <td>{{isset($data_array['leave_deduction']) ? $data_array['leave_deduction'] : ""}}</td>
               <td>
-                <button type="button" class="btn btn-warning btn-xs edit" id='' data-toggle="attendence_editor_modal" data-target="#modalform_modal">edit</button> |
+                <button type="button" class="btn btn-warning btn-xs edit" id='{{$working_day->id}}' data-salary_id='{{$working_day->salary_id}}'data-toggle="attendence_editor_modal" data-target="#attendence_editor_modal">edit</button> |
               </td>
             </tr>
             @endforeach
@@ -62,7 +62,25 @@
 
 @section('form_script')
   <script>
+  $('#branch_id').val({{$employee->branch_id}})
     Route_call('attendence/{{$employee->id}}','set date','get','select range');
+
+    $('.edit').click(function(){
+      var salary_id=$(this).attr('data-salary_id');
+      $('#salary_id').val(salary_id);
+      employee_id={{$employee->id}};
+      var clock_in_attendence_id=$(this).attr('data-clock_in_attendence_id');
+      var clock_out_attendence_id=$(this).attr('data-clock_out_attendence_id');
+      var clock_in = employee_attendence_index.row( $(this).parents('tr') ).data();
+      alert( data[0] +"'s salary is: "+ data[ 5 ] );
+
+      $('#clock_in_datetime_picker').data("DateTimePicker").date(cell_date+' '+clock_in);
+      $('#clock_out_datetime_picker').data("DateTimePicker").date(cell_date+' '+clock_out);
+
+
+
+    });
+
 
     // $('.br_tri').click(function(){
     //

@@ -31,6 +31,8 @@ function GetInOutOfDay($employee,$date,$salary,$data_mode=NULL)
       $data_array['actual_clock_out']=$only_time;
       $data_array['one_entry_attendence_id']=$attendence_id;
       $data_array['status']='one entry';
+      $data_array['1_entries']=1;
+
 
     }
     elseif ($entrys_for_working_day>1) {
@@ -48,7 +50,6 @@ function GetInOutOfDay($employee,$date,$salary,$data_mode=NULL)
         }
       }
       if ($data_mode) {
-        var_dump($data_array);
         $data_array['status']='';
         $data_array['2_entries']=1;
         $data_array_2=CompleteDay($actual_clock_in,$actual_clock_out,$User_att_data,1,$clock_in_attendence_id,$clock_out_attendence_id);
@@ -68,6 +69,8 @@ function GetInOutOfDay($employee,$date,$salary,$data_mode=NULL)
     else {
       if (!isset($html)) {
         $html=HtmlCreator('ab','error','plane','AB');
+        $data_array['status']='absent';
+
       }
     }
   }
@@ -222,6 +225,13 @@ function OTcal($actual_clock_in_sec,$actual_clock_out_sec,$planned_clock_in_sec,
 function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_mode=NULL,$clock_in_attendence_id=0,$clock_out_attendence_id=0)
 {
   $data_array;
+  $data_array['late_time_min']=0;
+  $data_array['early_time_min']=0;
+  $data_array['OT']=0;
+  $data_array['double_OT']=0;
+  $data_array['leave_deduction']=0;
+  
+
 
     $in_date=date('Y-m-d',$in_date_time_sec);
     $out_date=date('Y-m-d',$out_date_time_sec);
@@ -253,7 +263,6 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
       $late_time_min = ($actual_clock_in_sec-$planned_clock_in_sec)/60;
       $early_time_min = ($planned_clock_out_sec-$actual_clock_out_sec)/60;
 
-        $data_array['late_time_min']=0;
       if($late_time_min>0 && !$User_att_data['is_holiday']){
         $html=HtmlCreator('late','warning','sign-in',$actual_clock_in.'<br>'.$late_time_min.'m',$clock_in_attendence_id);
         $data_array['late_time_min']=$late_time_min;
@@ -263,7 +272,6 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
         $html=HtmlCreator('clock_in','success','sign-in',$actual_clock_in,$clock_in_attendence_id);
       }
 
-      $data_array['early_time_min']=0;
       if($early_time_min>0 && !$User_att_data['is_holiday']){
         $html=$html.HtmlCreator('early','warning','sign-out',$actual_clock_out.'<br>'.$early_time_min.'m',$clock_out_attendence_id);
         $data_array['early_time_min']=$early_time_min;
@@ -277,13 +285,13 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
       $OT=OTcal($actual_clock_in_sec,$actual_clock_out_sec,$planned_clock_in_sec,$planned_clock_out_sec,$work_time_diff_sec,$actual_work_time_sec,$User_att_data);
 
 
-      $data_array['OT']=0;
-      $data_array['double_OT']=0;
 
       if ($OT && !($User_att_data['cat_id']==2 && $User_att_data['day_of_date']=="Sun") ) {
 
         $html=$html.HtmlCreator('ot','info','clock-o',$OT.'m');
         $data_array['OT']=$OT;
+        // echo   $data_array['OT'];
+
 
         if (($User_att_data['cat_id']!=2 && $User_att_data['day_of_date']=="Sun") || IsCompanyHoliday($in_date)) {
           $data_array['double_OT']=$OT;
@@ -291,7 +299,6 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
 
         }
       }
-      $data_array['leave_deduction']=0;
 
       if (!$User_att_data['is_on_Leave']) {
         $leave_deduction=LeaveDeductionCal($work_time_diff_sec,

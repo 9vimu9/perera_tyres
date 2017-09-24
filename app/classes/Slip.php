@@ -119,14 +119,37 @@ class Slip
     $actual_salary=0;
     $basic_salary=$slip->basic_salary+$slip->salary->budget_allowence;
 
+    $epf_ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee,$slip->epf_ot_rate);
+    $real_ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee,$slip->ot_rate);
+
+    $ot_difference=$epf_ot_in_rs-$real_ot_in_rs;
+    if ($ot_difference<0) {
+      $ot_difference=0;
+    }
+
     if ($slip->actual_salary) {
       $actual_salary=$slip->actual_salary;
     }
     else {//per_day_salary employee
       $worked_days=worked_days_in_salary_month($slip->employee,$slip->salary);
-      $actual_salary=$worked_days*$slip->per_day_salary;
+      $worked_days_salary=$worked_days*$slip->per_day_salary;
+
+      $pay_per_hour=$slip->per_day_salary/8;
+      $worked_hours_salary=$pay_per_hour*$this->get_worked_hours($slip);
+
+      if ($worked_hours_salary>$worked_days_salary) {
+        $actual_salary=$worked_hours_salary;
+      }
+      else {
+        $actual_salary=$worked_days_salary;
+      }
     }
+
     $salary_difference=$actual_salary-$basic_salary;
+
+    if ($slip->ot_available) {
+      $salary_difference-=$ot_difference;
+    }
     if($salary_difference>981){
       $random_min=$salary_difference/2;
       $random_max=($salary_difference/3)*2;

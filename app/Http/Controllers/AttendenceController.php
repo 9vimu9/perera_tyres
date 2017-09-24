@@ -77,6 +77,7 @@ class AttendenceController extends Controller
     return $this->go_for_attendence_mark_view($request->salary_id,$request->branch_id);
     }
 
+
     public function go_for_attendence_mark_view($salary_id,$branch_id)
     {
       $salary=DB::table('salarys')->where('id', '=', $salary_id)->first();
@@ -89,35 +90,36 @@ class AttendenceController extends Controller
                                             ]);
     }
 
+
     public function SaveAttendenceToDb($branch_id,$salary_id,$fingerprint_no,$date,$time)
     {
       $conditions_employee=['branch_id'=>$branch_id,'fingerprint_no'=>$fingerprint_no];
       $employee = IsRecordExist('employees',$conditions_employee);
+
       if($employee){//check for existance of a employee
-      $date=date('Y-m-d', strtotime($date));
-      $conditions_working_days=['date'=>$date];
-      $conditions_attendence=['employee_id'=>$employee->id,'date'=>$date,'time'=>$time];
-      $working_day=IsRecordExist('working_days',$conditions_working_days);
+        $date=date('Y-m-d', strtotime($date));
+        $conditions_working_days=['date'=>$date];
+        $conditions_attendence=['employee_id'=>$employee->id,'date'=>$date,'time'=>$time];
+        $working_day=IsRecordExist('working_days',$conditions_working_days);
 
-      if (!$working_day) {
-        $working_day=new working_days();
-        $working_day->salary_id=$salary_id;
-        $working_day->date=$date;
-        $working_day->save();
+        if (!$working_day) {
+          $working_day=new working_days();
+          $working_day->salary_id=$salary_id;
+          $working_day->date=$date;
+          $working_day->save();
+        }
+
+        if ($employee && !IsRecordExist('attendences',$conditions_attendence)) {
+
+          $employee_id=$employee->id;
+          $attendence =new attendences();
+          $attendence->employee_id=$employee_id;
+          $attendence->working_day_id=$working_day->id;
+          $attendence->date=$date;
+          $attendence->time=$time;
+          $attendence->save();
+        }
       }
-
-      if ($employee && !IsRecordExist('attendences',$conditions_attendence)) {
-
-        $employee_id=$employee->id;
-        $attendence =new attendences();
-        $attendence->employee_id=$employee_id;
-        $attendence->working_day_id=$working_day->id;
-        $attendence->date=$date;
-        $attendence->time=$time;
-        $attendence->save();
-      }
-
-}
     }
 
     /**
@@ -193,21 +195,17 @@ class AttendenceController extends Controller
      */
     public function show(Request $request, $employee_id)
     {
-
       $employee=employees::find($employee_id);
-      $working_days=NULL;
+      $data['employee']=$employee;
 
-      if (isset($request->range_by_salary) && $request->salary_id) {
-        $salary=salarys::find($request->salary_id);
-        $working_days=$salary->working_days;
+
+      if($request->all()){
+        $date_range=get_date_range_from_date_ranger($request);
+        $data['date_range']=$date_range;
       }
-      elseif (isset($request->range_by_custom)) {
-        $working_days=working_days::where('date','>=',$request->from_datetime)
-        ->where('date','<=',$request->to_datetime)
-        ->get();
-      }
-      $data=['working_days'=>$working_days,'employee'=>$employee];
       return view('attendence.employee_attendences',$data);
+
+
     }
 
     /**
@@ -246,7 +244,69 @@ class AttendenceController extends Controller
 
     public function input_fingerprint_data()
     {
-    //  return "DDD";
         return view("attendence.input_fingerprint_data");
     }
+
+    public function attenedence_daily_monthly(request $request)
+    {
+
+      if($request->all()){
+        $date_range=get_date_range_from_date_ranger($request);
+        $data['date_range']=$date_range;
+      }
+      $employees=Employees::where('branch_id',$request->branch_id);
+
+      foreach ($employees as $employee) {
+        $days_worked=0;
+        $times_onleave=0;
+        $times_absent_without_leave=0;
+        $times_early=0;
+        $times_late=0;
+        $ot_hours_working_days=0;
+        $ot_hours_holidays=0;
+        $mins_early=0;
+        $mins_late=0;
+
+        foreach ($date_range as $date) {
+          $data_array=GetInOutOfDay($employee,$date_in_format,$salary,1);
+
+          if (isset($data_array['1_entries']) && isset($data_array['2_entries'])) {
+            if ($data_array['1_entries']|| $data_array['2_entries']) {
+              $days_worked++;
+            }
+          }
+          if ($data_array['status']=='leave') {
+            $times_onleave++;
+          }
+
+          if ($data_array['status']=='absent') {
+            $times_absent_without_leave++;
+          }
+
+          if (isset($data_array['late_time_min']) && $data_array['late_time_min']>0 ) {
+            $times_late++;
+            $mins_late+=$data_array['late_time_min'];
+          }
+
+          if (isset($data_array['early_time_min']) && $data_array['early_time_min']>0 ) {
+            $times_early++;
+            $mins_early+=$data_array['early_time_min'];
+          }
+
+          if (isset($data_array['OT'])) {
+            $ot_hours_working_days+=$data_array['OT'];
+          }
+
+          if (isset($data_array['double_OT'])) {
+            $ot_hours_holidays+=$data_array['double_OT'];
+          }
+
+
+        }
+      }
+        return view("attendence.attenedence_daily_monthly");
+    }
+
+
+
 }

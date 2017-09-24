@@ -13,7 +13,7 @@ class working_days extends Model
 
   public function attendences()
   {
-      return $this->hasMany('App\attendences');
+      return $this->hasMany('App\attendences','working_day_id');
   }
 
 

@@ -112,7 +112,7 @@ class EmployeesController extends Controller
       // $employee->end_time=$request['end_time'];
       // $employee->join_date=$request['join_date'];
       // $employee->basic_salary=$request['basic_salary'];
-      // $employee->ot_available=GetCheckBoxValue($request['ot_available']);
+      $employee->ot_available=GetCheckBoxValue($request['ot_available']);
       // $employee->is_sat_work=GetCheckBoxValue($request['is_sat_work']);
       // $employee->save();
 
@@ -129,7 +129,7 @@ class EmployeesController extends Controller
       $employee->end_time=$request['end_time'];
       $employee->join_date='2016-12-12';
       $employee->basic_salary=$request['basic_salary'];
-      $employee->ot_available=1;
+      // $employee->ot_available=1;
       $employee->is_sat_work=1;
 
       $employee->is_epf=GetCheckBoxValue($request['is_epf']);

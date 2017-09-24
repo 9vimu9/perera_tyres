@@ -11,15 +11,25 @@ function EmloyeeDetailsFromSlipForSalary($salary,$employee)
 
 function get_epf_ot_rate($salary,$employee)
 {
-  // echo "$salary";
+  $multiplier=$employee->cat->ot_multiplier;
+  return get_epf_ot_rate_core($salary,$employee,$multiplier);
+
+}
+
+function get_double_ot_rate($salary,$employee)
+{
+  return get_epf_ot_rate_core($salary,$employee,2);
+}
+
+function get_epf_ot_rate_core($salary,$employee,$multiplier)
+{
   $relevent_salary_details=EmloyeeDetailsFromSlipForSalary($salary,$employee);
   $salary=$salary->budget_allowence+$relevent_salary_details->basic_salary;
   $demnominator=$employee->cat->ot_denominator;
-  $multiplier=$employee->cat->ot_multiplier;
   $ot_rate=($salary/$demnominator)*$multiplier;
   return round($ot_rate, 2);
-
 }
+
 function get_ot_rate($salary,$employee)
 {
   if (MetaGet('is_fixed_ot_rate')==1) {
@@ -29,6 +39,24 @@ function get_ot_rate($salary,$employee)
     return get_epf_ot_rate($salary,$employee);
   }
 }
+
+// function get_slip_ot_rate($slip)
+// {
+//   $salary=$slip->salary;
+//   $employee=$slip->employee;
+//   if ($slip->ot_available) {
+//     if (MetaGet('is_fixed_ot_rate')==1) {
+//       return MetaGet('fixed_ot_rate');
+//     }
+//     else {
+//       return get_epf_ot_rate($salary,$employee);
+//     }
+//   }
+//   else {
+//     return 0;
+//   }
+//
+// }
 
 
 function get_nopay_rate($salary,$employee)
@@ -43,32 +71,19 @@ function get_nopay_rate($salary,$employee)
 
 function is_date_has_over_time($date,$salary,$employee)
 {
-  $attendences=array();
-  $a=Illuminate\Support\Facades\DB::table('attendences')
-        ->leftJoin('employees', 'employees.id', '=', 'attendences.employee_id')
-        ->leftJoin('working_days', 'working_days.id', '=', 'attendences.working_day_id')
-        // ->where('employees.id',$employee->id)
-        // ->where('working_days.date',$date)
-        ->get(['attendences.date AS date',
-                'attendences.time AS time',
-                'employees.id AS employee_id',
-                'working_days.date AS working_day_date']);
-        foreach ($a as $b) {
-          if ($b->employee_id==$employee->id && $b->working_day_date==$date) {
-            array_push($attendences,$b);
-          }
-        }
-        if(count($attendences)==2){
-          $clock_in_datetime_sec=strtotime($attendences[0]->date.$attendences[0]->time);
-          $clock_out_datetime_sec=strtotime($attendences[1]->date.$attendences[1]->time);
-          $User_att_data=GetUserAttendenceBackGroundDetails($salary,$employee,$date);
-          $data=CompleteDay($clock_in_datetime_sec,$clock_out_datetime_sec,$User_att_data,"data");
-// echo $data;
-          return $data;
+  $times=is_employee_worked_that_date($employee,$date);
 
-        }
+  $actual_clock_in = reset($times);
+  end($times);//going for last record
+  $actual_clock_out =current($times);
+
+  if(count($times)==2){
+    $User_att_data=GetUserAttendenceBackGroundDetails($salary,$employee,$date);
+    $data=CompleteDay($actual_clock_in,$actual_clock_out,$User_att_data,"data");
+    return $data;
+
+  }
 }
-
 
 
 function get_ot_hours_leave_deduction_mins($salary,$employee)
@@ -82,8 +97,8 @@ function get_ot_hours_leave_deduction_mins($salary,$employee)
 // echo "string";
     if ($data) {
       $ot_mins+=$data["OT"];
-      echo $employee->name.$data["OT"];
-      echo "<br>";
+      // echo $employee->name.$data["OT"];
+      // echo "<br>";
       $double_ot_mins+=$data["double_OT"];
       $leave_deduction_mins+=$data['leave_deduction'];
     }
@@ -109,7 +124,7 @@ function get_ot_hours_all($salary,$employee)
 
 function get_ot_in_rs($salary,$employee,$rate)
 {
-  $ot_in_rs= (get_ot_hours_normal($salary,$employee)+2*get_ot_hours_double($salary,$employee))*$rate;
+  $ot_in_rs=$rate*get_ot_hours_normal($salary,$employee)+get_double_ot_rate($salary,$employee)*get_ot_hours_double($salary,$employee);
   return round($ot_in_rs, 2);
 }
 

@@ -105,7 +105,6 @@ function get_date_range_from_date_ranger($request)
     $end_date=explode(" ", $request->to_datetime)[0];
 
   }
-
   $daterange = GetEveryDayBetweenTwoDates($start_date,$end_date);
 
   foreach ($daterange as $date) {

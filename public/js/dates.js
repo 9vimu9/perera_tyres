@@ -11,6 +11,7 @@ $('.date_picker_input').datetimepicker({
     format: 'YYYY/MM/DD'
 });
 
+
 $('.datetime_picker_input').datetimepicker({
     format: 'YYYY/MM/DD HH:mm'
 });
@@ -20,7 +21,7 @@ $('.time_picker_input').datetimepicker({
     format: 'HH:mm'
 });
 SetDateTimePicker('.datetime_picker_fix','YYYY/MM/DD HH:mm',true,true);
-
+SetDateTimePicker('.year_picker_fix','YYYY',true,true);
 SetDateTimePicker('.date_picker_fix','YYYY/MM/DD',true,true);
 SetDateTimePicker('.month_picker_fix','YYYY/MM',true,false);
 

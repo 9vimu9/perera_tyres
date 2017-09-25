@@ -64,102 +64,64 @@ class LeavesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($request,$employee_id)
+    public function show(Request $request,$employee_id)
     {
+      $employee=Employees::find($employee_id);
+
         if(count($request->all())>0){
           $date_range_data=get_date_range_from_date_ranger($request);
           $date_range=$date_range_data['days'];
-          $employee=Employees::find($employee_id);
 
-          $days_worked=0;
-          $times_onleave=0;
-          $times_absent_without_leave=0;
-          $times_early=0;
-          $times_late=0;
-          $ot_hours_working_days=0;
-          $ot_hours_holidays=0;
-          $mins_early=0;
-          $mins_late=0;
-          $effective_leave_deduction=0;
-          // var_dump();
+          $employee_leave_data=array();
+
           foreach ($date_range as $date) {
-              $date_in_format=$date['date'];
-              $data_array=GetInOutOfDay($employee,$date_in_format,$date['salary'],1);
 
-              if (isset($data_array['2_entries']) && $data_array['2_entries']==1) {
-                $days_worked++;
+              if ($date['salary'] && $employee->join_date<=$date['date']) {
+
+                $data_array=GetInOutOfDay($employee,$date['date'],$date['salary'],1);
+
+                if ($data_array['status']=='absent') {
+                  $leave_data=[
+                  'date'=>$date['date'],
+                  'type'=>'absent(without notifying)',
+                  'days'=>'1 d'
+                  ];
+                  array_push($employee_leave_data,$leave_data);
+                }else {
+                  if (isset($data_array['leave_deduction']) && $data_array['leave_deduction']>0) {
+                    $leave_data=[
+                    'date'=>$date['date'],
+                    'type'=>'effective late',
+                    'days'=>$data_array['leave_deduction'].' m'
+                    ];
+                    array_push($employee_leave_data,$leave_data);
+
+
+                  }
+                }
+
 
               }
-              if (isset($data_array['1_entries']) && $data_array['1_entries']==1) {
-                $days_worked++;
-
-              }
-              if ($data_array['status']=='leave') {
-                $times_onleave++;
-              }
-
-              if ($data_array['status']=='absent') {
-                $times_absent_without_leave++;
-              }
-
-              if (isset($data_array['late_time_min']) && $data_array['late_time_min']>0 ) {
-                $times_late++;
-                $mins_late+=$data_array['late_time_min'];
-              }
-
-              if (isset($data_array['early_time_min']) && $data_array['early_time_min']>0 ) {
-                $times_early++;
-                $mins_early+=$data_array['early_time_min'];
-              }
-
-              if (isset($data_array['OT'])) {
-                $ot_hours_working_days+=$data_array['OT'];
-              }
-
-              if (isset($data_array['double_OT'])) {
-                $ot_hours_holidays+=$data_array['double_OT'];
-              }
-
-              if (isset($data_array['late_time_min'])) {
-                $effective_leave_deduction+=$data_array['late_time_min'];
-              }
-
             }
 
-            $employee_attendence_data=[
-            'employee'=>$employee,
-            'days_worked'=>$days_worked,
-            'times_onleave'=>$times_onleave,
-            'times_absent_without_leave'=>$times_absent_without_leave,
-            'times_early'=>$times_early,
-            'times_late'=>$times_late,
-            'ot_hours_working_days'=>$ot_hours_working_days,
-            'ot_hours_holidays'=>$ot_hours_holidays,
-            'mins_early'=>$mins_early,
-            'mins_late'=>$mins_late,
-            'effective_leave_deduction'=>$effective_leave_deduction
-
-          ];
-          array_push($employees_attendence_data,$employee_attendence_data);
-          $branch_name=branchs::find($request->branch_id)->name;
-
-
-          $date_range_data['end_date'];
-
           $data=[
-            'employees_attendence_data'=>$employees_attendence_data,
-            'branch_name'=>$branch_name,
-            'start_date'=>$date_range_data['start_date'],
-            'end_date'=>$date_range_data['end_date'],
+            'employee'=>$employee,
+            'employee_leave_data'=>$employee_leave_data,
+            'year'=>$date_range_data['start_date']
 
           ];
-          // var_dump($employees_attendence_data);
-
-          return view("attendence.attenedence_daily_monthly",$data);
+          //
+          foreach ($employee_leave_data as $leave_data) {
+            var_dump($leave_data);
+            echo "<br>";
+          }
         }
         else {
-          return view("attendence.attenedence_daily_monthly");
+          $data=[
+            'employee'=>$employee
+          ];
         }
+        return view("leaves.employee_leaves",$data);
 
 
     }

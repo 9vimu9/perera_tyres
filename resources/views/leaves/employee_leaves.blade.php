@@ -10,7 +10,7 @@
 
 @section('table')
 
-  @if (isset($date_range) && count($date_range)>0)
+  @if (isset($employee_leave_data) && count($employee_leave_data)>0)
     @php
 
     @endphp
@@ -23,125 +23,50 @@
           </tr>
       </thead>
       <tbody>
-            @foreach ($date_range as $date)
+            @foreach ($employee_leave_data as $leave_data)
 
-              @php
-                $date_in_format=$date['date'];
-                $salary=$date['salary'];
-                $data_array=GetInOutOfDay($employee,$date_in_format,$salary,1);
-              @endphp
             <tr>
-              <td>{{$date_in_format}} <strong>{{date('D', strtotime($date_in_format))}}</strong></td>
-              <td>{{$data_array['status']}}</td>
-              <td>{{isset($data_array['actual_clock_in']) ? $data_array['actual_clock_in'] : ""}}</td>
-              <td>{{isset($data_array['actual_clock_out']) ? $data_array['actual_clock_out'] : ""}}</td>
-              <td>{{isset($data_array['OT']) ? $data_array['OT'] : ""}}</td>
-              <td>{{isset($data_array['double_OT']) ? $data_array['double_OT'] : ""}}</td>
-              <td>{{isset($data_array['leave_deduction']) ? $data_array['leave_deduction'] : ""}}</td>
-              <td>
-                {{-- <button type="button" class="btn btn-warning btn-xs edit" id='{{$working_day->id}}' data-salary_id='{{$working_day->salary_id}}'data-toggle="attendence_editor_modal" data-target="#attendence_editor_modal">edit</button> | --}}
-              </td>
+              <td>{{$leave_data['date']}}</td>
+              <td>{{$leave_data['type']}}</td>
+              <td>{{$leave_data['days']}}</td>
             </tr>
             @endforeach
       </tbody>
   </table>
-  @include('attendence.attendence_editor')
   @endif
 @endsection
 
 @section('modal_form')
-  <input type="hidden" name="salary_id" id="salary_id" >
-  @include('layouts.complete_date_range')
+
+
+
+  <div class="row">
+    <div class="col-md-3"></div>
+
+    <div class="col-md-6" >
+      <p class="text-center">from</p>
+      <div  class="year_picker_fix" id="year_picker_fix"></div>
+      <input type="hidden" name="from_datetime" id="from_datetime">
+      <input type="hidden" name="to_datetime" id="to_datetime">
+      <input type="hidden" name="range_by_custom" value="1">
+
+
+    </div>
+  </div>
 
 
 @endsection
 
 @section('form_script')
   <script>
-  $('#branch_id').val({{$employee->branch_id}})
-    Route_call('attendence/{{$employee->id}}','set date','get','select range');
+    Route_call('leaves/{{$employee->id}}','set year','get','select year');
 
-    $('.edit').click(function(){
-      var salary_id=$(this).attr('data-salary_id');
-      $('#salary_id').val(salary_id);
-      employee_id={{$employee->id}};
-      var clock_in_attendence_id=$(this).attr('data-clock_in_attendence_id');
-      var clock_out_attendence_id=$(this).attr('data-clock_out_attendence_id');
-      var clock_in = employee_attendence_index.row( $(this).parents('tr') ).data();
-      alert( data[0] +"'s salary is: "+ data[ 5 ] );
-
-      $('#clock_in_datetime_picker').data("DateTimePicker").date(cell_date+' '+clock_in);
-      $('#clock_out_datetime_picker').data("DateTimePicker").date(cell_date+' '+clock_out);
-
-
+    $('.save').click(function () {
+      var year=$('#year_picker_fix').data("date");
+      $("#from_datetime").val(year+"-01-01");
+      $("#to_datetime").val(year+"-12-31");
 
     });
-
-
-    // $('.br_tri').click(function(){
-    //
-    //   var cell_date=$(this).attr('data-date');
-    //   employee_id=$(this).attr('data-employee_id');
-    //
-    //
-    //   clock_in_attendence_id=$(this).parent().find('.clock_in').attr('data-attendence_id');
-    //   clock_out_attendence_id=$(this).parent().find('.clock_out').attr('data-attendence_id');
-    //
-    //   var late_attendence_id=$(this).parent().find('.late').attr('data-attendence_id');
-    //   var early_attendence_id=$(this).parent().find('.early').attr('data-attendence_id');
-    //
-    //   leave_id=$(this).parent().find('.on_leave').attr('data-leave_id');
-    //
-    //   var clock_in=$(this).parent().find('.clock_in').text();
-    //   var one_entry=$(this).parent().find('.one_entry').text();
-    //   var late=$(this).parent().find('.late').text().slice(0,5);
-    //   var clock_out=$(this).parent().find('.clock_out').text();
-    //   var early=$(this).parent().find('.early').text().slice(0,5);
-    //   var is_ab=$(this).parent().find('.ab');
-    //   if(one_entry)
-    //   {
-    //     clock_in=clock_out=one_entry;
-    //   }
-    //
-    //
-    //   if(!clock_in){
-    //     clock_in=late;
-    //     clock_in_attendence_id=late_attendence_id;
-    //   }
-    //
-    //   if(!clock_out){
-    //     clock_out=early;
-    //     clock_out_attendence_id=early_attendence_id;
-    //   }
-    //
-    // $('#clock_in_datetime_picker').data("DateTimePicker").date(cell_date+' '+clock_in);
-    // $('#clock_out_datetime_picker').data("DateTimePicker").date(cell_date+' '+clock_out);
-    //
-    //
-    // if (leave_id>0) {
-    //   $('#is_on_Leave').prop('checked', true);
-    // }
-    // else {
-    //   $('#is_on_Leave').prop('checked', false);
-    // }
-    //
-    //   $('#is_on_Leave').change();
-    //
-    //   if (leave_id>0) {
-    //     queryData={leave_id:leave_id};
-    //
-    //     AjaxGetData(3,'get',queryData).success(function (data) {
-    //       $('#from_datetime_picker').data("DateTimePicker").date(data[0].from_date+' '+data[0].from_time);
-    //       $('#to_datetime_picker').data("DateTimePicker").date(data[0].to_date+' '+data[0].to_time);
-    //     });
-    //
-    //   }
-    //   else {
-    //     $('#from_datetime_picker').data("DateTimePicker").date(cell_date);
-    //     $('#to_datetime_picker').data("DateTimePicker").date(cell_date);
-    //   }
-    // });
-
 
   </script>
 

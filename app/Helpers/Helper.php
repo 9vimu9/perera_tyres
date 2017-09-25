@@ -74,15 +74,6 @@ function GetInOutOfDay($employee,$date,$salary,$data_mode=NULL)
       $html=$html.'<span class="on_leave badge badge-inverse" data-leave_id="'.$leave->id.'"><i class="fa fa-sun-o" aria-hidden="true" ></i>LEAVE</span>';
       $data_array['status']='leave';
     }
-    // else {
-    //   if (!isset($html)) {
-    //     $html=HtmlCreator('ab','error','plane','AB');
-    //     $data_array['status']='absent';
-    //     // $data_array['absent']=1;
-    //
-    //
-    //   }
-    // }
   }
   else{
     $html='<span class="badge badge-default"><i class="fa fa-frown-o" aria-hidden="true"></i> not<br>reg</span>';

@@ -55,10 +55,11 @@
                   <td>{{$employee->cat->name}}</td>
                   <td>
                     <div class="material-switch ">
-                      <input class="material-child" id="{{$employee->id}}" name="ot_available" type="checkbox" />
-                        <label for="{{$employee->id}}" class="label-warning"></label>
+                      <input class="material-child" id="material-child-id_{{$employee->id+10}}" name="ot_available" type="checkbox" />
+                        <label for="material-child-id_{{$employee->id+10}}" class="label-warning"></label>
                     </div>
                   </td>
+
 
 
                 </tr>
@@ -79,7 +80,7 @@
 
 
 <script>
-$( document ).ready(function() {
+$(document).ready(function() {
   function IsDuplicated(employee_id) {
     var IsDuplicated=false;
     batch_receive_table.column(4, { search:'applied' } ).data().each(function(value, index) {
@@ -97,7 +98,7 @@ $( document ).ready(function() {
     });
 
     $(".material-child").each(function () {
-      var employee_id=$(this).attr('id');
+      var employee_id=$(this).attr('id').split('_')[1];
      console.log(IsDuplicated(employee_id));
     //  console.log(employee_id);
 

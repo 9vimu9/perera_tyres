@@ -77,7 +77,7 @@ var employees_index_table =   $('#employees_index').DataTable({
     searching   : true,
     ordering    : true,
     info        : true,
-    'autoWidth'   : true,
+    autoWidth   : true,
     dom         : 'Bfrtip',
     buttons     : [
 
@@ -126,6 +126,8 @@ var holidays_index_table =   $('#holidays_index').DataTable({
     AddColumnSearch(holidays_index_table,searchArray,'#holidays_index');
 
 ////////////////////////////////////eof holidays.index////////////////////////////////
+
+
 
 
 var employee_attendence_index =   $('#employee_attendence_index').DataTable({

@@ -5,7 +5,7 @@
 <div class="container">
 
 
-      <h3><p class="text-center">ATTENDENCE</p></h3>
+      <h3><p class="text-center">MARK ATTENDENCE</p></h3>
 
       <div class="panel panel-info">
         <div class="panel-heading">select salary month</div>

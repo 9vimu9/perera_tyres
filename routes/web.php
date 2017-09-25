@@ -17,17 +17,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
-
+//Slapping the keyboard until something good happens.
 Route::get('/get_suggestions_for_select2','Select2Controller@GetSuggestionsForSelect2');
 
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('/test', function () {
-   return view('attendence.input_fingerprint_data');
-});
-
-
 
 Route::resource('employees','EmployeesController');
 
@@ -49,6 +43,8 @@ Route::get('printouts/slip/{slip_id}','PrintoutsController@PrintSlip');
 Route::resource('attendence','AttendenceController');
 Route::get('input_fingerprint_data','AttendenceController@input_fingerprint_data');
 Route::post('attendence/new_sheet','AttendenceController@index');
+Route::get('attendence_daily_monthly','AttendenceController@attenedence_daily_monthly');
+
 
 
 

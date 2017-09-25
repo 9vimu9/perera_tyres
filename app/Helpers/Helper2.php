@@ -88,7 +88,7 @@ function worked_days_in_salary_month($employee,$salary)
 
 function get_date_range_from_date_ranger($request)
 {
-  var_dump($request->all());
+  // var_dump($request->all());
   $days=array();
   $start_date=NULL;
   $end_date=NULL;
@@ -121,7 +121,7 @@ function get_date_range_from_date_ranger($request)
   }
 
 
-  return $days;
+  return ['days'=>$days,'start_date'=>$start_date,'end_date'=>$end_date];
 }
 
  ?>

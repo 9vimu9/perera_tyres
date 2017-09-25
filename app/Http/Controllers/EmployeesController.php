@@ -10,6 +10,7 @@ use App\Employees;
 
 class EmployeesController extends Controller
 {
+  
     /**
      * Display a listing of the resource.
      *

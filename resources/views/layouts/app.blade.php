@@ -39,6 +39,7 @@
     <script src="{{ asset('js/libries/jquery-2.2.4.min.js') }}"></script>
 
 
+
 </head>
 <body>
     <div id="app">
@@ -63,14 +64,16 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
+                      <li><a href="/salaries"><strong><span class="badge">1</span> salary month</strong></a></li>
+                      <li><a href="/input_fingerprint_data"><strong><span class="badge">2</span> mark attendence</strong></a></li>
+                      <li><a href="/slips"><strong><span class="badge">3</span> pay slips</strong></a></li>
+                      <li><a href="/attendence_daily_monthly">att. reports</a></li>
                       <li><a href="/employees">employees</a></li>
                       <li><a href="/holidays">holidays</a></li>
-                      <li><a href="/features">allowences/deductions</a></li>
+                      {{-- <li><a href="/features">allowences/deductions</a></li> --}}
                       <li><a href="/leaves">leaves</a></li>
 
-                      <li><a href="/salaries">salary month</a></li>
-                      <li><a href="/input_fingerprint_data">mark attendence</a></li>
-                      <li><a href="/slips">pay slips</a></li>
+
 
                     </ul>
 
@@ -79,27 +82,19 @@
                         <!-- Authentication Links -->
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
+                            {{-- <li><a href="{{ route('register') }}">Register</a></li> --}}
                         @else
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
+                          <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i> {{ Auth::user()->name }}</a></li>
+                          <li>
+                              <a href="{{ route('logout') }}"
+                                  onclick="event.preventDefault();
+                                           document.getElementById('logout-form').submit();">
+                                  Logout
+                              </a>
+                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                  {!! csrf_field() !!}
+                              </form>
+                          </li>
                         @endif
                     </ul>
                 </div>
@@ -116,6 +111,9 @@
 <script src="{{ asset('js/libries/bootstrap.min.js') }}"></script>
 
 <script src="{{ asset('js/libries/datatables.min.js') }}"></script>
+<script src="{{ asset('js/libries/select2.full.min.js') }}"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.full.js"></script> --}}
+
 <script src="https://cdn.datatables.net/fixedcolumns/3.2.3/js/dataTables.fixedColumns.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
@@ -125,8 +123,6 @@
 
 <script src="{{ asset('js/libries/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="{{ asset('js/libries/fullcalendar.min.js') }}"></script>
-<script src="{{ asset('js/libries/select2.min.js') }}"></script>
-
 
 
 

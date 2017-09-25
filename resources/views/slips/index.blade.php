@@ -38,7 +38,7 @@
 <br>
 
 
-    <table id="slips_index_table" class="table table-bordered  " cellspacing="0" style="table-layout: fixed" >
+    <table id="slips_index_table" class="table table-bordered table-striped table-hover" cellspacing="0" style="table-layout: fixed" >
       <thead>
         <tr>
             <th >name</th>
@@ -89,7 +89,7 @@
               $slip_feature_deductions=PrintFeature($slip,0);//slip,feature_type
 
               $basic_salary=$slip->basic_salary+$slip->salary->budget_allowence;
-              $ot_rate=$slip->epf_ot_rate;
+              $ot_rate=$slip->ot_available==1 ? $slip->epf_ot_rate : 'no OT' ;
               $ot_hours=get_ot_hours_all($slip->salary,$slip->employee);
               // $ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee,$slip);
               $ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee,$slip->epf_ot_rate);

@@ -20,8 +20,16 @@ function GetInOutOfDay($employee,$date,$salary,$data_mode=NULL)
     $entrys_for_working_day=count($times);
 
     if ($entrys_for_working_day==0) {
-      $html= AbsentDayHTML($User_att_data);
+      $html= AbsentDayHTML($User_att_data);//check holidays only
       $data_array['status']=$User_att_data['is_holiday'];
+      if (!$html) {//not a holiday
+        $leave=$User_att_data['is_on_Leave'];
+        if(!$leave){//not a leave therfore he is absent
+          $html=HtmlCreator('ab','error','plane','AB');
+          $data_array['status']='absent';
+        }
+      }
+
     }
     elseif ($entrys_for_working_day==1) {
       $only_time=date('H:i',reset($times));
@@ -66,13 +74,15 @@ function GetInOutOfDay($employee,$date,$salary,$data_mode=NULL)
       $html=$html.'<span class="on_leave badge badge-inverse" data-leave_id="'.$leave->id.'"><i class="fa fa-sun-o" aria-hidden="true" ></i>LEAVE</span>';
       $data_array['status']='leave';
     }
-    else {
-      if (!isset($html)) {
-        $html=HtmlCreator('ab','error','plane','AB');
-        $data_array['status']='absent';
-
-      }
-    }
+    // else {
+    //   if (!isset($html)) {
+    //     $html=HtmlCreator('ab','error','plane','AB');
+    //     $data_array['status']='absent';
+    //     // $data_array['absent']=1;
+    //
+    //
+    //   }
+    // }
   }
   else{
     $html='<span class="badge badge-default"><i class="fa fa-frown-o" aria-hidden="true"></i> not<br>reg</span>';
@@ -230,7 +240,7 @@ function CompleteDay($in_date_time_sec,$out_date_time_sec,$User_att_data,$data_m
   $data_array['OT']=0;
   $data_array['double_OT']=0;
   $data_array['leave_deduction']=0;
-  
+
 
 
     $in_date=date('Y-m-d',$in_date_time_sec);
@@ -367,7 +377,7 @@ function IsOnLeave($employee_id,$date)
   where('employee_id','=', $employee_id)
   ->where('from_date', '<=', $date)
   ->where('to_date', '>=', $date)
-  ->get()->first();
+  ->first();
 }
 
 

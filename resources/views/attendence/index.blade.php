@@ -9,7 +9,7 @@
       </p></h3>
 
       @if (count($employees)>0)
-      <table id="attendence_index" class="table table-bordered  " cellspacing="0" style="table-layout: fixed" >
+      <table id="attendence_index" class="table table-bordered" cellspacing="0" style="table-layout: fixed" >
 
         @php
         $daterange = GetEveryDayBetweenTwoDates($salary->start_date,$salary->end_date);

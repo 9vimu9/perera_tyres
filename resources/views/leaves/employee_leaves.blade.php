@@ -1,13 +1,12 @@
 @extends('layouts.modalform')
 
-@section('title')ATTENDENCE : {{$employee->name}}
+@section('title')LEAVES: {{$employee->name}}
   @isset($start_date)
-  from <span class="badge">{{$start_date}}</span>
-  to <span class="badge">{{$end_date}}</span>
+  from <span class="badge">{{$year}}</span>
   @endisset
 @endsection
 
-@section('create_new')select date range @endsection
+@section('create_new')select year @endsection
 
 @section('table')
 
@@ -15,22 +14,12 @@
     @php
 
     @endphp
-  <table id="employee_attendence_index" class="table table-striped table-hover table-center " cellspacing="0" style="table-layout: fixed; width: 70%" >
+  <table id="employee_leaves_index" class="table table-striped table-hover table-center " cellspacing="0" style="table-layout: fixed; width: 70%" >
       <thead>
           <tr>
               <th style="width: 30%">date</th>
-              <th style="width: 20%">status</th>
-              <th style="width: 14%">clock in</th>
-              <th style="width: 14%">clock out</th>
-              <th style="width: 12%">OT m</th>
-              <th style="width: 12%">weekend OT m</th>
-              <th style="width: 12%">late m</th>
-              <th style="width: 20%"></th>
-              {{-- array(3) { ["one_entry"]=> string(5) "18:13" ["one_entry_attendence_id"]=> int(290) ["status"]=> string(9) "one entry" }
-              array(0) { } array(9) { ["status"]=> string(0) "" ["2_entries"]=> int(1) ["actual_clock_in"]=> string(5) "07:08" ["actual_clock_out"]=> string(5) "18:13" ["late_time_min"]=> int(0) ["early_time_min"]=> int(0) ["OT"]=> int(253) ["double_OT"]=> int(0) ["leave_deduction"]=> int(0) } --}}
-{{--  --}}
-
-
+              <th style="width: 20%">leave type</th>
+              <th style="width: 14%">days</th>
           </tr>
       </thead>
       <tbody>

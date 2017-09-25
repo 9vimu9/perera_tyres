@@ -25,10 +25,9 @@
                 <th style="width: 8%" >fp id</th>
                 <th style="width: 15%" >EPF </th>
                 <th style="width: 8%" >salary type</th>
-                <th style="width: 10%" >primary salary</th>
+                <th style="width: 12%" >amont</th>
+                <th style="width: 10%" >EPF salary</th>
                 <th style="width: 8%" >ot </th>
-                <th style="width: 10%" >planned in</th>
-                <th style="width: 10%" >planned out</th>
                 <th style="width: 30%" ></th>
               </tr>
           </thead>
@@ -45,10 +44,10 @@
                   <td>{{$employee->fingerprint_no}}</td>
                   <td>{{$employee->is_epf==1 ? 'yes-#'.$employee->epf_no : 'no'}}</td>
                   <td>{{$employee->per_day_salary>0 ? 'per day' : 'monthly'}}</td>
+                  <td>{{$employee->per_day_salary>0 ? $employee->per_day_salary : $employee->actual_salary}}</td>
                   <td>{{$employee->basic_salary}}</td>
                   <td>{{$employee->ot_available==1 ? 'yes' : 'no'}}</td>
-                  <td>{{$employee->start_time}}</td>
-                  <td>{{$employee->end_time}}</td>
+
                   <td>
                     <a href="/attendence/{{$employee->id}}" class="btn btn-success btn-xs">attendence</a>
                     <a href="/employees/" class="btn btn-info btn-xs">leaves</a>

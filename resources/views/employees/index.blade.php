@@ -47,14 +47,16 @@
                   <td>{{$employee->per_day_salary>0 ? $employee->per_day_salary : $employee->actual_salary}}</td>
                   <td>{{$employee->basic_salary}}</td>
                   <td>{{$employee->ot_available==1 ? 'yes' : 'no'}}</td>
-
-                  <td>
-                    <a href="/attendence/{{$employee->id}}" class="btn btn-success btn-xs">attendence</a>
-                    <a href="/leaves/{{$employee->id}}" class="btn btn-info btn-xs">leaves</a>
-
-                    <a href="/employees/{{$employee->id}}/edit" class="btn btn-warning btn-xs edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>edit</a>
-                    <button type="button" class="btn btn-danger btn-xs delete">remove</button>
-                  </td>
+                  <form action="/employees/{{$employee->id}}" class="pull-right" method="POST">
+                    {{ csrf_field() }}
+                    <td>
+                      <a href="/attendence/{{$employee->id}}" class="btn btn-success btn-xs">attendence</a>
+                      <a href="/leaves/{{$employee->id}}" class="btn btn-info btn-xs">leaves</a>
+                      <a href="/employees/{{$employee->id}}/edit" class="btn btn-warning btn-xs edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>edit</a>
+                      <input type="submit" name="delete" value="remove" class="btn btn-danger btn-xs">
+                      <input type="hidden" name="_method" value="DELETE">
+                    </td>
+                  </form>
                 </tr>
                 @endforeach
           </tbody>

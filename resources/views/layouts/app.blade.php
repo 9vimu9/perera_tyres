@@ -77,6 +77,11 @@
 
                     </ul>
 
+                    {{-- veee
+                    samba, keeri smba, naadu
+                    haal
+                    samba, keer samba, rathu nke sudu ker  nadu   --}}
+
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->

@@ -85,7 +85,6 @@ function is_date_has_over_time($date,$salary,$employee)
   }
 }
 
-
 function get_ot_hours_leave_deduction_mins($salary,$employee)
 {
   $working_days=App\working_days::where('salary_id',$salary->id)->get();
@@ -94,11 +93,8 @@ function get_ot_hours_leave_deduction_mins($salary,$employee)
   $leave_deduction_mins=0;
   foreach ($working_days as $working_day) {
     $data=is_date_has_over_time($working_day->date,$salary,$employee);
-// echo "string";
-    if ($data) {
+    if (count($data) && isset($data["OT"])) {
       $ot_mins+=$data["OT"];
-      // echo $employee->name.$data["OT"];
-      // echo "<br>";
       $double_ot_mins+=$data["double_OT"];
       $leave_deduction_mins+=$data['leave_deduction'];
     }

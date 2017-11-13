@@ -61,7 +61,11 @@ function GetInOutOfDay($employee,$date,$salary,$data_mode=NULL)
         $data_array['status']='';
         $data_array['2_entries']=1;
         $data_array_2=CompleteDay($actual_clock_in,$actual_clock_out,$User_att_data,1,$clock_in_attendence_id,$clock_out_attendence_id);
-        $data_array=array_merge($data_array, $data_array_2);
+
+        if (is_array($data_array_2) && is_array($data_array)) {
+          $data_array=array_merge($data_array, $data_array_2);
+        }
+        
       }
       else {
         $html=CompleteDay($actual_clock_in,$actual_clock_out,$User_att_data,NULL,$clock_in_attendence_id,$clock_out_attendence_id);

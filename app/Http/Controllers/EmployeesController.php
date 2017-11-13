@@ -10,7 +10,7 @@ use App\Employees;
 
 class EmployeesController extends Controller
 {
-  
+
     /**
      * Display a listing of the resource.
      *
@@ -95,7 +95,7 @@ class EmployeesController extends Controller
      */
     public function destroy($id)
     {
-        //
+      return RemoveRecord($id,'Employees','employees');
     }
 
     function SaveToDb($request,$employee)

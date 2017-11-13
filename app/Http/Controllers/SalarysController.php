@@ -90,7 +90,7 @@ class SalarysController extends Controller
      */
     public function destroy($id)
     {
-        //
+      return RemoveRecord($id,'salarys','salaries');
     }
 
     public function SaveToDb($request,$salary)

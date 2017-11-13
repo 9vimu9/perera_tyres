@@ -14,7 +14,7 @@
 
 @section('content')
   @php
-    $ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee,$slip);
+    $ot_in_rs=get_ot_in_rs($slip->salary,$slip->employee,$slip->epf_ot_rate);
     $basic_salary=$slip->salary->budget_allowence+$slip->basic_salary;
     $total_allowences_in_rs=$allowences[1]+$ot_in_rs;
     $total_deductions_in_rs=$deductions[1];

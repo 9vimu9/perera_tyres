@@ -27,7 +27,7 @@ var batch_receive_table =   $('#batch_receive_table').DataTable({
       'autoWidth'   : false
 
     });
-    batch_receive_table.column(4).visible(false);
+    // batch_receive_table.column(4).visible(false);
 
 
 /////////////////////////////eof batch_receiver_table/////////////////

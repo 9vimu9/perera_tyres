@@ -26,7 +26,9 @@
         "files" : ["app/Helpers/Helper.php",
                     "app/Helpers/Helper2.php",
                     "app/Helpers/metaGetSet.php",
-                    "app/Helpers/SlipHelper.php"
+                    "app/Helpers/SlipHelper.php",
+                    "app/Helpers/db_helper.php",
+                    "app/Helpers/slip_layout_helper.php"
 
                   ]
 

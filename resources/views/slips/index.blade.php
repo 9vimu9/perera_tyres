@@ -21,12 +21,13 @@
 
 
   @section('panel_heding_right_side_button')
-    @isset($slips)
-      <div class="text-right">
+      @isset($slips)
+        <div class="pull-right">
+          <a href="print_all_slips/{{$salary_id}}/{{$branch_id}}" class="btn btn-default">print all slips</a>
 
-      </div>
-    @endisset
-  @endsection
+        </div>
+      @endisset
+    @endsection
 
 
 

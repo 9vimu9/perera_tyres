@@ -37,6 +37,8 @@ Route::get('slips/is_paid/{slip_id}','SlipsController@IsPaid');
 
 
 Route::get('printouts/slip/{slip_id}','PrintoutsController@PrintSlip');
+Route::get('print_all_slips/{salary_id}/{branch_id}','SlipsController@print_all_slips');
+
 
 
 

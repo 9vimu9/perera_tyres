@@ -96,9 +96,9 @@ $(document).ready(function() {
     batch_receive_table.column(4,{ search:'applied'}).data().each(function(value, index) {
       array.push(value);
     });
-
+alert(array);
     $(".material-child").each(function () {
-      var employee_id=$(this).attr('id').split('_')[1];
+      var employee_id=$(this).attr('id').split('_')[1]-10;
      console.log(IsDuplicated(employee_id));
     //  console.log(employee_id);
 

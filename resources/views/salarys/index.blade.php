@@ -54,21 +54,22 @@
            <th></th>
        </tr>
      </tfoot>
-
-      <tbody>
+     <tbody>
             @foreach ($salarys as $salary)
             <tr>
               <td>{{$salary->year}}</td>
               <td>{{date("F", mktime(0, 0, 0, $salary->month, 10))}}</td>
               <td>{{$salary->start_date}}</td>
               <td>{{$salary->end_date}}</td>
-                <td>{{$salary->budget_allowence}}</td>
-              <td>
-                {{-- <button type="button" class="btn btn-basic btn-xs more" id='{{$salary->id}}'>more</button> | --}}
-                <button type="button" class="btn btn-warning btn-xs edit" id='{{$salary->id}}' data-toggle="modal" data-target="#modalform_modal">edit</button> |
-                <button type="button" class="btn btn-danger btn-xs delete" id='{{$salary->id}}'>delete</button>
-
-              </td>
+              <td>{{$salary->budget_allowence}}</td>
+                <form action="/salaries/{{$salary->id}}" class="pull-right" method="POST">
+                  {{ csrf_field() }}
+                  <td>
+                    <button type="button" class="btn btn-warning btn-xs edit" id='{{$salary->id}}' data-toggle="modal" data-target="#modalform_modal">edit</button> |
+                    <input type="submit" name="delete" value="remove" class="btn btn-danger btn-xs">
+                    <input type="hidden" name="_method" value="DELETE">
+                  </td>
+                </form>
             </tr>
             @endforeach
 

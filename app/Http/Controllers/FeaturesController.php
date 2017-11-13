@@ -41,12 +41,7 @@ class FeaturesController extends Controller
     {
 
       $feature=new features();
-      $feature->name=$request->name;
-      $feature->is_static_value=GetCheckBoxValue($request['is_static_value']);
-      $feature->value_type=$request->value_type;
-      $feature->static_value=$request->static_value ==NULL ? 0 : $request->static_value;
-      $feature->feature_type=$request->feature_type;
-      $feature->save();
+      $this->SaveToDb($request,$feature);
       return redirect('/features');
 
     }
@@ -93,6 +88,17 @@ class FeaturesController extends Controller
      */
     public function destroy($id)
     {
-        //
+      return RemoveRecord($id,'features','features');
     }
+
+
+    function SaveToDb($request,$feature){
+      $feature->name=$request->name;
+      $feature->is_static_value=GetCheckBoxValue($request['is_static_value']);
+      $feature->value_type=$request->value_type;
+      $feature->static_value=$request->static_value ==NULL ? 0 : $request->static_value;
+      $feature->feature_type=$request->feature_type;
+      $feature->save();
+    }
+
 }

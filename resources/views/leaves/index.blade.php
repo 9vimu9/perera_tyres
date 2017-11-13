@@ -45,12 +45,16 @@
               <td>{{$from_datetime}}</td>
               <td>{{$to_datetime}}</td>
               <td>{{GetDurationHumanVersion($to_datetime,$from_datetime)}}</td>
-              <td>
-                <button type="button" class="btn btn-basic btn-xs more" id='{{$leave->id}}'>more</button> |
-                <button type="button" class="btn btn-warning btn-xs edit" id='{{$leave->id}}' data-toggle="modal" data-target="#modalform_modal">edit</button> |
-                <button type="button" class="btn btn-danger btn-xs delete" id='{{$leave->id}}'>delete</button>
 
-              </td>
+              <form action="/leaves/{{$leave->id}}" class="pull-right" method="POST">
+                {{ csrf_field() }}
+                <td>
+                  <button type="button" class="btn btn-warning btn-xs edit" id='{{$leave->id}}' data-toggle="modal" data-target="#modalform_modal">edit</button> |
+                  <input type="submit" name="delete" value="remove" class="btn btn-danger btn-xs">
+                  <input type="hidden" name="_method" value="DELETE">
+                </td>
+              </form>
+
             </tr>
             @endforeach
 
@@ -64,36 +68,39 @@
 
 @section('modal_form')
 
+<span id="employee_list">
   @include('layouts/receiver_table')
+</span>
+
 
   @include('leaves/leave_template')
-
-
-
 
 @endsection
 
 @section('form_script')
 
   <script>
-    create_update_toggle('leaves','leave');
 
-    //var leaves_index_table =$('leaves_index_table').DataTable();
+    create_update_toggle("leaves","leave");
 
     $('.edit').click(function () {
+      $("#employee_list").fadeOut();
       var rowData = leaves_index_table.row( $(this).parents('tr') ).data();
-      alert(rowData);
-      var year=rowData[0];
-      var month=moment().month(rowData[1]).format("M");
-      var start_date=rowData[2];
-      var end_date=rowData[3];
-
-      $('#month_picker').data("DateTimePicker").date(year+'/'+month);
-      $('#start_date_picker').data("DateTimePicker").date(start_date);
-      $('#end_date_picker').data("DateTimePicker").date(end_date);
+      var employee_name=rowData[2];
+      var leave_id=$(this).attr('id');
+      $('#edit_form').attr( 'action',"/leaves/"+leave_id);
+      $('#modal_title').text($('#modal_title').text()+":"+employee_name);
+      var start_date=rowData[4];
+      var end_date=rowData[5];
+      $('#from_datetime_picker').data("DateTimePicker").date(start_date);
+      $('#to_datetime_picker').data("DateTimePicker").date(end_date);
 
     });
 
+    $('.create').click(function () {
+      $("#employee_list").fadeIn();
+
+    });
 
     $('.save').click(function () {//modalform save buttton
       var batch_employee_id = [];

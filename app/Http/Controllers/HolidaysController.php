@@ -86,7 +86,7 @@ class HolidaysController extends Controller
      */
     public function destroy($id)
     {
-        //
+      return RemoveRecord($id,'holidays','holidays');
     }
 
 
@@ -95,8 +95,6 @@ class HolidaysController extends Controller
       $holiday->date=$request['date'];
       $holiday->holiday_type_id=$request['holiday_type_id'];
       $holiday->save();
-
-
 
     }
 }

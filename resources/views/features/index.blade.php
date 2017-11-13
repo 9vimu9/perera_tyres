@@ -39,10 +39,16 @@
                   customize
                 @endif
               </td>
-              <td>
-                <button type="button" class="btn btn-warning btn-xs edit" id='{{$feature->id}}' data-toggle="modal" data-target="#modalform_modal">edit</button> |
-                <button type="button" class="btn btn-danger btn-xs delete" id='{{$feature->id}}'>delete</button>
-              </td>
+
+              <form action="/features/{{$feature->id}}" class="pull-right" method="POST">
+                {{ csrf_field() }}
+                <td>
+                  <button type="button" class="btn btn-warning btn-xs edit" id='{{$feature->id}}' data-toggle="modal" data-target="#modalform_modal">edit</button> |
+                  <input type="submit" name="delete" value="remove" class="btn btn-danger btn-xs">
+                  <input type="hidden" name="_method" value="DELETE">
+                </td>
+              </form>
+
             </tr>
             @endforeach
       </tbody>

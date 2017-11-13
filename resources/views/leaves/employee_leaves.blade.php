@@ -1,9 +1,10 @@
 @extends('layouts.modalform')
 
-@section('title')LEAVES: {{$employee->name}}
-  @isset($start_date)
-  from <span class="badge">{{$year}}</span>
+@section('title')
+  @isset($year)
+{{$year}}
   @endisset
+  LEAVES: {{$employee->name}}
 @endsection
 
 @section('create_new')select year @endsection
@@ -11,9 +12,6 @@
 @section('table')
 
   @if (isset($employee_leave_data) && count($employee_leave_data)>0)
-    @php
-
-    @endphp
   <table id="employee_leaves_index" class="table table-striped table-hover table-center " cellspacing="0" style="table-layout: fixed; width: 70%" >
       <thead>
           <tr>
@@ -67,6 +65,8 @@
       $("#to_datetime").val(year+"-12-31");
 
     });
+
+
 
   </script>
 

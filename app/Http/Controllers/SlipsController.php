@@ -26,6 +26,13 @@ class SlipsController extends Controller
         return view('slips.index');
     }
 
+
+    public function print_all_slips($salary_id,$branch_id)
+  {
+    $data= $this->index_with_slips($salary_id,$branch_id);
+    return view('layouts.printouts.slip_bundle',$data);
+  }
+
     public function index_with_slips($salary_id,$branch_id)
     {
       $employees=Employees::where('branch_id',$branch_id)->get();
@@ -208,6 +215,6 @@ class SlipsController extends Controller
      */
     public function destroy($id)
     {
-        //
+      return RemoveRecord($id,'slips','slips');
     }
 }

@@ -64,9 +64,10 @@ class Slip
 
       $gap_allowences=$this->find_gap_allowences($slip);
 
-      for ($i=0; $i <2; $i++) {
+      print_r($gap_allowences);
+      for ($i=0; $i <4; $i++) {
 
-        $feature=features::find($i+1);//allways gap_allowences feature_ids must be 1,2
+        $feature=features::find($i+1);//allways gap_allowences feature_ids must be 1,2,3,4
 
         if ($slip_id) {
           $slip_feature=slip_features::where('slip_id',$slip->id)->where('feature_id',$feature->id)->first();
@@ -75,13 +76,15 @@ class Slip
           $slip_feature=new slip_features();
         }
         //attenence_in
+        if ($slip_feature) {
+          $slip_feature->slip_id=$slip->id;
+          $slip_feature->feature_id=$feature->id;
+          $slip_feature->static_value=0;
+          $slip_feature->value_type=$feature->value_type;
+          $slip_feature->value=$gap_allowences[$i];
+          $slip_feature->save();
+        }
 
-        $slip_feature->slip_id=$slip->id;
-        $slip_feature->feature_id=$feature->id;
-        $slip_feature->static_value=0;
-        $slip_feature->value_type=$feature->value_type;
-        $slip_feature->value=$gap_allowences[$i];
-        $slip_feature->save();
       }
 
 
@@ -89,8 +92,8 @@ class Slip
       $features=features::all();
       foreach ($features as $feature) {
 
-        if ($feature->is_static_value && !($slip->is_epf==0 && ($feature->id==3 || $feature->id==4 || $feature->id==5)) ) {
-          //EPF FEATURE IDS MUST BE 3,4,5
+        if ($feature->is_static_value && !($slip->is_epf==0 && ($feature->id==5 || $feature->id==6 || $feature->id==7)) ) {
+          //EPF FEATURE IDS MUST BE 5,6,7
           if ($slip_id) {
             $slip_feature=slip_features::where('slip_id',$slip->id)->where('feature_id',$feature->id)->first();
           }
@@ -98,17 +101,19 @@ class Slip
             $slip_feature=new slip_features();
           }
 
-          if ($feature->id==6) {
-            $slip_feature->value=$this->make_attendence_incentive($slip);
+          if ($slip_feature) {
+            if ($feature->id==8) {
+              $slip_feature->value=$this->make_attendence_incentive($slip);
+            }
+            else {
+              $slip_feature->value=$feature->static_value;
+            }
+            $slip_feature->slip_id=$slip->id;
+            $slip_feature->feature_id=$feature->id;
+            $slip_feature->static_value=$feature->static_value;
+            $slip_feature->value_type=$feature->value_type;
+            $slip_feature->save();
           }
-          else {
-            $slip_feature->value=$feature->static_value;
-          }
-          $slip_feature->slip_id=$slip->id;
-          $slip_feature->feature_id=$feature->id;
-          $slip_feature->static_value=$feature->static_value;
-          $slip_feature->value_type=$feature->value_type;
-          $slip_feature->save();
         }
       }
   }
@@ -151,16 +156,23 @@ class Slip
       $salary_difference-=$ot_difference;
     }
     if($salary_difference>981){
-      $random_min=$salary_difference/2;
-      $random_max=($salary_difference/3)*2;
-      $gap_allowence_1=round(mt_rand($random_min,$random_max),2);
-      $gap_allowence_2=round($salary_difference-$gap_allowence_1,2);
+      $average_val=$salary_difference/4;
+      $val_diff=$average_val/20;
+      $gap_allowence_1=round(mt_rand($average_val-$val_diff,$average_val+$val_diff),2);
+      $gap_allowence_2=round(mt_rand($average_val-($val_diff*2),$average_val+($val_diff*2)),2);
+      $gap_allowence_3=round(mt_rand($average_val-($val_diff*3),$average_val+($val_diff*3)),2);
+      $gap_allowence_4=$salary_difference-($gap_allowence_1+$gap_allowence_2+$gap_allowence_3);
+
     }
     else {
       $gap_allowence_1=$salary_difference;
       $gap_allowence_2=0;
+      $gap_allowence_3=0;
+      $gap_allowence_4=0;
+
+
     }
-    return [$gap_allowence_1,$gap_allowence_2];
+    return [$gap_allowence_1,$gap_allowence_2,$gap_allowence_3,$gap_allowence_4];
   }
 
 
@@ -172,7 +184,11 @@ class Slip
     $full_attendence_incentive=MetaGet('attendence_incentive');
     $ratio=$this->get_work_ratio($slip);
     $attendence_incentive=$ratio*$full_attendence_incentive;
-    return $attendence_incentive;
+    if ($ratio>0.85) {
+      return $attendence_incentive;
+    }else {
+      return 0;
+    }
 
   }
   public function get_work_ratio($slip)
